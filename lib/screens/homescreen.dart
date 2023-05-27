@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:presence/utility/individual_attendance_tile.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -12,51 +13,77 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(
-        title: Text('Home For now'),
-        centerTitle: true,
-      ),
+      backgroundColor: Colors.grey[300],
       body: SafeArea(
-          child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: 15,
-          ),
-          Text(
-            'Present?',
-            textAlign: TextAlign.end,
-          ),
-          ListView.builder(
-            shrinkWrap: true,
-            itemBuilder: (context, index) {
-              return ListTile(
-                title: Text('Student Name'),
-                leading: CircleAvatar(
-                  radius: 15,
-                  backgroundImage: NetworkImage(
-                      'https://www.google.com/search?q=avatar+url&source=lnms&tbm=isch&sa=X&ved=2ahUKEwiegO6ty-X8AhXMI7cAHZr3AU8Q_AUoAXoECAEQAw&biw=1536&bih=754&dpr=1.25#imgrc=YYYLguVFuko0CM'),
-                ),
-                trailing: Switch.adaptive(
-                    value: isSwitch,
-                    onChanged: (v) {
-                      setState(() {
-                        isSwitch = v;
-                      });
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: 10,
+            ),
+            Padding(
+              padding: const EdgeInsets.only(right: 20.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                children: [
+                  Container(
+                    padding: EdgeInsets.all(10),
+                    margin: EdgeInsets.only(left: 25),
+                    height: 50,
+                    child: Image.asset('assets/preferences.png'),
+                    decoration: BoxDecoration(
+                      color: Colors.grey[200],
+                      border: Border.all(color: Colors.white),
+                      borderRadius: BorderRadius.circular(12),
+                    ),
+                  ),
+                  Text(
+                    'Detected Peoples(9)',
+                    style: TextStyle(fontSize: 25, fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 30,
+            ),
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  Text(
+                    'Present?',
+                    style: TextStyle(
+                        color: Colors.grey[800],
+                        fontSize: 16,
+                        fontWeight: FontWeight.bold),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: 25,
+            ),
+            Expanded(
+              child: Padding(
+                padding: const EdgeInsets.all(8.0),
+                child: ListView.builder(
+                    itemCount: 10,
+                    itemBuilder: (context, index) {
+                      return Individual_tile();
                     }),
-              );
-            },
-            itemCount: 5,
-          ),
-          Row(
-            children: [
-              Expanded(
-                  child:
-                      ElevatedButton(onPressed: () {}, child: Text('Confirm')))
-            ],
-          )
-        ],
-      )),
+              ),
+            )
+            // Padding(
+            //   padding: EdgeInsets.symmetric(horizontal: 25.0),
+            //   child: ListView.builder(itemBuilder: (context, index) {
+            //     return Individual_tile();
+            //   }),
+            // )
+          ],
+        ),
+      ),
     );
   }
 }
