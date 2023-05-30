@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:presence/screens/onBoardingScreens/onBoardingController.dart';
 
 import 'screens/homescreen.dart';
 
@@ -11,6 +12,7 @@ class OurApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(debugShowCheckedModeBanner: false, home: HomeScreen());
+    return MaterialApp(
+        debugShowCheckedModeBanner: false, home: OnBoardingController());
   }
 }
