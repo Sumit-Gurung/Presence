@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:presence/components/custom_button.dart';
 
+import '../authn/signup.dart';
+
 class OnBoradingMainPage extends StatefulWidget {
   const OnBoradingMainPage({super.key});
 
@@ -53,10 +55,10 @@ class _OnBoradingMainPageState extends State<OnBoradingMainPage> {
                       height: 54,
                       width: 224,
                       onTap: () {
-                        // Navigator.push(
-                        //     context,
-                        //     MaterialPageRoute(
-                        //         builder: (context) => SignUpPage()));
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) => SignUpPage()));
                       },
                       child: Text(
                         'Sign In',
