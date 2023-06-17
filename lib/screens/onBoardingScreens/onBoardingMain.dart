@@ -76,7 +76,7 @@ class _OnBoradingMainPageState extends State<OnBoradingMainPage> {
                           fontWeight: FontWeight.w400,
                           fontSize: 18,
                         ),
-                        children: [
+                        children: const [
                           TextSpan(
                             text: 'LOGIN',
                             style: TextStyle(

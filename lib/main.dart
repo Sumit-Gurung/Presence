@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:presence/screens/onBoardingScreens/onBoardingController.dart';
+import 'package:presence/start_page.dart';
 import 'package:presence/utility/app_theme.dart';
 
 // import 'screens/homescreen.dart';
@@ -15,7 +15,7 @@ class OurApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: MyTheme.darktheme,
-        home: OnBoardingController());
+        theme: ThemeData.light(),
+        home: StartPage());
   }
 }

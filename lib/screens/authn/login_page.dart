@@ -46,6 +46,7 @@ class _LoginPageState extends State<LoginPage> {
                             if (value == null || value.isEmpty) {
                               return "Enter UserName";
                             }
+                            return null;
                             // if(value.trim().length < 10){
                             //   return "enter";
 
@@ -65,6 +66,7 @@ class _LoginPageState extends State<LoginPage> {
                             if (value == null || value.isEmpty) {
                               return "Enter Password";
                             }
+                            return null;
                           },
                           onFieldSubmitted: (value) {
                             setState(() {

@@ -74,6 +74,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                 if (value.trim().length < 10) {
                                   return "enter";
                                 }
+                                return null;
                               },
                               decoration: InputDecoration(
                                   hintText: 'UserName',
@@ -88,11 +89,12 @@ class _SignUpPageState extends State<SignUpPage> {
                                 bool emailValid = RegExp(
                                         r"^[a-zA-Z0-9.]+@[a-zA-Z0-9]+\.[a-zA-Z]+")
                                     .hasMatch(value!);
-                                if (value == null || value.isEmpty) {
+                                if (value.isEmpty) {
                                   return "Enter Email";
                                 } else if (!emailValid) {
                                   return "Enter Valid Email";
                                 }
+                                return null;
                               },
                               decoration: InputDecoration(
                                   hintText: 'EmailAddess',
@@ -108,6 +110,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                 if (value == null || value.isEmpty) {
                                   return "Enter Password";
                                 }
+                                return null;
                               },
                               //  onChanged: (value) {
                               //   setState(() {
@@ -140,6 +143,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                 if (!phoneNumberValid) {
                                   return "Enter Valid PhoneNumber";
                                 }
+                                return null;
                               },
                               onFieldSubmitted: (value) {
                                 setState(() {
@@ -179,7 +183,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                         style: TextStyle(
                                             fontSize: 12,
                                             fontWeight: FontWeight.w400),
-                                        children: [
+                                        children: const [
                                           TextSpan(
                                               text:
                                                   '\n\n(Example: Password/Citizenship)',

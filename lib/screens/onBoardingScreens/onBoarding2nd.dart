@@ -22,7 +22,7 @@ class _OnBoarding2ndState extends State<onBoarding2nd> {
               child: Column(
                 // mainAxisAlignment: MainAxisAlignment.center,
                 // crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
+                children: const [
                   SizedBox(
                     height: 142,
                   ),

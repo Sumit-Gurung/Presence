@@ -29,7 +29,7 @@ class _OnBoardingControllerState extends State<OnBoardingController> {
               });
             },
             controller: _pageController,
-            children: [OnBoarding1st(), onBoarding2nd(), OnBoradingMainPage()],
+            children: const [OnBoarding1st(), onBoarding2nd(), OnBoradingMainPage()],
           ),
           Container(
             alignment: Alignment(0, 0.90),
