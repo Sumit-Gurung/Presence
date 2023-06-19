@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:presence/components/constant.dart';
 
 class Individual_tile extends StatefulWidget {
+  // final bool? showToogle;
+
+  // const Individual_tile({super.key, this.showToogle});
   const Individual_tile({Key? key}) : super(key: key);
 
   @override
@@ -14,7 +18,7 @@ class _MyWidgetState extends State<Individual_tile> {
     return Container(
       margin: EdgeInsets.only(bottom: 25),
       decoration: BoxDecoration(
-        color: Colors.grey[200],
+        color: AppColors.tilebackgroundColor,
         borderRadius: BorderRadius.circular(12),
       ),
       child: ListTile(

@@ -28,13 +28,13 @@ class _ReportState extends State<Report> {
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
-              children: [
-                IconButton(
-                    constraints: const BoxConstraints(),
-                    padding: EdgeInsets.zero,
-                    onPressed: () => Navigator.pop(context),
-                    icon: const Icon(Icons.arrow_back,
-                        color: Colors.black, size: 25)),
+              children: const [
+                // IconButton(
+                //     constraints: const BoxConstraints(),
+                //     padding: EdgeInsets.zero,
+                //     onPressed: () => Navigator.pop(context),
+                //     icon: const Icon(Icons.arrow_back,
+                //         color: Colors.black, size: 25)),
                 Expanded(
                   child: Text(
                     'My Reports',

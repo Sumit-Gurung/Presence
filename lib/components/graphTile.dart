@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:presence/components/constant.dart';
 
 class MyGraphTile extends StatelessWidget {
   final Widget child;
@@ -20,7 +21,7 @@ class MyGraphTile extends StatelessWidget {
       height: 270,
       padding: EdgeInsets.all(20),
       decoration: BoxDecoration(
-          color: Colors.grey[200],
+          color: AppColors.tilebackgroundColor,
           borderRadius: BorderRadius.circular(12),
           border: Border.all(color: Colors.white)),
       child: Column(
@@ -34,7 +35,7 @@ class MyGraphTile extends StatelessWidget {
             height: 10,
           ),
           Text(
-            'Present: $totalIndividual \/ $attendee',
+            'Present: $totalIndividual / $attendee',
             style:
                 TextStyle(color: Colors.grey[700], fontWeight: FontWeight.w600),
           ),

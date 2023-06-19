@@ -2,11 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:presence/components/constant.dart';
 import 'package:presence/screens/groups.dart';
 import 'package:presence/screens/homescreen.dart';
+import 'package:presence/screens/manageAttendee.dart';
+import 'package:presence/screens/notificationScreen.dart';
 import 'package:presence/screens/profile.dart';
 import 'package:presence/screens/report.dart';
+import 'package:presence/utility/manageAttendeeTile.dart';
+import 'package:presence/utility/mydrawer.dart';
 
 class StartPage extends StatefulWidget {
-  const StartPage({super.key});
+  final bool? showprofile;
+  const StartPage({super.key, this.showprofile});
 
   @override
   State<StartPage> createState() => _StartPageState();
@@ -41,9 +46,7 @@ class _StartPageState extends State<StartPage> {
     return GestureDetector(
       onTap: () => _onItemTapped(index),
       child: Container(
-        color: (selectedIndex == index)
-            ? Color.fromRGBO(255, 255, 255, 0.5)
-            : null,
+        color: (selectedIndex == index) ? Colors.grey[400] : null,
         width: MediaQuery.of(context).size.width / 4,
         child: Padding(
           padding: EdgeInsets.only(right: rightPadding, left: leftPadding),
@@ -56,7 +59,7 @@ class _StartPageState extends State<StartPage> {
                         return LinearGradient(
                           begin: Alignment.topCenter,
                           end: Alignment.bottomCenter,
-                          colors: [
+                          colors: const [
                             AppColors.mainGradientOne,
                             AppColors.mainGradientTwo,
                           ],
@@ -98,147 +101,55 @@ class _StartPageState extends State<StartPage> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.grey[300],
+      backgroundColor: AppColors.backgroundColor,
       appBar: AppBar(
+        iconTheme: IconThemeData(color: Colors.black),
         centerTitle: true,
         title: Image.asset(
           'assets/images/GoogleImage.png',
           fit: BoxFit.fill,
         ),
-        backgroundColor: Color.fromARGB(255, 55, 117, 171),
+        // backgroundColor: Color.fromARGB(255, 55, 117, 171),
+        backgroundColor: Colors.grey[200],
+        // elevation: ,
         actions: [
-          IconButton(onPressed: () {}, icon: Icon(Icons.notifications)),
-          IconButton(onPressed: () {}, icon: Icon(Icons.person)),
+          IconButton(
+              onPressed: () {
+                Navigator.push(context, MaterialPageRoute(
+                  builder: (context) {
+                    return NotificationScreen();
+                  },
+                ));
+              },
+              icon: Icon(
+                Icons.notifications,
+              )),
+          IconButton(
+              onPressed: () {
+                Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                      builder: (context) => StartPage(
+                        showprofile: true,
+                      ),
+                    ));
+              },
+              icon: Icon(
+                Icons.person,
+              )),
         ],
       ),
-      drawer: Drawer(
-        backgroundColor: Color.fromARGB(255, 70, 116, 156),
-        // backgroundColor: Colors.grey[200],
-        child: ListView(
-          children: [
-            DrawerHeader(
-                padding: EdgeInsets.only(bottom: 10),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    CircleAvatar(
-                      backgroundImage: AssetImage('assets/images/avatar.jpg'),
-                      radius: 55,
-                    ),
-                    Text(
-                      'Name Gurung',
-                      style: TextStyle(
-                          fontSize: 23,
-                          fontWeight: FontWeight.w600,
-                          color: Colors.white),
-                    )
-                  ],
-                )),
-            ListTile(
-              leading: Icon(
-                Icons.home,
-                color: Colors.white,
-              ),
-              title: Text(
-                'Home',
-                style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white),
-              ),
-              trailing: IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.arrow_forward_outlined,
-                    color: Colors.white,
-                  )),
-            ),
-            Divider(
-              color: Colors.grey[800],
-              thickness: 2,
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.people_alt_outlined,
-                color: Colors.white,
-              ),
-              title: Text(
-                'Groups',
-                style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white),
-              ),
-              trailing: IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.arrow_forward_outlined,
-                    color: Colors.white,
-                  )),
-            ),
-            Divider(
-              color: Colors.grey[800],
-              thickness: 2,
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.library_books_outlined,
-                color: Colors.white,
-              ),
-              title: Text(
-                'Report',
-                style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white),
-              ),
-              trailing: IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.arrow_forward_outlined,
-                    color: Colors.white,
-                  )),
-            ),
-            Divider(
-              color: Colors.grey[800],
-              thickness: 2,
-            ),
-            ListTile(
-              leading: Icon(
-                Icons.person_2,
-                color: Colors.white,
-              ),
-              title: Text(
-                'Profile',
-                style: TextStyle(
-                    fontSize: 18,
-                    fontWeight: FontWeight.w500,
-                    color: Colors.white),
-              ),
-              trailing: IconButton(
-                  onPressed: () {},
-                  icon: Icon(
-                    Icons.arrow_forward_outlined,
-                    color: Colors.white,
-                  )),
-            ),
-            Divider(
-              color: Colors.grey[800],
-              thickness: 2,
-            ),
-          ],
-        ),
-      ),
+      drawer: MyDrawer(),
 
-      body: pages[selectedIndex],
+      body: (widget.showprofile == true) ? pages[3] : pages[selectedIndex],
       floatingActionButton: ShaderMask(
         shaderCallback: (Rect bounds) {
           return LinearGradient(
             begin: Alignment.topCenter,
             end: Alignment.bottomCenter,
-            colors: [
-              AppColors.mainGradientOne,
-              AppColors.mainGradientTwo,
+            colors: const [
+              Color.fromARGB(255, 135, 223, 116),
+              Color.fromARGB(255, 112, 154, 182),
             ],
           ).createShader(bounds);
         },
@@ -253,7 +164,9 @@ class _StartPageState extends State<StartPage> {
       ),
       floatingActionButtonLocation: FloatingActionButtonLocation.centerDocked,
       bottomNavigationBar: BottomAppBar(
-        color: Color.fromARGB(255, 55, 117, 171),
+        // color: Color.fromARGB(255, 55, 117, 171),
+        color: Colors.grey[200],
+
         //
         notchMargin: 10,
         // padding: EdgeInsets.all(5),

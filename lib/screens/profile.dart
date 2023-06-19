@@ -1,7 +1,5 @@
 import 'package:flutter/material.dart';
 
-import '../utility/gradient_border.dart';
-
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
 
@@ -42,12 +40,12 @@ class _ProfilePageState extends State<ProfilePage> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 const SizedBox(height: 10),
-                IconButton(
-                    constraints: const BoxConstraints(),
-                    padding: EdgeInsets.zero,
-                    onPressed: () => Navigator.pop(context),
-                    icon: const Icon(Icons.arrow_back,
-                        color: Colors.black, size: 25)),
+                // IconButton(
+                //     constraints: const BoxConstraints(),
+                //     padding: EdgeInsets.zero,
+                //     onPressed: () => Navigator.pop(context),
+                //     icon: const Icon(Icons.arrow_back,
+                //         color: Colors.black, size: 25)),
                 SizedBox(height: 20),
                 Column(
                   children: [
@@ -182,7 +180,7 @@ class CustomListTile extends StatelessWidget {
             color: isSelected ? null : Colors.grey[200],
             gradient: isSelected
                 ? (LinearGradient(
-                    colors: [Color(0xff65F4CD), Color(0xff5A5BF3)],
+                    colors: const [Color(0xff65F4CD), Color(0xff5A5BF3)],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                   ))
