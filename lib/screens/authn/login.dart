@@ -10,6 +10,7 @@ import 'package:presence/model/userDetail.dart';
 import 'package:presence/providers/user_provider.dart';
 import 'package:presence/screens/authn/signup_page.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../components/custom_button.dart';
 import '../../start_page.dart';
@@ -29,6 +30,14 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   static FocusNode userNameFocusNode = FocusNode();
   static FocusNode passwordFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    //set email and password to defaults
+    _userNameController.text = 'arjunq21@gmail.com';
+    _passwordController.text = 'asdfasdf1';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -216,6 +225,18 @@ class _LoginPageState extends State<LoginPage> {
                                                 Provider.of<UserProvider>(
                                                     context,
                                                     listen: false);
+                                            // saving in shared preferences
+                                            var inst = await SharedPreferences
+                                                .getInstance();
+
+                                            await inst.setString(
+                                                "accessToken",
+                                                loginResponseInJson['token']
+                                                    ['access']);
+
+                                            print("Access token set as: " +
+                                                inst.getString("accessToken")!);
+
                                             UserProviderVariable.setUser(user);
                                             Navigator.push(
                                                 context,

@@ -7,9 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:presence/components/constant.dart';
 import 'package:presence/providers/user_provider.dart';
 import 'package:provider/provider.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import "package:http_parser/http_parser.dart";
 import '../components/custom_button.dart';
 import 'package:http/http.dart' as http;
+
+import 'package:mime/mime.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -74,10 +77,20 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> uploadImage(File imageFile) async {
+    var inst = await SharedPreferences.getInstance();
+
+    String accessToken = inst.getString('accessToken')!;
+
+    Map<String, String> headers = {
+      "Authorization": "Bearer $accessToken",
+    };
+
     var request = http.MultipartRequest(
       'POST',
       Uri.parse(Endpoints.forProfileImage),
     );
+
+    request.headers.addAll(headers);
 
     var stream = http.ByteStream(imageFile.openRead());
     var length = await imageFile.length();
@@ -87,6 +100,7 @@ class _ProfilePageState extends State<ProfilePage> {
       stream,
       length,
       filename: imageFile.path,
+      contentType: MediaType.parse(lookupMimeType(imageFile.path)!),
     );
 
     request.files.add(multipartFile);
