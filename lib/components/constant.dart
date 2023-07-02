@@ -1,3 +1,5 @@
+import 'dart:io';
+
 import 'package:flutter/material.dart';
 
 class AppColors {
@@ -16,9 +18,11 @@ class AppColors {
 }
 
 class Endpoints {
-  static const String forSignup = "http://10.0.2.2:8000/auth/register/";
-  static const String forLogin = "";
-  static const String forProfileImage = "";
+  static get url =>
+      Platform.isAndroid ? "http://10.0.2.2:8000" : "http://localhost:8000";
+  static String forSignup = "$url/auth/register/";
+  static String forLogin = "$url/auth/login/";
+  static String forProfileImage = "";
 }
 
 Color unSelecteddrawerIconColor = Colors.grey.shade600;

@@ -105,8 +105,8 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Consumer<UserProvider>(
-        builder: (context, UserProviderVariable, child) {
-      final user = UserProviderVariable.user;
+        builder: (context, userProviderVariable, child) {
+      final user = userProviderVariable;
       return Scaffold(
         backgroundColor: Colors.grey[300],
         body: SafeArea(
@@ -279,10 +279,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       SizedBox(
                         height: 26,
                       ),
-                      // user!.name,
 //
                       Text(
-                        "Name Gurung",
+                        user.user?.name ?? "Name Here",
                         style: TextStyle(
                             fontSize: 24, fontWeight: FontWeight.w600),
                       ),
@@ -292,7 +291,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       // user.phoneNumber,
 
                       Text(
-                        "9874563210",
+                        user.user?.name ?? "Phone Number Here",
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w400),
                       ),

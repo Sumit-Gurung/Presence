@@ -120,7 +120,7 @@ class _LoginPageState extends State<LoginPage> {
                                   focusNode: userNameFocusNode,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return "Enter UserName";
+                                      return "Enter Email";
                                     }
                                     return null;
                                     // if(value.trim().length < 10){
@@ -128,7 +128,7 @@ class _LoginPageState extends State<LoginPage> {
 
                                     // }
                                   },
-                                  label: 'Enter UserName',
+                                  label: 'Enter Email',
                                   prefixIcon: Icon(
                                     Icons.email,
                                     size: 32,
@@ -185,8 +185,8 @@ class _LoginPageState extends State<LoginPage> {
                                       if (_formKey.currentState!.validate()) {
                                         try {
                                           Map toSendSignUp = {
-                                            "": _userNameController.text,
-                                            "": _passwordController.text
+                                            "email": _userNameController.text,
+                                            "password": _passwordController.text
                                           };
                                           String toSendAsStringSignUp =
                                               jsonEncode(toSendSignUp);
@@ -204,12 +204,14 @@ class _LoginPageState extends State<LoginPage> {
                                                 jsonDecode(response.body);
                                             final user = UserDetails(
                                                 name:
-                                                    loginResponseInJson["name"],
-                                                email: loginResponseInJson[
-                                                    "email"],
+                                                    loginResponseInJson['user']
+                                                        ["name"],
+                                                email:
+                                                    loginResponseInJson['user']
+                                                        ["email"],
                                                 phoneNumber:
-                                                    loginResponseInJson[
-                                                        "phoneNumner"]);
+                                                    loginResponseInJson['user']
+                                                        ["phoneNumber"]);
                                             final UserProviderVariable =
                                                 Provider.of<UserProvider>(
                                                     context,
