@@ -39,14 +39,14 @@ class _ProfilePageState extends State<ProfilePage> {
 // final GlobalKey<AlertDialogState> alertDialogKey =
   //     GlobalKey<AlertDialogState>();
   // TextEditingController controllersa = TextEditingController();
-  FilePickerResult? result;
   String? fileName;
+  FilePickerResult? result;
   PlatformFile? pickedFile;
+  File? imageToDisplay;
   bool isFileUploaded = false;
   bool isLoading = false;
-  File? imageToDisplay;
 
-  void pickFile() async {
+  Future<void> pickFile() async {
     try {
       setState(() {
         isLoading = true;
@@ -182,78 +182,83 @@ class _ProfilePageState extends State<ProfilePage> {
                                 showDialog(
                                   context: context,
                                   builder: (context) {
-                                    return AlertDialog(
-                                      // actionsPadding: EdgeInsets.all(20),
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12)),
-                                      // icon: Icon(Icons.home),
-                                      title: Text('Upload Profile Photo'),
+                                    return StatefulBuilder(
+                                        builder: (context, setState1) {
+                                      return AlertDialog(
+                                        // actionsPadding: EdgeInsets.all(20),
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12)),
+                                        // icon: Icon(Icons.home),
+                                        title: Text('Upload Profile Photo'),
 
-                                      content: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          isLoading
-                                              ? CircularProgressIndicator()
-                                              : CustomButton(
-                                                  height: 35,
-                                                  borderRadius: 20,
-                                                  isValidated: isFileUploaded,
-                                                  width: 120,
-                                                  onTap: () async {
-                                                    pickFile();
-                                                  },
-                                                  child: Text(
-                                                    'CHoose Photo',
-                                                    style: TextStyle(
-                                                        fontSize: 14,
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.w600),
-                                                  )),
-                                          SizedBox(
-                                            height: 12,
-                                          ),
-                                          isFileUploaded
-                                              ? SizedBox(
-                                                  height: 85,
-                                                  width: 140,
-                                                  child: Image.file(
-                                                    imageToDisplay!,
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                )
-                                              : Text(
-                                                  '\nCHOOSE IMAGE WISELY\n BECAUSE\n It WILL BE USED',
-                                                  textAlign: TextAlign.center,
-                                                )
-                                        ],
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                            child: Text("cancel")),
-                                        TextButton(
-                                            onPressed: () {
-                                              if (pickedFile != null &&
-                                                  pickedFile!.path != null) {
-                                                File imageFile = File(
-                                                    pickedFile!.path
-                                                        .toString());
-                                                if (imageFile.existsSync()) {
-                                                  uploadImage(imageFile);
+                                        content: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            isLoading
+                                                ? CircularProgressIndicator()
+                                                : CustomButton(
+                                                    height: 35,
+                                                    borderRadius: 20,
+                                                    isValidated: isFileUploaded,
+                                                    width: 120,
+                                                    onTap: () async {
+                                                      await pickFile();
+                                                      setState1(() {});
+                                                    },
+                                                    child: Text(
+                                                      'CHoose Photo',
+                                                      style: TextStyle(
+                                                          fontSize: 14,
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.w600),
+                                                    )),
+                                            SizedBox(
+                                              height: 12,
+                                            ),
+                                            isFileUploaded
+                                                ? SizedBox(
+                                                    height: 85,
+                                                    width: 140,
+                                                    child: Image.file(
+                                                      imageToDisplay!,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  )
+                                                : Text(
+                                                    '\nCHOOSE IMAGE WISELY\n BECAUSE\n It WILL BE USED',
+                                                    textAlign: TextAlign.center,
+                                                  )
+                                          ],
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text("cancel")),
+                                          TextButton(
+                                              onPressed: () {
+                                                if (pickedFile != null &&
+                                                    pickedFile!.path != null) {
+                                                  File imageFile = File(
+                                                      pickedFile!.path
+                                                          .toString());
+                                                  if (imageFile.existsSync()) {
+                                                    uploadImage(imageFile);
+                                                  } else {
+                                                    print(
+                                                        'File does not exist.');
+                                                  }
                                                 } else {
-                                                  print('File does not exist.');
-                                                }
-                                              } else {
-                                                print('No file selected.');
-                                              } // Replace with your image file path
-                                            },
-                                            child: Text("Upload")),
-                                      ],
-                                    );
+                                                  print('No file selected.');
+                                                } // Replace with your image file path
+                                              },
+                                              child: Text("Upload")),
+                                        ],
+                                      );
+                                    });
                                   },
                                 );
                               },
