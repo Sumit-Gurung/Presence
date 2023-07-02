@@ -148,7 +148,7 @@ class _DrawerTileState extends State<DrawerTile> {
                     context,
                     MaterialPageRoute(
                       builder: (context) => StartPage(
-                        selectedIndexFromOutside: 1,
+                        selectedIndexFromOutside: widget.navigateIndex,
                       ),
                     ));
               },
