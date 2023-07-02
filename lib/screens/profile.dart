@@ -291,7 +291,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       // user.phoneNumber,
 
                       Text(
-                        user.user?.name ?? "Phone Number Here",
+                        user.user?.phoneNumber ?? "Phone Number Here",
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w400),
                       ),
