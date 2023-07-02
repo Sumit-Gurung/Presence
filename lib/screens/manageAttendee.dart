@@ -8,9 +8,9 @@ import 'package:provider/provider.dart';
 import '../utility/manageAttendeeTile.dart';
 
 class ManageAttendee extends StatefulWidget {
-  final int index;
+  final int groupIndex;
 
-  const ManageAttendee({super.key, required this.index});
+  const ManageAttendee({super.key, required this.groupIndex});
   // const ManageAttendee({Key? key}) : super(key: key);
 
   @override
@@ -63,13 +63,11 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                             TextButton(
                                 onPressed: () {
                                   setState(() {
-                                    attendeeVariable
-                                        .addToList(nameAddController.text);
-                                    // groupProviderVariable
-                                    //     .addAttendeeToGroup(widget.index, {
-                                    //   "attendeeList": attendeeVariable
-                                    //       .attendeeName[widget.index],
-                                    // });
+                                    // attendeeVariable
+                                    //     .addToList(nameAddController.text);
+                                    groupProviderVariable.addAttendeeToGroup(
+                                        nameAddController.text,
+                                        widget.groupIndex);
                                   });
 
                                   Navigator.pop(context);
@@ -90,20 +88,19 @@ class _ManageAttendeeState extends State<ManageAttendee> {
               ],
             ),
             body: SafeArea(
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    height: 10,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.only(right: 20.0),
-                    child: Row(
+              child: Padding(
+                padding: const EdgeInsets.symmetric(horizontal: 25),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      height: 10,
+                    ),
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Container(
                           padding: EdgeInsets.all(10),
-                          margin: EdgeInsets.only(left: 25),
                           height: 50,
                           decoration: BoxDecoration(
                             color: Colors.grey[200],
@@ -121,17 +118,14 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                         ),
                       ],
                     ),
-                  ),
-                  SizedBox(
-                    height: 30,
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    child: Row(
+                    SizedBox(
+                      height: 30,
+                    ),
+                    Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          groupProviderVariable.myGroups[widget.index]
+                          groupProviderVariable.myGroups[widget.groupIndex]
                               ['groupName'],
                           style: TextStyle(
                               color: Colors.grey[800],
@@ -140,35 +134,35 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                         ),
                       ],
                     ),
-                  ),
-                  SizedBox(
-                    height: 25,
-                  ),
+                    SizedBox(
+                      height: 25,
+                    ),
 
-                  Expanded(
-                    child: Padding(
-                      padding: const EdgeInsets.all(8.0),
+                    Expanded(
                       child: ListView.builder(
-                          itemCount: attendeeVariable.attendeeName.length,
-                          // itemCount: {
-                          //   groupProviderVariable.myGroups[widget.index]
-                          //       ["attendeeList"]
-                          // }.length,
-                          // attendeeVariable.attendeeName.length
+                          // itemCount: attendeeVariable.attendeeName.length,
+                          itemCount: groupProviderVariable
+                              .myGroups[widget.groupIndex]["attendeeList"]
+                              .length,
+                          // attendeeVariable.attendeeName.length,
                           itemBuilder: (context, index) {
                             return ManageAttendeeTile(
-                              index: index,
+                              attendee: groupProviderVariable
+                                      .myGroups[widget.groupIndex]
+                                  ["attendeeList"][index],
+                              attendeeIndex: index,
+                              groupIndex: widget.groupIndex,
                             );
                           }),
-                    ),
-                  )
-                  // Padding(
-                  //   padding: EdgeInsets.symmetric(horizontal: 25.0),
-                  //   child: ListView.builder(itemBuilder: (context, index) {
-                  //     return Individual_tile();
-                  //   }),
-                  // )
-                ],
+                    )
+                    // Padding(
+                    //   padding: EdgeInsets.symmetric(horizontal: 25.0),
+                    //   child: ListView.builder(itemBuilder: (context, index) {
+                    //     return Individual_tile();
+                    //   }),
+                    // )
+                  ],
+                ),
               ),
             ));
       },

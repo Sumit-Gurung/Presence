@@ -35,13 +35,20 @@ class _MyGroupTileState extends State<MyGroupTile> {
           onTap: widget.ontap,
           child: Container(
             width: double.maxFinite,
-            height: 100,
-            margin: EdgeInsets.only(bottom: 15),
+            // height: double.maxFinite,
+            margin: EdgeInsets.only(bottom: 20),
             decoration: BoxDecoration(
-                // color: Colors.grey[800],
+                color: AppColors.tilebackgroundColor,
+                boxShadow: [
+                  BoxShadow(
+                      blurRadius: 10,
+                      spreadRadius: -2,
+                      color: Colors.grey.shade500,
+                      offset: Offset(1, 6)),
+                ],
                 borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(12),
-                    bottomRight: Radius.circular(12))),
+                    topLeft: Radius.circular(12),
+                    bottomLeft: Radius.circular(12))),
             child: Slidable(
               endActionPane: ActionPane(motion: ScrollMotion(), children: [
                 SlidableAction(
@@ -87,23 +94,22 @@ class _MyGroupTileState extends State<MyGroupTile> {
                 ),
               ]),
               child: Container(
-                width: double.maxFinite,
-                height: 100,
+                // width: double.maxFinite,
+                // height: double.maxFinite,
                 // margin: EdgeInsets.only(bottom: 15),
-                decoration: BoxDecoration(
-                    color: AppColors.tilebackgroundColor,
-                    borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(12),
-                        bottomLeft: Radius.circular(12))),
-                padding: EdgeInsets.all(15),
+
+                padding: EdgeInsets.all(14),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
                   crossAxisAlignment: CrossAxisAlignment.start,
+                  // mainAxisSize: MainAxisSize.max,
                   children: [
                     Text(
                       widget.groupName,
-                      style:
-                          TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
+                      style: TextStyle(
+                          fontSize: 20,
+                          fontWeight: FontWeight.bold,
+                          height: 1.2),
                     ),
                     SizedBox(
                       height: 8,

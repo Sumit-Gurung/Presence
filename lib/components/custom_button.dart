@@ -33,8 +33,8 @@ class CustomButton extends StatelessWidget {
                 end: Alignment.bottomCenter,
                 colors: isValidated == null || isValidated == false
                     ? [
-                        Color(0xff65F4FD),
-                        Color(0xff5A5BF3),
+                        Color.fromARGB(255, 32, 237, 216),
+                        Color(0xff004A57),
                       ]
                     : [
                         Color(0xff00FFBB),

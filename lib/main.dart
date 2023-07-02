@@ -1,6 +1,10 @@
 import 'package:flutter/material.dart';
+import 'package:google_fonts/google_fonts.dart';
 import 'package:presence/providers/group_Provider.dart';
-import 'package:presence/start_page.dart';
+import 'package:presence/providers/user_provider.dart';
+//
+import 'package:presence/screens/onBoardingScreens/onBoardingController.dart';
+
 import 'package:provider/provider.dart';
 
 import 'providers/Individual_attendee_provider.dart';
@@ -17,6 +21,8 @@ void main() {
         ChangeNotifierProvider<GroupProvider>(
           create: (context) => GroupProvider(),
         ),
+        ChangeNotifierProvider<UserProvider>(
+            create: (context) => UserProvider())
       ],
       child: OurApp(),
     ),
@@ -30,7 +36,22 @@ class OurApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return MaterialApp(
         debugShowCheckedModeBanner: false,
-        theme: ThemeData.light(),
-        home: StartPage());
+        theme: ThemeData(
+          textTheme: Theme.of(context).textTheme.apply(
+                fontFamily: 'Dangrek',
+
+                // fontSizeDelta: 4,
+                fontSizeFactor: 0.95,
+
+                bodyColor: Colors.black, //<-- SEE HERE
+                displayColor: Colors.grey[600],
+              ),
+        ),
+        // theme: ThemeData.light().copyWith(
+        //     textTheme: TextTheme(bodyText1: TextStyle(fontFamily: 'Dangrek'))),
+        // theme: ThemeData.light().copyWith(
+        //     textTheme:
+        //         GoogleFonts.dangrekTextTheme((Theme.of(context).textTheme))),
+        home: OnBoardingController());
   }
 }

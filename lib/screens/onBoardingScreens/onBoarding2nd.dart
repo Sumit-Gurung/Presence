@@ -11,42 +11,70 @@ class _OnBoarding2ndState extends State<onBoarding2nd> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: Colors.grey[200],
       body: SafeArea(
-          child: Container(
-              height: double.infinity,
-              width: double.infinity,
-              decoration: BoxDecoration(
-                  image: DecorationImage(
-                      image: AssetImage('assets/images/onboarding_screen.png'),
-                      fit: BoxFit.fill)),
-              child: Column(
-                // mainAxisAlignment: MainAxisAlignment.center,
-                // crossAxisAlignment: CrossAxisAlignment.center,
-                children: const [
-                  SizedBox(
-                    height: 142,
+          child: Padding(
+        padding: const EdgeInsets.all(28.0),
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+              height: 40,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  '2.',
+                  textAlign: TextAlign.left,
+                  style: TextStyle(
+                    fontSize: 40,
                   ),
-                  Text('WELCOME',
-                      textAlign: TextAlign.center,
-                      style:
-                          TextStyle(fontSize: 48, fontWeight: FontWeight.w600)),
-                  SizedBox(
-                    height: 26,
+                ),
+                SizedBox(
+                  width: 20,
+                ),
+                Expanded(
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text('Add Attendee',
+                          textAlign: TextAlign.center,
+                          style: TextStyle(
+                              fontSize: 32,
+                              color: Colors.yellow.shade700,
+                              fontWeight: FontWeight.w600)),
+                      Text(
+                          'Group banapache attendee haru add garnu parcha lah! ',
+                          textAlign: TextAlign.justify,
+                          style: TextStyle(
+                            fontSize: 18,
+                            fontWeight: FontWeight.w400,
+                          )),
+                    ],
                   ),
-                  Text('ON BOARD',
-                      textAlign: TextAlign.center,
-                      style:
-                          TextStyle(fontSize: 36, fontWeight: FontWeight.w400)),
-                  SizedBox(
-                    height: 54,
-                  ),
-                  Text(
-                    'All the fun starts here!\n\n Wanna feel these happy vibes?\n\n Create an account and you’re all set to go',
-                    style: TextStyle(fontSize: 18, fontWeight: FontWeight.w400),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ))),
+                ),
+              ],
+            ),
+
+            // SizedBox(
+            //   height: ,
+            // ),
+
+            SizedBox(
+              height: 35,
+            ),
+
+            Container(
+              height: 350,
+              width: 310,
+              child: Image(image: AssetImage('assets/images/onBoarding2.png')),
+            ),
+          ],
+        ),
+      )),
     );
   }
 }

@@ -18,8 +18,8 @@ class MyGraphTile extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: 270,
-      padding: EdgeInsets.all(20),
+      // height: 400,
+      padding: EdgeInsets.all(18),
       decoration: BoxDecoration(
           color: AppColors.tilebackgroundColor,
           borderRadius: BorderRadius.circular(12),
@@ -31,19 +31,19 @@ class MyGraphTile extends StatelessWidget {
             groupName,
             style: TextStyle(fontSize: 20, fontWeight: FontWeight.w600),
           ),
-          SizedBox(
-            height: 10,
-          ),
+          // SizedBox(
+          //   height: 10,
+          // ),
           Text(
-            'Present: $totalIndividual / $attendee',
+            'Present: $attendee / $totalIndividual  ',
             style:
                 TextStyle(color: Colors.grey[700], fontWeight: FontWeight.w600),
           ),
           SizedBox(
-            height: 20,
+            height: 15,
           ),
           SizedBox(
-            height: 140,
+            height: 150,
             child: child,
           ),
         ],

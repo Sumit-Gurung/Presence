@@ -1,9 +1,10 @@
 import 'package:flutter/material.dart';
-import 'package:presence/screens/homescreen.dart';
+import 'package:presence/start_page.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import 'onBoarding1st.dart';
 import 'onBoarding2nd.dart';
+import 'onBoarding3rd.dart';
 import 'onBoardingMain.dart';
 
 class OnBoardingController extends StatefulWidget {
@@ -21,15 +22,21 @@ class _OnBoardingControllerState extends State<OnBoardingController> {
     return Scaffold(
       body: SafeArea(
           child: Stack(
+        alignment: AlignmentDirectional.topStart,
         children: [
           PageView(
             onPageChanged: (value) {
               setState(() {
-                lastPage = (value == 2);
+                lastPage = (value == 3);
               });
             },
             controller: _pageController,
-            children: const [OnBoarding1st(), onBoarding2nd(), OnBoradingMainPage()],
+            children: const [
+              OnBoarding1st(),
+              onBoarding2nd(),
+              onBoarding3rd(),
+              OnBoradingMainPage()
+            ],
           ),
           Container(
             alignment: Alignment(0, 0.90),
@@ -42,15 +49,15 @@ class _OnBoardingControllerState extends State<OnBoardingController> {
                     },
                     child: Text(
                       'Skip',
-                      style: TextStyle(color: Colors.white),
+                      style: TextStyle(color: Colors.grey[700]),
                     )),
                 SmoothPageIndicator(
                   controller: _pageController,
-                  count: 3,
+                  count: 4,
                   effect: ExpandingDotsEffect(
                       dotColor: Colors.grey.shade800,
                       dotWidth: 15,
-                      activeDotColor: Colors.green.shade400),
+                      activeDotColor: Colors.grey.shade700),
                 ),
                 lastPage
                     ? TextButton(
@@ -58,18 +65,18 @@ class _OnBoardingControllerState extends State<OnBoardingController> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => HomeScreen()));
+                                  builder: (context) => StartPage()));
                         },
-                        child:
-                            Text('Done', style: TextStyle(color: Colors.white)))
+                        child: Text('Done',
+                            style: TextStyle(color: Colors.grey[700])))
                     : TextButton(
                         onPressed: () {
                           _pageController.nextPage(
                               duration: Duration(microseconds: 500),
                               curve: Curves.bounceIn);
                         },
-                        child:
-                            Text('Next', style: TextStyle(color: Colors.white)))
+                        child: Text('Next',
+                            style: TextStyle(color: Colors.grey[700])))
               ],
             ),
           ),

@@ -1,0 +1,344 @@
+// ignore_for_file: prefer_const_constructors, prefer_const_literals_to_create_immutables
+
+import 'dart:convert';
+import 'package:http/http.dart' as http;
+
+import 'package:flutter/material.dart';
+import 'package:presence/components/constant.dart';
+import 'package:presence/components/cutomFormField.dart';
+import 'package:presence/model/userDetail.dart';
+import 'package:presence/providers/user_provider.dart';
+import 'package:presence/screens/authn/signup_page.dart';
+import 'package:provider/provider.dart';
+
+import '../../components/custom_button.dart';
+import '../../start_page.dart';
+
+class LoginPage extends StatefulWidget {
+  const LoginPage({Key? key}) : super(key: key);
+
+  @override
+  State<LoginPage> createState() => _LoginPageState();
+}
+
+class _LoginPageState extends State<LoginPage> {
+  bool obsureText = true;
+  bool isValid = false;
+  final _formKey = GlobalKey<FormState>();
+  final TextEditingController _userNameController = TextEditingController();
+  final TextEditingController _passwordController = TextEditingController();
+  static FocusNode userNameFocusNode = FocusNode();
+  static FocusNode passwordFocusNode = FocusNode();
+
+  @override
+  Widget build(BuildContext context) {
+    final heightt = MediaQuery.of(context).size.height;
+
+    return Scaffold(
+      // resizeToAvoidBottomInset: false,
+      backgroundColor: Colors.black,
+      body: SizedBox(
+        height: heightt,
+        child: Stack(
+          children: [
+            Container(
+              height: heightt / 2,
+              width: double.infinity,
+              decoration: BoxDecoration(
+                  color: AppColors.authBasicColor,
+                  borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(62),
+                      bottomRight: Radius.circular(62))),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Container(
+                        height: 100,
+                        padding: EdgeInsets.all(10),
+                        child: Image.asset(
+                          'assets/images/GoogleImage.png',
+                        ),
+                      ),
+                      Text(
+                        'Presence',
+                        style: TextStyle(
+                            fontSize: 32,
+                            fontWeight: FontWeight.bold,
+                            color: Colors.white),
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: 10,
+                  ),
+                  Text(
+                    'AI-Based Attendace App!',
+                    style: TextStyle(
+                        fontSize: 15,
+                        fontWeight: FontWeight.bold,
+                        color: Colors.white),
+                  )
+                ],
+              ),
+            ),
+            SingleChildScrollView(
+              child: SizedBox(
+                height: heightt,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.end,
+                  children: [
+                    Container(
+                      height: heightt / 1.8,
+                      margin: EdgeInsets.all(23),
+                      padding: EdgeInsets.all(28),
+                      decoration: BoxDecoration(
+                          color: Colors.grey[300],
+                          borderRadius: BorderRadius.circular(50)),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.stretch,
+                        children: [
+                          Text(
+                            'Login',
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Colors.grey[800],
+                                fontWeight: FontWeight.bold,
+                                fontSize: 32),
+                          ),
+                          SizedBox(
+                            height: 15,
+                          ),
+                          Form(
+                            key: _formKey,
+                            child: Column(
+                              children: [
+                                CustomFormField(
+                                  textController: _userNameController,
+                                  focusNode: userNameFocusNode,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "Enter UserName";
+                                    }
+                                    return null;
+                                    // if(value.trim().length < 10){
+                                    //   return "enter";
+
+                                    // }
+                                  },
+                                  label: 'Enter UserName',
+                                  prefixIcon: Icon(
+                                    Icons.email,
+                                    size: 32,
+                                    color: AppColors.authBasicColor,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: 15,
+                                ),
+                                CustomFormField(
+                                  textController: _passwordController,
+                                  focusNode: passwordFocusNode,
+                                  validator: (value) {
+                                    if (value == null || value.isEmpty) {
+                                      return "Enter Password";
+                                    }
+                                    return null;
+                                  },
+                                  label: 'Enter Password',
+                                  prefixIcon: Icon(
+                                    Icons.security,
+                                    color: AppColors.authBasicColor,
+                                    size: 32,
+                                  ),
+                                  suffixIcon: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        obsureText = !obsureText;
+                                      });
+                                    },
+                                    child: Icon(
+                                      obsureText
+                                          ? Icons.visibility_off
+                                          : Icons.visibility,
+                                      color: AppColors.authBasicColor,
+                                    ),
+                                  ),
+                                  onFieldSubmitted: (value) {
+                                    setState(() {
+                                      isValid =
+                                          _formKey.currentState!.validate();
+                                    });
+                                  },
+                                ),
+                                SizedBox(
+                                  height: 23,
+                                ),
+                                CustomButton(
+                                    height: 54,
+                                    width: 224,
+                                    borderRadius: 20,
+                                    isValidated: isValid,
+                                    onTap: () async {
+                                      if (_formKey.currentState!.validate()) {
+                                        try {
+                                          Map toSendSignUp = {
+                                            "": _userNameController.text,
+                                            "": _passwordController.text
+                                          };
+                                          String toSendAsStringSignUp =
+                                              jsonEncode(toSendSignUp);
+                                          var response = await http.post(
+                                              Uri.parse(Endpoints.forLogin),
+                                              headers: {
+                                                "Content-Type":
+                                                    "application/json"
+                                              },
+                                              body: toSendAsStringSignUp);
+                                          print(response.body);
+                                          if (response.statusCode >= 200 &&
+                                              response.statusCode < 300) {
+                                            var loginResponseInJson =
+                                                jsonDecode(response.body);
+                                            final user = UserDetails(
+                                                name:
+                                                    loginResponseInJson["name"],
+                                                email: loginResponseInJson[
+                                                    "email"],
+                                                phoneNumber:
+                                                    loginResponseInJson[
+                                                        "phoneNumner"]);
+                                            final UserProviderVariable =
+                                                Provider.of<UserProvider>(
+                                                    context,
+                                                    listen: false);
+                                            UserProviderVariable.setUser(user);
+                                            Navigator.push(
+                                                context,
+                                                MaterialPageRoute(
+                                                    builder: (context) =>
+                                                        StartPage()));
+                                          }
+                                        } catch (e) {
+                                          print(
+                                              "--------Exception catched!---------");
+                                          print(e);
+                                        }
+
+                                        Navigator.push(
+                                            context,
+                                            MaterialPageRoute(
+                                                builder: (context) =>
+                                                    StartPage()));
+                                      } else {
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                                content:
+                                                    Text("LOGIN-UP FAILED!")));
+                                      }
+                                    },
+                                    child: Text(
+                                      "Login",
+                                      style: TextStyle(
+                                          fontSize: 17,
+                                          fontWeight: FontWeight.w700),
+                                    )),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: 8,
+                          ),
+                          Row(
+                            // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Expanded(
+                                child: Divider(
+                                  // height: 10,
+                                  // color: Colors.black,
+                                  thickness: 4,
+                                ),
+                              ),
+                              Text('   OR   '),
+                              Expanded(
+                                child: Divider(
+                                  thickness: 4,
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: 10,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceAround,
+                            children: [
+                              SizedBox(
+                                height: 45,
+                                child: Image.asset(
+                                  'assets/images/apple.png',
+                                  color: Colors.grey[800],
+                                ),
+                              ),
+                              SizedBox(
+                                height: 45,
+                                child: Image.asset(
+                                  'assets/images/GoogleImage.png',
+                                  color: Colors.grey[800],
+                                ),
+                              ),
+                              SizedBox(
+                                height: 45,
+                                child: Image.asset(
+                                  'assets/images/nike.png',
+                                ),
+                              ),
+                            ],
+                          )
+                        ],
+                      ),
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Don\'t Have An Account? ',
+                          style: TextStyle(
+                              fontSize: 14,
+                              // fontWeight: FontWeight.bold,
+                              color: Colors.white),
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) => SignUpPage(),
+                                ));
+                          },
+                          child: Text(
+                            'SignUP',
+                            style: TextStyle(
+                                fontSize: 16,
+                                decoration: TextDecoration.underline,
+                                fontWeight: FontWeight.bold,
+                                color: Colors.white),
+                          ),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: 20,
+                    )
+                  ],
+                ),
+              ),
+            )
+          ],
+        ),
+      ),
+    );
+  }
+}

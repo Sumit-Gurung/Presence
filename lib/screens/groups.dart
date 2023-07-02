@@ -72,7 +72,7 @@ class _GroupsState extends State<Groups> {
                               context,
                               MaterialPageRoute(
                                 builder: (context) => ManageAttendee(
-                                  index: index,
+                                  groupIndex: index,
                                 ),
                               ));
                         },

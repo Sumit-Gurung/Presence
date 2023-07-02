@@ -1,13 +1,13 @@
 import 'package:flutter/material.dart';
 
-class OnBoarding1st extends StatefulWidget {
-  const OnBoarding1st({super.key});
+class onBoarding3rd extends StatefulWidget {
+  const onBoarding3rd({super.key});
 
   @override
-  State<OnBoarding1st> createState() => _OnBoarding1stState();
+  State<onBoarding3rd> createState() => _onBoarding3rdState();
 }
 
-class _OnBoarding1stState extends State<OnBoarding1st> {
+class _onBoarding3rdState extends State<onBoarding3rd> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -27,7 +27,7 @@ class _OnBoarding1stState extends State<OnBoarding1st> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  '1.',
+                  '3.',
                   textAlign: TextAlign.left,
                   style: TextStyle(
                     fontSize: 40,
@@ -37,7 +37,7 @@ class _OnBoarding1stState extends State<OnBoarding1st> {
                   height: 350,
                   width: 310,
                   child: Image.asset(
-                    'assets/images/onBoarding1.png',
+                    'assets/images/onBoarding3.png',
                     fit: BoxFit.fill,
                   ),
                 ),
@@ -47,16 +47,16 @@ class _OnBoarding1stState extends State<OnBoarding1st> {
             SizedBox(
               height: 35,
             ),
-            Text('Create Groups',
+            Text('Take Photo',
                 textAlign: TextAlign.center,
                 style: TextStyle(
                     fontSize: 32,
-                    color: Color(0xFFFF4E4A),
+                    color: Color.fromARGB(255, 3, 86, 229),
                     fontWeight: FontWeight.w600)),
             // SizedBox(
             //   height: ,
             // ),
-            Text('Pahela Group banune lah. ane tespache sochamla k garne ',
+            Text('Photo soto kechne ane voilaaa attendance huncha! ',
                 textAlign: TextAlign.justify,
                 style: TextStyle(
                   fontSize: 18,

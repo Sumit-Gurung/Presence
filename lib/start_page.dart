@@ -2,16 +2,16 @@ import 'package:flutter/material.dart';
 import 'package:presence/components/constant.dart';
 import 'package:presence/screens/groups.dart';
 import 'package:presence/screens/homescreen.dart';
-import 'package:presence/screens/manageAttendee.dart';
 import 'package:presence/screens/notificationScreen.dart';
 import 'package:presence/screens/profile.dart';
 import 'package:presence/screens/report.dart';
-import 'package:presence/utility/manageAttendeeTile.dart';
 import 'package:presence/utility/mydrawer.dart';
 
 class StartPage extends StatefulWidget {
   final bool? showprofile;
-  const StartPage({super.key, this.showprofile});
+  final int? selectedIndexFromOutside;
+
+  const StartPage({super.key, this.showprofile, this.selectedIndexFromOutside});
 
   @override
   State<StartPage> createState() => _StartPageState();
@@ -30,6 +30,10 @@ class _StartPageState extends State<StartPage> {
     Report(),
     ProfilePage(),
   ];
+  //   if (widget.selectedIndexFromOutside != null) {
+  //     selectedIndex = widget.selectedIndexFromOutside!;
+  //   }
+  //  selectedIndex = widget.selectedIndexFromOutside ?? index;
   void _onItemTapped(int index) {
     setState(() {
       selectedIndex = index;
@@ -46,7 +50,7 @@ class _StartPageState extends State<StartPage> {
     return GestureDetector(
       onTap: () => _onItemTapped(index),
       child: Container(
-        color: (selectedIndex == index) ? Colors.grey[400] : null,
+        // color: (selectedIndex == index) ? Colors.grey[400] : null,
         width: MediaQuery.of(context).size.width / 4,
         child: Padding(
           padding: EdgeInsets.only(right: rightPadding, left: leftPadding),
@@ -54,21 +58,23 @@ class _StartPageState extends State<StartPage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               (selectedIndex == index)
-                  ? ShaderMask(
-                      shaderCallback: (Rect bounds) {
-                        return LinearGradient(
-                          begin: Alignment.topCenter,
-                          end: Alignment.bottomCenter,
-                          colors: const [
-                            AppColors.mainGradientOne,
-                            AppColors.mainGradientTwo,
-                          ],
-                        ).createShader(bounds);
-                      },
-                      child: Icon(
-                        bottomNavIcon,
-                        size: 28,
-                      ),
+                  ?
+                  // ? ShaderMask(
+                  //     shaderCallback: (Rect bounds) {
+                  //       return LinearGradient(
+                  //         begin: Alignment.topCenter,
+                  //         end: Alignment.bottomCenter,
+                  //         colors: const [
+                  //           AppColors.mainGradientOne,
+                  //           AppColors.mainGradientTwo,
+                  //         ],
+                  //       ).createShader(bounds);
+                  //     },
+                  //     child:
+                  Icon(
+                      bottomNavIcon,
+                      size: 28,
+                      color: AppColors.authBasicColor,
                     )
                   : Icon(
                       bottomNavIcon,
@@ -77,7 +83,12 @@ class _StartPageState extends State<StartPage> {
 
               // Image.asset(asset, height: 28, width: 28),
               Text(text,
-                  style: TextStyle(fontSize: 10, fontWeight: FontWeight.w400))
+                  style: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w400,
+                      color: (selectedIndex == index)
+                          ? AppColors.authBasicColor
+                          : Colors.grey[600]))
             ],
           ),
         ),
@@ -97,6 +108,14 @@ class _StartPageState extends State<StartPage> {
   //           Colors.black,
   //         ];
   // }
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    if (widget.selectedIndexFromOutside != null) {
+      selectedIndex = widget.selectedIndexFromOutside!;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -105,9 +124,16 @@ class _StartPageState extends State<StartPage> {
       appBar: AppBar(
         iconTheme: IconThemeData(color: Colors.black),
         centerTitle: true,
-        title: Image.asset(
-          'assets/images/GoogleImage.png',
-          fit: BoxFit.fill,
+        title: Container(
+          margin: EdgeInsets.only(left: 20),
+          child: SizedBox(
+            height: 185,
+            width: 250,
+            child: Image.asset(
+              'assets/images/PresenceMain.png',
+              fit: BoxFit.cover,
+            ),
+          ),
         ),
         // backgroundColor: Color.fromARGB(255, 55, 117, 171),
         backgroundColor: Colors.grey[200],
@@ -126,13 +152,7 @@ class _StartPageState extends State<StartPage> {
               )),
           IconButton(
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => StartPage(
-                        showprofile: true,
-                      ),
-                    ));
+                _onItemTapped(3);
               },
               icon: Icon(
                 Icons.person,
@@ -141,7 +161,7 @@ class _StartPageState extends State<StartPage> {
       ),
       drawer: MyDrawer(),
 
-      body: (widget.showprofile == true) ? pages[3] : pages[selectedIndex],
+      body: pages[selectedIndex],
       floatingActionButton: ShaderMask(
         shaderCallback: (Rect bounds) {
           return LinearGradient(

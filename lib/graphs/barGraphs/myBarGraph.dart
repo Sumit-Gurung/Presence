@@ -29,7 +29,9 @@ class MyBarGraph extends StatelessWidget {
             topTitles: AxisTitles(sideTitles: SideTitles(showTitles: false)),
             bottomTitles: AxisTitles(
                 sideTitles: SideTitles(
-                    showTitles: true, getTitlesWidget: getBottomTitle))),
+                    reservedSize: 27,
+                    showTitles: true,
+                    getTitlesWidget: getBottomTitle))),
         minY: 0,
         barGroups: myBarData.barData
             .map((data) => BarChartGroupData(x: data.x, barRods: [
@@ -47,49 +49,49 @@ class MyBarGraph extends StatelessWidget {
 
 Widget getBottomTitle(double value, TitleMeta meta) {
   const style =
-      TextStyle(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 14);
+      TextStyle(color: Colors.grey, fontWeight: FontWeight.bold, fontSize: 11);
   Widget text;
 
   switch (value.toInt()) {
     case 1:
       text = const Text(
-        'S',
+        'Jan',
         style: style,
       );
       break;
     case 2:
       text = const Text(
-        'T',
+        'Feb',
         style: style,
       );
       break;
     case 3:
       text = const Text(
-        'T',
+        'Mar',
         style: style,
       );
       break;
     case 4:
       text = const Text(
-        'W',
+        'Apr',
         style: style,
       );
       break;
     case 5:
       text = const Text(
-        'Th',
+        'May',
         style: style,
       );
       break;
     case 6:
       text = const Text(
-        'F',
+        'Jun',
         style: style,
       );
       break;
     case 7:
       text = const Text(
-        'Sat',
+        'jul',
         style: style,
       );
       break;

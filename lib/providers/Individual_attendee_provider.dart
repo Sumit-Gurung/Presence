@@ -1,5 +1,4 @@
 import 'package:flutter/cupertino.dart';
-import 'package:provider/provider.dart';
 
 class AttendeeProvider with ChangeNotifier {
   List<Map<String, dynamic>> attendeeName = [
@@ -9,11 +8,11 @@ class AttendeeProvider with ChangeNotifier {
     {"name": "Graint Thomas", "presentDays": 22},
   ];
 
-  AttendeeProvider() {}
+  AttendeeProvider();
 
   void addToList(String fname) {
     attendeeName.add({
-      "name": "$fname",
+      "name": fname,
       "presentDays": 1,
     });
   }
@@ -31,7 +30,7 @@ class AttendeeProvider with ChangeNotifier {
   void editToList(String fname, String editFname) {
     for (int i = 0; i < attendeeName.length; i++) {
       if (fname == attendeeName[i]['name']) {
-        attendeeName[i]['name'] == "${editFname}";
+        attendeeName[i]['name'] == editFname;
       }
     }
     // attendeeName.removeWhere((item) => item["name"] == "${fname}");

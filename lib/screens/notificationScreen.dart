@@ -14,6 +14,8 @@ class NotificationScreen extends StatelessWidget {
     ['Event Invitation', 'You are invited to a party on Saturday.', '1:15 PM']
   ];
 
+  NotificationScreen({super.key});
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -57,6 +59,7 @@ class NotificationItem extends StatelessWidget {
   final String time;
 
   const NotificationItem({
+    super.key,
     required this.title,
     required this.subtitle,
     required this.time,
@@ -72,12 +75,17 @@ class NotificationItem extends StatelessWidget {
         borderRadius: BorderRadius.circular(12),
       ),
       child: ListTile(
-        leading: CircleAvatar(
-          backgroundColor: Colors.grey[800],
-          child: Icon(
-            Icons.notifications,
-            color: Colors.white,
-          ),
+        leading: Column(
+          mainAxisAlignment: MainAxisAlignment.center,
+          children: [
+            CircleAvatar(
+              backgroundColor: Colors.grey[800],
+              child: Icon(
+                Icons.notifications,
+                color: Colors.white,
+              ),
+            ),
+          ],
         ),
         title: Text(
           title,
@@ -85,7 +93,10 @@ class NotificationItem extends StatelessWidget {
             fontWeight: FontWeight.bold,
           ),
         ),
-        subtitle: Text(subtitle),
+        subtitle: Text(
+          subtitle,
+          style: TextStyle(height: 1.3),
+        ),
         trailing: Text(
           time,
           style: TextStyle(
