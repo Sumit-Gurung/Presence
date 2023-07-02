@@ -38,6 +38,16 @@ class _SignUpPageState extends State<SignUpPage> {
   static FocusNode phoneNumberFocusNode = FocusNode();
 
   @override
+  void initState() {
+    super.initState();
+    _userNameController.text = "Arjun Adhikari";
+    _emailController.text = "arjunq21@gmail.com";
+    _passwordController.text = "asdfasdf1";
+    _confirmPasswordController.text = "asdfasdf1";
+    _phoneNumberController.text = "9841234567";
+  }
+
+  @override
   Widget build(BuildContext context) {
     final heightt = MediaQuery.of(context).size.height;
 

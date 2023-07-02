@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
-import 'package:google_fonts/google_fonts.dart';
 import 'package:presence/providers/group_Provider.dart';
 import 'package:presence/providers/user_provider.dart';
+import 'package:presence/screens/authn/signup_page.dart';
 //
 import 'package:presence/screens/onBoardingScreens/onBoardingController.dart';
 
@@ -25,6 +25,7 @@ void main() {
             create: (context) => UserProvider())
       ],
       child: OurApp(),
+      // child: SignUpPage(),
     ),
   );
 }
@@ -52,6 +53,7 @@ class OurApp extends StatelessWidget {
         // theme: ThemeData.light().copyWith(
         //     textTheme:
         //         GoogleFonts.dangrekTextTheme((Theme.of(context).textTheme))),
-        home: OnBoardingController());
+        // home: OnBoardingController(),
+        home: SignUpPage());
   }
 }

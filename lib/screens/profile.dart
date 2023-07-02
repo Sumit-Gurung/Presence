@@ -7,9 +7,12 @@ import 'package:flutter/material.dart';
 import 'package:presence/components/constant.dart';
 import 'package:presence/providers/user_provider.dart';
 import 'package:provider/provider.dart';
-
+import 'package:shared_preferences/shared_preferences.dart';
+import "package:http_parser/http_parser.dart";
 import '../components/custom_button.dart';
 import 'package:http/http.dart' as http;
+
+import 'package:mime/mime.dart';
 
 class ProfilePage extends StatefulWidget {
   const ProfilePage({Key? key}) : super(key: key);
@@ -39,14 +42,14 @@ class _ProfilePageState extends State<ProfilePage> {
 // final GlobalKey<AlertDialogState> alertDialogKey =
   //     GlobalKey<AlertDialogState>();
   // TextEditingController controllersa = TextEditingController();
-  FilePickerResult? result;
   String? fileName;
+  FilePickerResult? result;
   PlatformFile? pickedFile;
+  File? imageToDisplay;
   bool isFileUploaded = false;
   bool isLoading = false;
-  File? imageToDisplay;
 
-  void pickFile() async {
+  Future<void> pickFile() async {
     try {
       setState(() {
         isLoading = true;
@@ -74,10 +77,20 @@ class _ProfilePageState extends State<ProfilePage> {
   }
 
   Future<void> uploadImage(File imageFile) async {
+    var inst = await SharedPreferences.getInstance();
+
+    String accessToken = inst.getString('accessToken')!;
+
+    Map<String, String> headers = {
+      "Authorization": "Bearer $accessToken",
+    };
+
     var request = http.MultipartRequest(
       'POST',
       Uri.parse(Endpoints.forProfileImage),
     );
+
+    request.headers.addAll(headers);
 
     var stream = http.ByteStream(imageFile.openRead());
     var length = await imageFile.length();
@@ -87,6 +100,7 @@ class _ProfilePageState extends State<ProfilePage> {
       stream,
       length,
       filename: imageFile.path,
+      contentType: MediaType.parse(lookupMimeType(imageFile.path)!),
     );
 
     request.files.add(multipartFile);
@@ -105,8 +119,8 @@ class _ProfilePageState extends State<ProfilePage> {
   @override
   Widget build(BuildContext context) {
     return Consumer<UserProvider>(
-        builder: (context, UserProviderVariable, child) {
-      final user = UserProviderVariable.user;
+        builder: (context, userProviderVariable, child) {
+      final user = userProviderVariable;
       return Scaffold(
         backgroundColor: Colors.grey[300],
         body: SafeArea(
@@ -182,78 +196,83 @@ class _ProfilePageState extends State<ProfilePage> {
                                 showDialog(
                                   context: context,
                                   builder: (context) {
-                                    return AlertDialog(
-                                      // actionsPadding: EdgeInsets.all(20),
-                                      shape: RoundedRectangleBorder(
-                                          borderRadius:
-                                              BorderRadius.circular(12)),
-                                      // icon: Icon(Icons.home),
-                                      title: Text('Upload Profile Photo'),
+                                    return StatefulBuilder(
+                                        builder: (context, setState1) {
+                                      return AlertDialog(
+                                        // actionsPadding: EdgeInsets.all(20),
+                                        shape: RoundedRectangleBorder(
+                                            borderRadius:
+                                                BorderRadius.circular(12)),
+                                        // icon: Icon(Icons.home),
+                                        title: Text('Upload Profile Photo'),
 
-                                      content: Column(
-                                        mainAxisSize: MainAxisSize.min,
-                                        children: [
-                                          isLoading
-                                              ? CircularProgressIndicator()
-                                              : CustomButton(
-                                                  height: 35,
-                                                  borderRadius: 20,
-                                                  isValidated: isFileUploaded,
-                                                  width: 120,
-                                                  onTap: () async {
-                                                    pickFile();
-                                                  },
-                                                  child: Text(
-                                                    'CHoose Photo',
-                                                    style: TextStyle(
-                                                        fontSize: 14,
-                                                        color: Colors.white,
-                                                        fontWeight:
-                                                            FontWeight.w600),
-                                                  )),
-                                          SizedBox(
-                                            height: 12,
-                                          ),
-                                          isFileUploaded
-                                              ? SizedBox(
-                                                  height: 85,
-                                                  width: 140,
-                                                  child: Image.file(
-                                                    imageToDisplay!,
-                                                    fit: BoxFit.cover,
-                                                  ),
-                                                )
-                                              : Text(
-                                                  '\nCHOOSE IMAGE WISELY\n BECAUSE\n It WILL BE USED',
-                                                  textAlign: TextAlign.center,
-                                                )
-                                        ],
-                                      ),
-                                      actions: [
-                                        TextButton(
-                                            onPressed: () {
-                                              Navigator.pop(context);
-                                            },
-                                            child: Text("cancel")),
-                                        TextButton(
-                                            onPressed: () {
-                                              if (pickedFile != null &&
-                                                  pickedFile!.path != null) {
-                                                File imageFile = File(
-                                                    pickedFile!.path
-                                                        .toString());
-                                                if (imageFile.existsSync()) {
-                                                  uploadImage(imageFile);
+                                        content: Column(
+                                          mainAxisSize: MainAxisSize.min,
+                                          children: [
+                                            isLoading
+                                                ? CircularProgressIndicator()
+                                                : CustomButton(
+                                                    height: 35,
+                                                    borderRadius: 20,
+                                                    isValidated: isFileUploaded,
+                                                    width: 120,
+                                                    onTap: () async {
+                                                      await pickFile();
+                                                      setState1(() {});
+                                                    },
+                                                    child: Text(
+                                                      'CHoose Photo',
+                                                      style: TextStyle(
+                                                          fontSize: 14,
+                                                          color: Colors.white,
+                                                          fontWeight:
+                                                              FontWeight.w600),
+                                                    )),
+                                            SizedBox(
+                                              height: 12,
+                                            ),
+                                            isFileUploaded
+                                                ? SizedBox(
+                                                    height: 85,
+                                                    width: 140,
+                                                    child: Image.file(
+                                                      imageToDisplay!,
+                                                      fit: BoxFit.cover,
+                                                    ),
+                                                  )
+                                                : Text(
+                                                    '\nCHOOSE IMAGE WISELY\n BECAUSE\n It WILL BE USED',
+                                                    textAlign: TextAlign.center,
+                                                  )
+                                          ],
+                                        ),
+                                        actions: [
+                                          TextButton(
+                                              onPressed: () {
+                                                Navigator.pop(context);
+                                              },
+                                              child: Text("cancel")),
+                                          TextButton(
+                                              onPressed: () {
+                                                if (pickedFile != null &&
+                                                    pickedFile!.path != null) {
+                                                  File imageFile = File(
+                                                      pickedFile!.path
+                                                          .toString());
+                                                  if (imageFile.existsSync()) {
+                                                    uploadImage(imageFile);
+                                                  } else {
+                                                    print(
+                                                        'File does not exist.');
+                                                  }
                                                 } else {
-                                                  print('File does not exist.');
-                                                }
-                                              } else {
-                                                print('No file selected.');
-                                              } // Replace with your image file path
-                                            },
-                                            child: Text("Upload")),
-                                      ],
-                                    );
+                                                  print('No file selected.');
+                                                } // Replace with your image file path
+                                              },
+                                              child: Text("Upload")),
+                                        ],
+                                      );
+                                    });
                                   },
                                 );
                               },
@@ -279,10 +298,9 @@ class _ProfilePageState extends State<ProfilePage> {
                       SizedBox(
                         height: 26,
                       ),
-                      // user!.name,
 //
                       Text(
-                        "Name Gurung",
+                        user.user?.name ?? "Name Here",
                         style: TextStyle(
                             fontSize: 24, fontWeight: FontWeight.w600),
                       ),
@@ -292,7 +310,7 @@ class _ProfilePageState extends State<ProfilePage> {
                       // user.phoneNumber,
 
                       Text(
-                        "9874563210",
+                        user.user?.phoneNumber ?? "Phone Number Here",
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w400),
                       ),

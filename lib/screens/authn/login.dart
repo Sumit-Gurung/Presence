@@ -10,6 +10,7 @@ import 'package:presence/model/userDetail.dart';
 import 'package:presence/providers/user_provider.dart';
 import 'package:presence/screens/authn/signup_page.dart';
 import 'package:provider/provider.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../../components/custom_button.dart';
 import '../../start_page.dart';
@@ -29,6 +30,14 @@ class _LoginPageState extends State<LoginPage> {
   final TextEditingController _passwordController = TextEditingController();
   static FocusNode userNameFocusNode = FocusNode();
   static FocusNode passwordFocusNode = FocusNode();
+
+  @override
+  void initState() {
+    super.initState();
+    //set email and password to defaults
+    _userNameController.text = 'arjunq21@gmail.com';
+    _passwordController.text = 'asdfasdf1';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -120,7 +129,7 @@ class _LoginPageState extends State<LoginPage> {
                                   focusNode: userNameFocusNode,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
-                                      return "Enter UserName";
+                                      return "Enter Email";
                                     }
                                     return null;
                                     // if(value.trim().length < 10){
@@ -128,7 +137,7 @@ class _LoginPageState extends State<LoginPage> {
 
                                     // }
                                   },
-                                  label: 'Enter UserName',
+                                  label: 'Enter Email',
                                   prefixIcon: Icon(
                                     Icons.email,
                                     size: 32,
@@ -185,8 +194,8 @@ class _LoginPageState extends State<LoginPage> {
                                       if (_formKey.currentState!.validate()) {
                                         try {
                                           Map toSendSignUp = {
-                                            "": _userNameController.text,
-                                            "": _passwordController.text
+                                            "email": _userNameController.text,
+                                            "password": _passwordController.text
                                           };
                                           String toSendAsStringSignUp =
                                               jsonEncode(toSendSignUp);
@@ -204,16 +213,30 @@ class _LoginPageState extends State<LoginPage> {
                                                 jsonDecode(response.body);
                                             final user = UserDetails(
                                                 name:
-                                                    loginResponseInJson["name"],
-                                                email: loginResponseInJson[
-                                                    "email"],
+                                                    loginResponseInJson['user']
+                                                        ["name"],
+                                                email:
+                                                    loginResponseInJson['user']
+                                                        ["email"],
                                                 phoneNumber:
-                                                    loginResponseInJson[
-                                                        "phoneNumner"]);
+                                                    loginResponseInJson['user']
+                                                        ["phoneNumber"]);
                                             final UserProviderVariable =
                                                 Provider.of<UserProvider>(
                                                     context,
                                                     listen: false);
+                                            // saving in shared preferences
+                                            var inst = await SharedPreferences
+                                                .getInstance();
+
+                                            await inst.setString(
+                                                "accessToken",
+                                                loginResponseInJson['token']
+                                                    ['access']);
+
+                                            print("Access token set as: " +
+                                                inst.getString("accessToken")!);
+
                                             UserProviderVariable.setUser(user);
                                             Navigator.push(
                                                 context,
