@@ -140,11 +140,11 @@ class _GroupsState extends State<Groups> {
                                 String authToken =
                                     inst.getString('accessToken')!;
 
-                                var toSend = jsonEncode(groupName);
                                 var headers = {
                                   'Content-Type': 'application/json',
                                   'Authorization': 'Bearer $authToken',
                                 };
+                                var toSend = jsonEncode(groupName);
 
                                 var response = await http.post(
                                     Uri.parse(Endpoints.forCreateGroup),

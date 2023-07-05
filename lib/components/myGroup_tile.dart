@@ -3,6 +3,8 @@ import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:presence/components/constant.dart';
 import 'package:presence/providers/group_Provider.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class MyGroupTile extends StatefulWidget {
   final String groupName;
@@ -61,6 +63,28 @@ class _MyGroupTileState extends State<MyGroupTile> {
                           actions: [
                             TextButton(
                                 onPressed: () async {
+                                  var inst =
+                                      await SharedPreferences.getInstance();
+                                  String authToken =
+                                      inst.getString('accessToken')!;
+
+                                  var headers = {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': 'Bearer $authToken',
+                                  };
+                                  final response = await http.delete(
+                                    Uri.parse(Endpoints.forDeleteGroup),
+                                    headers: headers,
+                                  );
+
+                                  if (response.statusCode == 200) {
+                                    // Handle success response
+                                    print('Resource deleted successfully');
+                                  } else {
+                                    // Handle error response
+                                    print(
+                                        'Request failed with status: ${response.statusCode}');
+                                  }
                                   setState(() {
                                     groupProviderVariable.deleteFromList(
                                         groupProviderVariable

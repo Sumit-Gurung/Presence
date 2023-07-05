@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as https;
+import 'package:http/http.dart' as http;
 import 'dart:convert';
 
 import 'package:presence/components/constant.dart';
@@ -21,7 +21,7 @@ class _Test03State extends State<Test03> {
 
   Future<void> fetchUsers() async {
     print('yaha samma acha');
-    final response = await https.get(Uri.parse('${Endpoints.forAllUsers}'));
+    final response = await http.get(Uri.parse('${Endpoints.forAllUsers}'));
     print(response.body);
 
     if (response.statusCode == 200) {

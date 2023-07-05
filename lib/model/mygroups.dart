@@ -21,6 +21,7 @@
 // class MyGroups {
 //   final String name;
 //   final String created_at;
+//   final int id;
 
-//   MyGroups(this.name, this.created_at);
+//   MyGroups(this.name, this.created_at, this.id);
 // }
