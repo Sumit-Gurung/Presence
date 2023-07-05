@@ -22,6 +22,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
+  bool _isUploadingImage = false;
   int? selectedTileIndex;
   void handleTileTap(int index) {
     setState(() {
@@ -51,10 +52,6 @@ class _ProfilePageState extends State<ProfilePage> {
 
   Future<void> pickFile() async {
     try {
-      setState(() {
-        isLoading = true;
-      });
-
       result = await FilePicker.platform.pickFiles(
         type: FileType.any,
         allowMultiple: false,
@@ -100,7 +97,7 @@ class _ProfilePageState extends State<ProfilePage> {
 //the byte stream of the image, its length, the filename, and the content type of the image file.
 // The lookupMimeType function is used to determine the content type based on the file extension.
     var multipartFile = http.MultipartFile(
-      'image',
+      'profilePic',
       stream,
       length,
       filename: imageFile.path,
@@ -109,11 +106,18 @@ class _ProfilePageState extends State<ProfilePage> {
 //now created multipart file is add to the request and finally it is sent
     request.files.add(multipartFile);
 
-    var response = await request.send();
+    var response = await http.Response.fromStream(await request.send());
 
     if (response.statusCode == 200) {
       // Image uploaded successfully
       print('Image uploaded!');
+
+      ScaffoldMessenger.of(context)
+          .showSnackBar(SnackBar(content: Text("Image Uploaded Succeesfully")));
+      Navigator.of(context).pop();
+      setState(() {
+        imageToDisplay = null;
+      });
     } else {
       // Error occurred while uploading image
       print('Image upload failed.');
@@ -145,8 +149,11 @@ class _ProfilePageState extends State<ProfilePage> {
                         children: [
                           CircleAvatar(
                             radius: 90,
-                            backgroundImage:
-                                AssetImage('assets/images/avatar.jpg'),
+                            backgroundImage: (user.user != null &&
+                                    user.user!.imagePath != null)
+                                ? NetworkImage(user.user!.imagePath!)
+                                    as ImageProvider
+                                : AssetImage('assets/images/avatar.jpg'),
                           ),
                           Positioned(
                             bottom: 0,
@@ -177,6 +184,9 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     isValidated: isFilePicked,
                                                     width: 120,
                                                     onTap: () async {
+                                                      setState1(() {
+                                                        isLoading = true;
+                                                      });
                                                       await pickFile();
                                                       setState1(() {});
                                                     },
@@ -195,10 +205,14 @@ class _ProfilePageState extends State<ProfilePage> {
                                                 ? SizedBox(
                                                     height: 85,
                                                     width: 140,
-                                                    child: Image.file(
-                                                      imageToDisplay!,
-                                                      fit: BoxFit.cover,
-                                                    ),
+                                                    child: imageToDisplay !=
+                                                            null
+                                                        ? Image.file(
+                                                            imageToDisplay!,
+                                                            fit: BoxFit.cover,
+                                                          )
+                                                        : Text(
+                                                            "Choose file first"),
                                                   )
                                                 : Text(
                                                     '\nCHOOSE IMAGE WISELY\n BECAUSE\n It WILL BE USED AS BASE',
@@ -213,14 +227,21 @@ class _ProfilePageState extends State<ProfilePage> {
                                               },
                                               child: Text("cancel")),
                                           TextButton(
-                                              onPressed: () {
+                                              onPressed: () async {
                                                 if (pickedFile != null &&
                                                     pickedFile!.path != null) {
                                                   File imageFile = File(
                                                       pickedFile!.path
                                                           .toString());
                                                   if (imageFile.existsSync()) {
-                                                    uploadImage(imageFile);
+                                                    setState1(() {
+                                                      isLoading = true;
+                                                    });
+                                                    await uploadImage(
+                                                        imageFile);
+                                                    setState1(() {
+                                                      isLoading = false;
+                                                    });
                                                   } else {
                                                     print(
                                                         'File does not exist.');

@@ -218,6 +218,15 @@ class _LoginPageState extends State<LoginPage> {
                                                 email:
                                                     loginResponseInJson['user']
                                                         ["email"],
+                                                imagePath: loginResponseInJson[
+                                                                'user']
+                                                            ["profilePic"] !=
+                                                        null
+                                                    ? Endpoints.url +
+                                                        loginResponseInJson[
+                                                                'user']
+                                                            ["profilePic"]
+                                                    : null,
                                                 phoneNumber:
                                                     loginResponseInJson['user']
                                                         ["phoneNumber"]);
