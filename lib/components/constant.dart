@@ -23,6 +23,10 @@ class Endpoints {
   static String forSignup = "$url/auth/register/";
   static String forLogin = "$url/auth/login/";
   static String forProfileImage = "$url/auth/profilePic/";
+  static String forAllUsers = "$url/auth/allUsers/";
+  static String forCreateGroup = "$url/group/create/";
+  static String forShowMyGroups = "$url/group/groups/";
+  static String forDeleteGroup = "$url/  group/delete/";
 }
 
 Color unSelecteddrawerIconColor = Colors.grey.shade600;

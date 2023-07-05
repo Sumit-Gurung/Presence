@@ -1,3 +1,4 @@
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:presence/providers/Individual_attendee_provider.dart';
@@ -20,6 +21,38 @@ class ManageAttendee extends StatefulWidget {
 class _ManageAttendeeState extends State<ManageAttendee> {
   TextEditingController nameAddController = TextEditingController();
   bool isSwitch = false;
+  String selectedSortOption = '';
+  List<Map<String, dynamic>> attendeeList = [];
+
+  List<Map<String, dynamic>> sortAttendees() {
+    switch (selectedSortOption) {
+      case 'nameAscending':
+        return List<Map<String, dynamic>>.from(attendeeList)
+          ..sort((a, b) => a["name"].compareTo(b["name"]));
+      case 'nameDescending':
+        return List<Map<String, dynamic>>.from(attendeeList)
+          ..sort((a, b) => b["name"].compareTo(a["name"]));
+      case 'presentDaysAscending':
+        return List<Map<String, dynamic>>.from(attendeeList)
+          ..sort((a, b) => a["presentDays"].compareTo(b["presentDays"]));
+      case 'presentDaysDescending':
+        return List<Map<String, dynamic>>.from(attendeeList)
+          ..sort((a, b) => b["presentDays"].compareTo(a["presentDays"]));
+      default:
+        return attendeeList;
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    setState(() {
+      final grpProviderVariable =
+          Provider.of<GroupProvider>(context, listen: false);
+      attendeeList =
+          grpProviderVariable.myGroups[widget.groupIndex]["attendeeList"];
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -65,6 +98,7 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                                   setState(() {
                                     // attendeeVariable
                                     //     .addToList(nameAddController.text);
+
                                     groupProviderVariable.addAttendeeToGroup(
                                         nameAddController.text,
                                         widget.groupIndex);
@@ -99,15 +133,74 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
-                        Container(
-                          padding: EdgeInsets.all(10),
-                          height: 50,
-                          decoration: BoxDecoration(
-                            color: Colors.grey[200],
-                            border: Border.all(color: Colors.white),
-                            borderRadius: BorderRadius.circular(12),
+                        PopupMenuButton(
+                          elevation: 10,
+                          itemBuilder: (context) {
+                            return [
+                              PopupMenuItem(
+                                  child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    selectedSortOption = 'nameAscending';
+                                  });
+                                },
+                                child: ListTile(
+                                  leading:
+                                      Icon(CupertinoIcons.arrow_up_circle_fill),
+                                  title: Text("By Name"),
+                                ),
+                              )),
+                              PopupMenuItem(
+                                  child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    selectedSortOption = 'nameDescending';
+                                  });
+                                },
+                                child: ListTile(
+                                  leading: Icon(
+                                      CupertinoIcons.arrow_down_circle_fill),
+                                  title: Text("By Name"),
+                                ),
+                              )),
+                              PopupMenuItem(
+                                  child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    selectedSortOption = 'presentDaysAscending';
+                                  });
+                                },
+                                child: ListTile(
+                                  leading: Icon(CupertinoIcons.arrow_up_circle),
+                                  title: Text("By Present Days"),
+                                ),
+                              )),
+                              PopupMenuItem(
+                                  child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    selectedSortOption =
+                                        'presentDaysDescending';
+                                  });
+                                },
+                                child: ListTile(
+                                  leading:
+                                      Icon(CupertinoIcons.arrow_down_circle),
+                                  title: Text("By Present Days"),
+                                ),
+                              )),
+                            ];
+                          },
+                          child: Container(
+                            padding: EdgeInsets.all(10),
+                            height: 50,
+                            decoration: BoxDecoration(
+                              color: Colors.grey[200],
+                              border: Border.all(color: Colors.white),
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                            child: Image.asset('assets/images/preferences.png'),
                           ),
-                          child: Image.asset('assets/images/preferences.png'),
                         ),
                         Text(
                           'Manage Attendee',
@@ -137,7 +230,6 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                     SizedBox(
                       height: 25,
                     ),
-
                     Expanded(
                       child: ListView.builder(
                           // itemCount: attendeeVariable.attendeeName.length,
@@ -145,22 +237,16 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                               .myGroups[widget.groupIndex]["attendeeList"]
                               .length,
                           // attendeeVariable.attendeeName.length,
+
                           itemBuilder: (context, index) {
+                            final sortedAttendees = sortAttendees();
                             return ManageAttendeeTile(
-                              attendee: groupProviderVariable
-                                      .myGroups[widget.groupIndex]
-                                  ["attendeeList"][index],
+                              attendee: sortedAttendees[index],
                               attendeeIndex: index,
                               groupIndex: widget.groupIndex,
                             );
                           }),
                     )
-                    // Padding(
-                    //   padding: EdgeInsets.symmetric(horizontal: 25.0),
-                    //   child: ListView.builder(itemBuilder: (context, index) {
-                    //     return Individual_tile();
-                    //   }),
-                    // )
                   ],
                 ),
               ),

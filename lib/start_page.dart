@@ -110,7 +110,6 @@ class _StartPageState extends State<StartPage> {
   // }
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
     if (widget.selectedIndexFromOutside != null) {
       selectedIndex = widget.selectedIndexFromOutside!;

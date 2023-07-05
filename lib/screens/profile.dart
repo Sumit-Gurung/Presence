@@ -46,7 +46,7 @@ class _ProfilePageState extends State<ProfilePage> {
   FilePickerResult? result;
   PlatformFile? pickedFile;
   File? imageToDisplay;
-  bool isFileUploaded = false;
+  bool isFilePicked = false;
   bool isLoading = false;
 
   Future<void> pickFile() async {
@@ -62,7 +62,7 @@ class _ProfilePageState extends State<ProfilePage> {
 
       if (result != null) {
         fileName = result!.files.first.name;
-        isFileUploaded = true;
+        isFilePicked = true;
         pickedFile = result!.files.first;
         imageToDisplay = File(pickedFile!.path.toString());
 
@@ -84,17 +84,21 @@ class _ProfilePageState extends State<ProfilePage> {
     Map<String, String> headers = {
       "Authorization": "Bearer $accessToken",
     };
-
+//create mutipart req
     var request = http.MultipartRequest(
       'POST',
       Uri.parse(Endpoints.forProfileImage),
     );
-
+//add headers to req
     request.headers.addAll(headers);
 
+//imageFile is opened to obtain stream of its bytes and likewise for length
     var stream = http.ByteStream(imageFile.openRead());
-    var length = await imageFile.length();
 
+    var length = await imageFile.length();
+//The http.MultipartFile class is used to create a new multipart file. It takes the field name 'image',
+//the byte stream of the image, its length, the filename, and the content type of the image file.
+// The lookupMimeType function is used to determine the content type based on the file extension.
     var multipartFile = http.MultipartFile(
       'image',
       stream,
@@ -102,7 +106,7 @@ class _ProfilePageState extends State<ProfilePage> {
       filename: imageFile.path,
       contentType: MediaType.parse(lookupMimeType(imageFile.path)!),
     );
-
+//now created multipart file is add to the request and finally it is sent
     request.files.add(multipartFile);
 
     var response = await request.send();
@@ -134,50 +138,6 @@ class _ProfilePageState extends State<ProfilePage> {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   const SizedBox(height: 10),
-                  // IconButton(
-                  //     constraints: const BoxConstraints(),
-                  //     padding: EdgeInsets.zero,
-                  //     onPressed: () => Navigator.pop(context),
-                  //     icon: const Icon(Icons.arrow_back,
-                  //         color: Colors.black, size: 25)),
-                  //  CustomButton(
-                  //                     height: 40,
-                  //                     borderRadius: 20,
-                  //                     isValidated: isFileUploaded,
-                  //                     width: 180,
-                  //                     onTap: () {
-                  //                       pickFile();
-                  //                     },
-                  //                     child: Text(
-                  //                       'UPLOAD',
-                  //                       style: TextStyle(
-                  //                           fontSize: 14,
-                  //                           fontWeight: FontWeight.w600),
-                  //                     )),
-                  //                 SizedBox(
-                  //                   height: 12,
-                  //                 ),
-                  //                 isFileUploaded
-                  //                     ? Text("File to be uploaded: $fileName!")
-                  //                     : RichText(
-                  //                         textAlign: TextAlign.center,
-                  //                         text: TextSpan(
-                  //                             text: 'Submit Your Document Here',
-                  //                             style: TextStyle(
-                  //                                 fontSize: 12,
-                  //                                 color: Colors.black,
-                  //                                 fontWeight: FontWeight.w400),
-                  //                             children: const [
-                  //                               TextSpan(
-                  //                                   text:
-                  //                                       '\n\n(Example: Password/Citizenship)',
-                  //                                   style: TextStyle(
-                  //                                       color: Colors.black))
-                  //                             ]),
-                  //                       ),
-                  //                 SizedBox(
-                  //                   height: 12,
-                  //                 ),
                   SizedBox(height: 20),
                   Column(
                     children: [
@@ -214,7 +174,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                 : CustomButton(
                                                     height: 35,
                                                     borderRadius: 20,
-                                                    isValidated: isFileUploaded,
+                                                    isValidated: isFilePicked,
                                                     width: 120,
                                                     onTap: () async {
                                                       await pickFile();
@@ -231,7 +191,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                             SizedBox(
                                               height: 12,
                                             ),
-                                            isFileUploaded
+                                            isFilePicked
                                                 ? SizedBox(
                                                     height: 85,
                                                     width: 140,
@@ -241,7 +201,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                     ),
                                                   )
                                                 : Text(
-                                                    '\nCHOOSE IMAGE WISELY\n BECAUSE\n It WILL BE USED',
+                                                    '\nCHOOSE IMAGE WISELY\n BECAUSE\n It WILL BE USED AS BASE',
                                                     textAlign: TextAlign.center,
                                                   )
                                           ],
@@ -315,30 +275,7 @@ class _ProfilePageState extends State<ProfilePage> {
                             fontSize: 16, fontWeight: FontWeight.w400),
                       ),
                       SizedBox(height: 35),
-                      // GradientBorder(
-                      //   radius: 15,
-                      //   height: 52,
-                      //   width: 213,
-                      //   child: RichText(
-                      //       text: TextSpan(
-                      //           text: '5th Sem ',
-                      //           style: TextStyle(
-                      //               fontSize: 16,
-                      //               fontWeight: FontWeight.w400,
-                      //               color: Colors.black),
-                      //           children: [
-                      //         WidgetSpan(
-                      //             child: SizedBox(
-                      //           width: 8,
-                      //         )),
-                      //         TextSpan(
-                      //             text: 'Student',
-                      //             style: TextStyle(
-                      //                 fontSize: 24,
-                      //                 fontWeight: FontWeight.w600,
-                      //                 color: Colors.black))
-                      //       ])),
-                      // ),
+
                       SizedBox(height: 15),
                       CustomListTile(
                         onTap: () => handleTileTap(0),

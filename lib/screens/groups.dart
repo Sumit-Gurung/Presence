@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:presence/components/constant.dart';
@@ -5,6 +7,8 @@ import 'package:presence/components/myGroup_tile.dart';
 import 'package:presence/providers/group_Provider.dart';
 import 'package:presence/screens/manageAttendee.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class Groups extends StatefulWidget {
   const Groups({super.key});
@@ -127,7 +131,39 @@ class _GroupsState extends State<Groups> {
                               },
                               child: Text('cancel')),
                           TextButton(
-                              onPressed: () {
+                              onPressed: () async {
+                                Map groupName = {
+                                  "name": groupNameAddController.text
+                                };
+                                var inst =
+                                    await SharedPreferences.getInstance();
+                                String authToken =
+                                    inst.getString('accessToken')!;
+
+                                var toSend = jsonEncode(groupName);
+                                var headers = {
+                                  'Content-Type': 'application/json',
+                                  'Authorization': 'Bearer $authToken',
+                                };
+
+                                var response = await http.post(
+                                    Uri.parse(Endpoints.forCreateGroup),
+                                    headers: headers,
+                                    body: toSend);
+                                var showResponse = jsonDecode(response.body);
+
+                                if (response.statusCode == 200 ||
+                                    response.statusCode == 201) {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          content: Text(
+                                              "Group Created Sucessfully")));
+                                } else {
+                                  ScaffoldMessenger.of(context).showSnackBar(
+                                      SnackBar(
+                                          backgroundColor: Colors.red,
+                                          content: Text(" $showResponse")));
+                                }
                                 setState(() {
                                   groupProviderVariable
                                       .addToList(groupNameAddController.text);

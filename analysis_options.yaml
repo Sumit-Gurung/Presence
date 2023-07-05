@@ -34,6 +34,9 @@ linter:
     sized_box_for_whitespace: false
     prefer_const_constructors_in_immutables: false
     library_private_types_in_public_api: false
+    prefer_interpolation_to_compose_strings: false
+    unnecessary_new: false
+    unnecessary_string_interpolations: false
 
 # Additional information about this file can be found at
 # https://dart.dev/guides/language/analysis-options

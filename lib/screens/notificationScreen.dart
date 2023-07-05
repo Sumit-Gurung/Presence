@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:presence/components/constant.dart';
 
 class NotificationScreen extends StatelessWidget {
-  List NotificationList = [
+  final List NotificationList = [
     ["New Message", 'You have a new message from John Doe.', '10:30 AM'],
     [
       'New Message',

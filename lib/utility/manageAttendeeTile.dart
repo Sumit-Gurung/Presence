@@ -56,7 +56,8 @@ class _ManageAttendeeTileState extends State<ManageAttendeeTile> {
                   // title: Text(
                   // "${AttendeeVariable.attendeeName[widget.index]["name"]}"),
                   title: Text(widget.attendee["name"]),
-                  subtitle: Text("Present Days:  0 / 0"),
+                  subtitle:
+                      Text("Present Days: ${widget.attendee["presentDays"]}"),
                   //
                   leading: CircleAvatar(
                     radius: 15,
