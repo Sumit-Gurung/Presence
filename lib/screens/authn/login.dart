@@ -258,23 +258,23 @@ class _LoginPageState extends State<LoginPage> {
                                               "--------Exception catched!---------");
                                           print(e);
                                         }
-
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    StartPage()));
                                       } else {
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(SnackBar(
-                                                content:
-                                                    Text("LOGIN-UP FAILED!")));
+                                                backgroundColor:
+                                                    AppColors.authBasicColor,
+                                                content: Text(
+                                                  "LOGIN-UP FAILED!",
+                                                  style: TextStyle(
+                                                      color: Colors.white),
+                                                )));
                                       }
                                     },
                                     child: Text(
                                       "Login",
                                       style: TextStyle(
                                           fontSize: 17,
+                                          color: Colors.grey[100],
                                           fontWeight: FontWeight.w700),
                                     )),
                               ],

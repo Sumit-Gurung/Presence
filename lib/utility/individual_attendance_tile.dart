@@ -19,6 +19,13 @@ class _MyWidgetState extends State<Individual_tile> {
       margin: EdgeInsets.only(bottom: 25),
       decoration: BoxDecoration(
         color: AppColors.tilebackgroundColor,
+        boxShadow: [
+          BoxShadow(
+              blurRadius: 7,
+              spreadRadius: 1,
+              color: Colors.grey.shade500,
+              offset: Offset(2, 6)),
+        ],
         borderRadius: BorderRadius.circular(12),
       ),
       child: ListTile(

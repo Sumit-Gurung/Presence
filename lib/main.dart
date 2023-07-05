@@ -1,9 +1,14 @@
 import 'package:flutter/material.dart';
 import 'package:presence/providers/group_Provider.dart';
 import 'package:presence/providers/user_provider.dart';
-import 'package:presence/screens/authn/signup_page.dart';
+// import 'package:presence/screens/authn/signup_page.dart';
 //
 import 'package:presence/screens/onBoardingScreens/onBoardingController.dart';
+import 'package:presence/screens/test.dart';
+import 'package:presence/screens/test02.dart';
+import 'package:presence/screens/test03.dart';
+import 'package:presence/screens/test1.dart';
+import 'package:presence/start_page.dart';
 
 import 'package:provider/provider.dart';
 
@@ -54,6 +59,6 @@ class OurApp extends StatelessWidget {
         //     textTheme:
         //         GoogleFonts.dangrekTextTheme((Theme.of(context).textTheme))),
         // home: OnBoardingController(),
-        home: SignUpPage());
+        home: Test03());
   }
 }

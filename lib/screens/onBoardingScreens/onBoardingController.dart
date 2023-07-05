@@ -45,7 +45,7 @@ class _OnBoardingControllerState extends State<OnBoardingController> {
               children: [
                 TextButton(
                     onPressed: () {
-                      _pageController.jumpToPage(2);
+                      _pageController.jumpToPage(3);
                     },
                     child: Text(
                       'Skip',

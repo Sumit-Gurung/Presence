@@ -60,7 +60,7 @@ class _MyGroupTileState extends State<MyGroupTile> {
                           title: Text("Are You sure?"),
                           actions: [
                             TextButton(
-                                onPressed: () {
+                                onPressed: () async {
                                   setState(() {
                                     groupProviderVariable.deleteFromList(
                                         groupProviderVariable
