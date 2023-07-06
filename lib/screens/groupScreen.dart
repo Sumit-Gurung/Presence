@@ -20,22 +20,19 @@ class Groups extends StatefulWidget {
   State<Groups> createState() => _GroupsState();
 }
 
-// final List myGroupList = [
-//   ['Programming In C', 47, 'jan 15,2022', 10],
-//   ['Calculus-III', 30, 'march 30,2022', 10],
-//   ['Software Project Management', 20, 'feb 15,2022', 11],
-//   ['Network Programming', 47, 'jan 15,2022', 6],
-//   // ['Dataaaa Mining', 37, 'june 15,2022', 10],
-// ];
 TextEditingController groupNameAddController = TextEditingController();
 
 class _GroupsState extends State<Groups> {
-  late Future<List<Group>> groups;
+  List<Group> groups = [];
   @override
   void initState() {
     super.initState();
 
-    groups = MyGroupRepository.getGroup();
+    MyGroupRepository.getGroup().then((value) {
+      setState(() {
+        groups = value;
+      });
+    });
   }
 
   @override
@@ -58,12 +55,6 @@ class _GroupsState extends State<Groups> {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: const [
-                    // IconButton(
-                    //     constraints: const BoxConstraints(),
-                    //     padding: EdgeInsets.zero,
-                    //     onPressed: () => Navigator.pop(context),
-                    //     icon: const Icon(Icons.arrow_back,
-                    //         color: Colors.black, size: 25)),
                     Expanded(
                       child: Text(
                         'My Groups',
@@ -77,52 +68,38 @@ class _GroupsState extends State<Groups> {
                 SizedBox(
                   height: 25,
                 ),
-                FutureBuilder(
-                  future: groups,
-                  builder: (context, snapshot) {
-                    if (snapshot.hasError) {
-                      return Center(
-                        child: Text('${snapshot.error} found'),
-                      );
-                    } else if (snapshot.connectionState ==
-                        ConnectionState.done) {
-                      final datafromSnapShot = snapshot.data;
-                      final length = datafromSnapShot!.length;
-
-                      return Expanded(
-                          child: ListView.builder(
-                        itemCount: length,
-                        itemBuilder: (context, index) {
-                          return MyGroupTile(
-                              index: index,
-                              ontap: () {
-                                Navigator.push(
-                                    context,
-                                    MaterialPageRoute(
-                                      builder: (context) => ManageAttendee(
-                                        groupName: datafromSnapShot[index].name,
-                                        groupId: datafromSnapShot[index].id,
-                                        groupIndex: index,
-                                      ),
-                                    ));
-                              },
-                              groupName: '${datafromSnapShot[index].name}',
-                              groupId: datafromSnapShot[index].id,
-                              group: datafromSnapShot,
-                              numberOfAttendee: 4,
-                              numberOfRecords: 1,
-                              date: DateFormat.yMMMd()
-                                  .add_jm()
-                                  .format(datafromSnapShot[index].created_at));
+                Expanded(
+                    child: ListView.builder(
+                  itemCount: groups.length,
+                  itemBuilder: (context, index) {
+                    return MyGroupTile(
+                        index: index,
+                        onGroupDelete: () {
+                          setState(() {
+                            groups.removeAt(index);
+                          });
                         },
-                      ));
-                    } else {
-                      return Center(
-                        child: CircularProgressIndicator(),
-                      );
-                    }
+                        ontap: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => ManageAttendee(
+                                  groupName: groups[index].name,
+                                  groupId: groups[index].id,
+                                  groupIndex: index,
+                                ),
+                              ));
+                        },
+                        groupName: '${groups[index].name}',
+                        groupId: groups[index].id,
+                        group: groups,
+                        numberOfAttendee: 4,
+                        numberOfRecords: 1,
+                        date: DateFormat.yMMMd()
+                            .add_jm()
+                            .format(groups[index].created_at));
                   },
-                )
+                )),
               ],
             ),
           ),
@@ -187,6 +164,10 @@ class _GroupsState extends State<Groups> {
 
                                 if (response.statusCode == 200 ||
                                     response.statusCode == 201) {
+                                  Group justCreated = Group.fromMap(
+                                      jsonDecode(response.body)['data']);
+                                  groups.add(justCreated);
+                                  setState(() {});
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                           content: Text(

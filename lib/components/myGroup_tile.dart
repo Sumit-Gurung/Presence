@@ -15,6 +15,7 @@ class MyGroupTile extends StatefulWidget {
   final VoidCallback? ontap;
   final int groupId;
   final dynamic group;
+  final Function? onGroupDelete;
 
   const MyGroupTile(
       {super.key,
@@ -24,6 +25,7 @@ class MyGroupTile extends StatefulWidget {
       required this.groupId,
       required this.index,
       required this.group,
+      this.onGroupDelete,
       this.ontap,
       required this.date});
 
@@ -94,9 +96,12 @@ class _MyGroupTileState extends State<MyGroupTile> {
                                         setState11(() {
                                           // Remove the deleted group from the list
                                           // Update the state to trigger a refresh of the list
-                                          widget.group.removeWhere((group) =>
-                                              group.id == widget.groupId);
+                                          // widget.group.removeWhere((group) =>
+                                          //     group.id == widget.groupId);
                                         });
+                                        if (widget.onGroupDelete != null) {
+                                          widget.onGroupDelete!();
+                                        }
                                         print(
                                             'Group has been deleted successfully');
                                       } else {
