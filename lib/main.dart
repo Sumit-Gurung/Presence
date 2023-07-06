@@ -6,9 +6,10 @@ import 'package:presence/screens/authn/login.dart';
 //
 import 'package:presence/screens/onBoardingScreens/onBoardingController.dart';
 import 'package:presence/screens/test.dart';
-import 'package:presence/screens/test02.dart';
+import 'package:presence/screens/searchModule.dart';
 import 'package:presence/screens/test03.dart';
 import 'package:presence/screens/test1.dart';
+import 'package:presence/screens/testallgroups.dart';
 import 'package:presence/start_page.dart';
 
 import 'package:provider/provider.dart';
@@ -50,7 +51,7 @@ class OurApp extends StatelessWidget {
                 // fontSizeDelta: 4,
                 fontSizeFactor: 0.95,
 
-                bodyColor: Colors.black, //<-- SEE HERE
+                bodyColor: Colors.black,
                 displayColor: Colors.grey[600],
               ),
         ),

@@ -1,10 +1,11 @@
 import 'package:flutter/material.dart';
 import 'package:presence/components/constant.dart';
-import 'package:presence/screens/groups.dart';
+import 'package:presence/screens/groupScreen.dart';
 import 'package:presence/screens/homescreen.dart';
 import 'package:presence/screens/notificationScreen.dart';
 import 'package:presence/screens/profile.dart';
 import 'package:presence/screens/report.dart';
+import 'package:presence/screens/testallgroups.dart';
 import 'package:presence/utility/mydrawer.dart';
 
 class StartPage extends StatefulWidget {
@@ -142,7 +143,7 @@ class _StartPageState extends State<StartPage> {
               onPressed: () {
                 Navigator.push(context, MaterialPageRoute(
                   builder: (context) {
-                    return NotificationScreen();
+                    return GroupShow();
                   },
                 ));
               },

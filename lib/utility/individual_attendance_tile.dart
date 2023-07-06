@@ -15,33 +15,36 @@ class _MyWidgetState extends State<Individual_tile> {
   bool isSwitch = false;
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(bottom: 25),
-      decoration: BoxDecoration(
-        color: AppColors.tilebackgroundColor,
-        boxShadow: [
-          BoxShadow(
-              blurRadius: 7,
-              spreadRadius: 1,
-              color: Colors.grey.shade500,
-              offset: Offset(2, 6)),
-        ],
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: ListTile(
-        title: Text('Student Name'),
-        leading: CircleAvatar(
-          radius: 15,
-          backgroundImage: NetworkImage(
-              'https://www.google.com/search?q=avatar+url&source=lnms&tbm=isch&sa=X&ved=2ahUKEwiegO6ty-X8AhXMI7cAHZr3AU8Q_AUoAXoECAEQAw&biw=1536&bih=754&dpr=1.25#imgrc=YYYLguVFuko0CM'),
+    return Padding(
+      padding: const EdgeInsets.all(8.0),
+      child: Container(
+        margin: EdgeInsets.only(bottom: 5),
+        decoration: BoxDecoration(
+          color: AppColors.tilebackgroundColor,
+          boxShadow: [
+            BoxShadow(
+                blurRadius: 7,
+                spreadRadius: 1,
+                color: Colors.grey.shade500,
+                offset: Offset(2, 6)),
+          ],
+          borderRadius: BorderRadius.circular(12),
         ),
-        trailing: Switch.adaptive(
-            value: isSwitch,
-            onChanged: (v) {
-              setState(() {
-                isSwitch = v;
-              });
-            }),
+        child: ListTile(
+          title: Text('Student Name'),
+          leading: CircleAvatar(
+            radius: 15,
+            backgroundImage: NetworkImage(
+                'https://www.google.com/search?q=avatar+url&source=lnms&tbm=isch&sa=X&ved=2ahUKEwiegO6ty-X8AhXMI7cAHZr3AU8Q_AUoAXoECAEQAw&biw=1536&bih=754&dpr=1.25#imgrc=YYYLguVFuko0CM'),
+          ),
+          trailing: Switch.adaptive(
+              value: isSwitch,
+              onChanged: (v) {
+                setState(() {
+                  isSwitch = v;
+                });
+              }),
+        ),
       ),
     );
   }

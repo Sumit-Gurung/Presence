@@ -172,6 +172,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                 CustomFormField(
                                   textController: _passwordController,
                                   focusNode: passwordFocusNode,
+                                  obscureText: obsureText,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {
                                       return "Enter Password";
@@ -200,6 +201,7 @@ class _SignUpPageState extends State<SignUpPage> {
                                 ),
                                 CustomFormField(
                                   textController: _confirmPasswordController,
+                                  obscureText: obsureText,
                                   focusNode: confirmPasswordFocusNode,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {

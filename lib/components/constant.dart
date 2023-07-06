@@ -27,6 +27,7 @@ class Endpoints {
   static String forCreateGroup = "$url/group/create/";
   static String forShowMyGroups = "$url/group/groups/";
   static String forDeleteGroup = "$url/group/delete/";
+  static String forAddingAttendeeToGroup = "$url/group/attendees/";
 }
 
 Color unSelecteddrawerIconColor = Colors.grey.shade600;

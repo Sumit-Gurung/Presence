@@ -50,8 +50,9 @@ class _Test03State extends State<Test03> {
                   final user = users[index];
                   return ListTile(
                     leading: CircleAvatar(
-                      backgroundImage: NetworkImage(user['profilePic'] ??
-                          'https://i0.wp.com/sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png?ssl=1'),
+                      backgroundImage: NetworkImage(
+                          "${Endpoints.url} ${user['profilePic']}" ??
+                              'https://i0.wp.com/sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png?ssl=1'),
                     ),
                     title: Text(user['name']),
                     subtitle: Text(user['email']),

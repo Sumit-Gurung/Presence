@@ -1,17 +1,29 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:presence/components/constant.dart';
 import 'package:presence/providers/Individual_attendee_provider.dart';
 import 'package:presence/providers/group_Provider.dart';
+import 'package:presence/screens/searchModule.dart';
 // import 'package:presence/utility/individual_attendance_tile.dart';
 import 'package:provider/provider.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../utility/manageAttendeeTile.dart';
 
 class ManageAttendee extends StatefulWidget {
   final int groupIndex;
+  final String groupName;
+  final int groupId;
 
-  const ManageAttendee({super.key, required this.groupIndex});
+  const ManageAttendee(
+      {super.key,
+      required this.groupIndex,
+      required this.groupName,
+      required this.groupId});
   // const ManageAttendee({Key? key}) : super(key: key);
 
   @override
@@ -19,12 +31,62 @@ class ManageAttendee extends StatefulWidget {
 }
 
 class _ManageAttendeeState extends State<ManageAttendee> {
+  List<dynamic> users = [];
+  List<dynamic> filteredUsers = [];
+  TextEditingController searchController = TextEditingController();
+
+  dynamic selectedUser;
+
   TextEditingController nameAddController = TextEditingController();
   bool isSwitch = false;
   String selectedSortOption = '';
-  List<Map<String, dynamic>> attendeeList = [];
+  List<dynamic> attendeeList = [];
 
-  List<Map<String, dynamic>> sortAttendees() {
+  @override
+  void initState() {
+    super.initState();
+    fetchUsers();
+    setState(() {
+      final grpProviderVariable =
+          Provider.of<GroupProvider>(context, listen: false);
+      attendeeList =
+          grpProviderVariable.myGroups[widget.groupIndex]["attendeeList"];
+    });
+  }
+
+  Future<void> fetchUsers() async {
+    final response = await http.get(Uri.parse(Endpoints.forAllUsers));
+
+    if (response.statusCode == 200) {
+      setState(() {
+        users = json.decode(response.body)['users'];
+        filteredUsers = users;
+      });
+    } else {
+      // Handle error if necessary
+      print('Failed to load data');
+    }
+  }
+
+  void filterUsers(String query) {
+    setState(() {
+      selectedUser = null;
+      filteredUsers = users
+          .where((user) =>
+              user['name'].toLowerCase().contains(query.toLowerCase()) ||
+              user['email'].toLowerCase().contains(query.toLowerCase()))
+          .toList();
+    });
+  }
+
+  void selectUser(dynamic user) {
+    setState(() {
+      selectedUser = user;
+      searchController.text = user['name'];
+    });
+  }
+
+  List<dynamic> sortAttendees() {
     switch (selectedSortOption) {
       case 'nameAscending':
         return List<Map<String, dynamic>>.from(attendeeList)
@@ -41,17 +103,6 @@ class _ManageAttendeeState extends State<ManageAttendee> {
       default:
         return attendeeList;
     }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    setState(() {
-      final grpProviderVariable =
-          Provider.of<GroupProvider>(context, listen: false);
-      attendeeList =
-          grpProviderVariable.myGroups[widget.groupIndex]["attendeeList"];
-    });
   }
 
   @override
@@ -82,11 +133,79 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                       context: context,
                       builder: (context) {
                         return AlertDialog(
+                          backgroundColor: AppColors.backgroundColor,
                           title: Text('Add Attendee'),
-                          content: TextFormField(
-                              controller: nameAddController,
-                              decoration: InputDecoration(
-                                  hintText: 'Enter Attendee Name')),
+                          content: Container(
+                            height: 400,
+                            width: double.maxFinite,
+                            child: Column(
+                              children: [
+                                Padding(
+                                  padding: EdgeInsets.all(8.0),
+                                  child: TextField(
+                                    controller: searchController,
+                                    onChanged: filterUsers,
+                                    decoration: InputDecoration(
+                                      labelText: 'Search',
+                                      prefixIcon: Icon(Icons.search),
+                                    ),
+                                  ),
+                                ),
+                                Expanded(
+                                  child: ListView.builder(
+                                    itemCount: filteredUsers.length,
+                                    itemBuilder: (context, index) {
+                                      final user = filteredUsers[index];
+                                      return Padding(
+                                        padding: const EdgeInsets.all(8.0),
+                                        child: Container(
+                                          width: double.maxFinite,
+                                          decoration: BoxDecoration(
+                                              color:
+                                                  AppColors.tilebackgroundColor,
+                                              borderRadius:
+                                                  BorderRadius.circular(12),
+                                              boxShadow: [
+                                                BoxShadow(
+                                                    blurRadius: 7,
+                                                    spreadRadius: 1,
+                                                    color: Colors.grey.shade500,
+                                                    offset: Offset(2, 6)),
+                                              ]),
+                                          child: ListTile(
+                                              onTap: () => selectUser(user),
+                                              leading: CircleAvatar(
+                                                backgroundImage: NetworkImage(
+                                                    "${Endpoints.url} ${user['profilePic']}" ??
+                                                        'https://i0.wp.com/sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png?ssl=1'),
+                                                // ('${user['profilePic']}' != null)
+                                                //     ? NetworkImage(
+                                                //             "${Endpoints.url} ${user['profilePic']}")
+                                                //         as ImageProvider
+                                                //     : AssetImage('assets/images/avatar.jpg'),
+                                              ),
+
+                                              // (user.user != null &&
+                                              //             user.user!.imagePath != null)
+                                              //         ? NetworkImage(user.user!.imagePath!)
+                                              //             as ImageProvider
+                                              //         : AssetImage('assets/images/avatar.jpg'),
+                                              title: Text(user['name']),
+                                              subtitle: Text(
+                                                user['email'],
+                                                overflow: TextOverflow.fade,
+                                                maxLines: 1,
+                                              ),
+                                              trailing: Icon(
+                                                  CupertinoIcons.person_add)),
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
                           actions: [
                             TextButton(
                                 onPressed: () {
@@ -94,15 +213,42 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                                 },
                                 child: Text('cancel')),
                             TextButton(
-                                onPressed: () {
-                                  setState(() {
-                                    // attendeeVariable
-                                    //     .addToList(nameAddController.text);
+                                onPressed: () async {
+                                  Map tosend = {
+                                    "action": "add",
+                                    "user": selectedUser['id'],
+                                    "group": widget.groupId
+                                  };
+                                  var inst =
+                                      await SharedPreferences.getInstance();
+                                  String accessToken =
+                                      inst.getString('accessToken')!;
 
-                                    groupProviderVariable.addAttendeeToGroup(
-                                        nameAddController.text,
-                                        widget.groupIndex);
-                                  });
+                                  var headers = {
+                                    'Content-Type': 'application/json',
+                                    'Authorization': 'Bearer $accessToken',
+                                  };
+
+                                  var response = await http.post(
+                                      Uri.parse(
+                                          Endpoints.forAddingAttendeeToGroup),
+                                      headers: headers,
+                                      body: jsonEncode(tosend));
+                                  if (response.statusCode == 200 ||
+                                      response.statusCode == 201) {
+                                    ScaffoldMessenger.of(context).showSnackBar(
+                                        SnackBar(
+                                            content: Text(
+                                                'Attendee has been added!')));
+                                  } else {
+                                    print(
+                                        "Unsucessfull with statuscode: ${response.statusCode} ");
+                                  }
+
+                                  print(response.body);
+
+                                  groupProviderVariable.addAttendeeToGroup(
+                                      selectedUser['name'], widget.groupIndex);
 
                                   Navigator.pop(context);
                                 },
@@ -218,8 +364,7 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          groupProviderVariable.myGroups[widget.groupIndex]
-                              ['groupName'],
+                          widget.groupName,
                           style: TextStyle(
                               color: Colors.grey[800],
                               fontSize: 20,

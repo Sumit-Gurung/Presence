@@ -24,6 +24,7 @@ class LoginPage extends StatefulWidget {
 
 class _LoginPageState extends State<LoginPage> {
   bool obsureText = true;
+
   bool isValid = false;
   final _formKey = GlobalKey<FormState>();
   final TextEditingController _userNameController = TextEditingController();
@@ -35,8 +36,8 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
     //set email and password to defaults
-    _userNameController.text = 'arjunq21@gmail.com';
-    _passwordController.text = 'asdfasdf1';
+    _userNameController.text = 'sumitgur1169@gmail.com';
+    _passwordController.text = 'sumit123';
   }
 
   @override
@@ -149,6 +150,7 @@ class _LoginPageState extends State<LoginPage> {
                                 ),
                                 CustomFormField(
                                   textController: _passwordController,
+                                  obscureText: obsureText,
                                   focusNode: passwordFocusNode,
                                   validator: (value) {
                                     if (value == null || value.isEmpty) {

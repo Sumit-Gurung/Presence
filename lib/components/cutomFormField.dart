@@ -9,7 +9,7 @@ class CustomFormField extends StatefulWidget {
   final String label;
   final Widget prefixIcon;
   final Widget? suffixIcon;
-  // final bool? obscureText;
+  final bool? obscureText;
   final bool isValid = false;
 
   final Function(String)? onFieldSubmitted;
@@ -23,7 +23,8 @@ class CustomFormField extends StatefulWidget {
       required this.label,
       required this.prefixIcon,
       this.suffixIcon,
-      this.onFieldSubmitted
+      this.onFieldSubmitted,
+      this.obscureText
 
       // this.obscureText,
       });
@@ -43,7 +44,7 @@ class _CustomFormFieldState extends State<CustomFormField> {
 
       controller: widget.textController,
       focusNode: widget.focusNode,
-      // obscureText: widget.obscureText ?? false,
+      obscureText: widget.obscureText ?? false,
       validator: widget.validator,
       onFieldSubmitted: widget.onFieldSubmitted,
       decoration: InputDecoration(

@@ -13,13 +13,17 @@ class MyGroupTile extends StatefulWidget {
   final String date;
   final int index;
   final VoidCallback? ontap;
+  final int groupId;
+  final dynamic group;
 
   const MyGroupTile(
       {super.key,
       required this.groupName,
       required this.numberOfAttendee,
       required this.numberOfRecords,
+      required this.groupId,
       required this.index,
+      required this.group,
       this.ontap,
       required this.date});
 
@@ -58,48 +62,59 @@ class _MyGroupTileState extends State<MyGroupTile> {
                     showDialog(
                       context: context,
                       builder: (context) {
-                        return AlertDialog(
-                          title: Text("Are You sure?"),
-                          actions: [
-                            TextButton(
-                                onPressed: () async {
-                                  var inst =
-                                      await SharedPreferences.getInstance();
-                                  String authToken =
-                                      inst.getString('accessToken')!;
+                        return StatefulBuilder(
+                          builder: (context, setState11) {
+                            return AlertDialog(
+                              title: Text("Are You sure?"),
+                              actions: [
+                                TextButton(
+                                    onPressed: () async {
+                                      var inst =
+                                          await SharedPreferences.getInstance();
+                                      String authToken =
+                                          inst.getString('accessToken')!;
 
-                                  var headers = {
-                                    'Content-Type': 'application/json',
-                                    'Authorization': 'Bearer $authToken',
-                                  };
-                                  final response = await http.delete(
-                                    Uri.parse(Endpoints.forDeleteGroup),
-                                    headers: headers,
-                                  );
+                                      var headers = {
+                                        'Content-Type': 'application/json',
+                                        'Authorization': 'Bearer $authToken',
+                                      };
+                                      final response = await http.delete(
+                                        Uri.parse(
+                                            '${Endpoints.forDeleteGroup}${widget.groupId}'),
+                                        headers: headers,
+                                      );
+                                      setState11(
+                                        () {},
+                                      );
 
-                                  if (response.statusCode == 200) {
-                                    // Handle success response
-                                    print('Resource deleted successfully');
-                                  } else {
-                                    // Handle error response
-                                    print(
-                                        'Request failed with status: ${response.statusCode}');
-                                  }
-                                  setState(() {
-                                    groupProviderVariable.deleteFromList(
-                                        groupProviderVariable
-                                                .myGroups[widget.index]
-                                            ["groupName"]);
-                                  });
-                                  Navigator.pop(context);
-                                },
-                                child: Text('YES')),
-                            TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: Text("NO"))
-                          ],
+                                      print(
+                                          '${Endpoints.forDeleteGroup} ${widget.groupId}');
+
+                                      if (response.statusCode == 200) {
+                                        setState11(() {
+                                          // Remove the deleted group from the list
+                                          // Update the state to trigger a refresh of the list
+                                          widget.group.removeWhere((group) =>
+                                              group.id == widget.groupId);
+                                        });
+                                        print(
+                                            'Group has been deleted successfully');
+                                      } else {
+                                        print(
+                                            'Request failed with status: ${response.statusCode}');
+                                      }
+
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text('YES')),
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text("NO"))
+                              ],
+                            );
+                          },
                         );
                       },
                     );

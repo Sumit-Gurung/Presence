@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:intl/intl.dart';
 import 'package:presence/components/constant.dart';
 import 'package:presence/components/myGroup_tile.dart';
 import 'package:presence/providers/group_Provider.dart';
@@ -9,6 +10,8 @@ import 'package:presence/screens/manageAttendee.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
+
+import '../model/group.dart';
 
 class Groups extends StatefulWidget {
   const Groups({super.key});
@@ -27,6 +30,14 @@ class Groups extends StatefulWidget {
 TextEditingController groupNameAddController = TextEditingController();
 
 class _GroupsState extends State<Groups> {
+  late Future<List<Group>> groups;
+  @override
+  void initState() {
+    super.initState();
+
+    groups = MyGroupRepository.getGroup();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer<GroupProvider>(
@@ -66,30 +77,52 @@ class _GroupsState extends State<Groups> {
                 SizedBox(
                   height: 25,
                 ),
-                Expanded(
-                    child: ListView.builder(
-                  itemBuilder: (context, index) {
-                    return MyGroupTile(
-                        index: index,
-                        ontap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ManageAttendee(
-                                  groupIndex: index,
-                                ),
-                              ));
+                FutureBuilder(
+                  future: groups,
+                  builder: (context, snapshot) {
+                    if (snapshot.hasError) {
+                      return Center(
+                        child: Text('${snapshot.error} found'),
+                      );
+                    } else if (snapshot.connectionState ==
+                        ConnectionState.done) {
+                      final datafromSnapShot = snapshot.data;
+                      final length = datafromSnapShot!.length;
+
+                      return Expanded(
+                          child: ListView.builder(
+                        itemCount: length,
+                        itemBuilder: (context, index) {
+                          return MyGroupTile(
+                              index: index,
+                              ontap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ManageAttendee(
+                                        groupName: datafromSnapShot[index].name,
+                                        groupId: datafromSnapShot[index].id,
+                                        groupIndex: index,
+                                      ),
+                                    ));
+                              },
+                              groupName: '${datafromSnapShot[index].name}',
+                              groupId: datafromSnapShot[index].id,
+                              group: datafromSnapShot,
+                              numberOfAttendee: 4,
+                              numberOfRecords: 1,
+                              date: DateFormat.yMMMd()
+                                  .add_jm()
+                                  .format(datafromSnapShot[index].created_at));
                         },
-                        groupName: groupProviderVariable.myGroups[index]
-                            ["groupName"],
-                        numberOfAttendee: groupProviderVariable.myGroups[index]
-                            ['numberOfAttendee'],
-                        numberOfRecords: groupProviderVariable.myGroups[index]
-                            ['numberOfRecord'],
-                        date: groupProviderVariable.myGroups[index]['date']);
+                      ));
+                    } else {
+                      return Center(
+                        child: CircularProgressIndicator(),
+                      );
+                    }
                   },
-                  itemCount: groupProviderVariable.myGroups.length,
-                ))
+                )
               ],
             ),
           ),
@@ -162,7 +195,8 @@ class _GroupsState extends State<Groups> {
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                           backgroundColor: Colors.red,
-                                          content: Text(" $showResponse")));
+                                          content: Text(
+                                              " ${showResponse['name']}")));
                                 }
                                 setState(() {
                                   groupProviderVariable
