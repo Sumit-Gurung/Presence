@@ -45,6 +45,8 @@ class _ManageAttendeeState extends State<ManageAttendee> {
   @override
   void initState() {
     super.initState();
+    setGroupId();
+
     fetchUsers();
     setState(() {
       final grpProviderVariable =
@@ -52,6 +54,11 @@ class _ManageAttendeeState extends State<ManageAttendee> {
       attendeeList =
           grpProviderVariable.myGroups[widget.groupIndex]["attendeeList"];
     });
+  }
+
+  void setGroupId() async {
+    var inst = await SharedPreferences.getInstance();
+    await inst.setInt("groupID", widget.groupId);
   }
 
   Future<void> fetchUsers() async {
@@ -71,11 +78,13 @@ class _ManageAttendeeState extends State<ManageAttendee> {
   void filterUsers(String query) {
     setState(() {
       selectedUser = null;
-      filteredUsers = users
-          .where((user) =>
-              user['name'].toLowerCase().contains(query.toLowerCase()) ||
-              user['email'].toLowerCase().contains(query.toLowerCase()))
-          .toList();
+      filteredUsers = query.isEmpty
+          ? []
+          : users
+              .where((user) =>
+                  user['name'].toLowerCase().contains(query.toLowerCase()) ||
+                  user['email'].toLowerCase().contains(query.toLowerCase()))
+              .toList();
     });
   }
 

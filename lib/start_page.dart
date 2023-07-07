@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:presence/components/constant.dart';
+import 'package:presence/screens/cameraScreen.dart';
 import 'package:presence/screens/groupScreen.dart';
 import 'package:presence/screens/homescreen.dart';
 import 'package:presence/screens/notificationScreen.dart';
@@ -174,7 +175,13 @@ class _StartPageState extends State<StartPage> {
           ).createShader(bounds);
         },
         child: FloatingActionButton(
-          onPressed: () {},
+          onPressed: () {
+            Navigator.push(
+                context,
+                MaterialPageRoute(
+                  builder: (context) => CameraScreen(),
+                ));
+          },
           child: Icon(
             Icons.camera_enhance_outlined,
             size: 30,
