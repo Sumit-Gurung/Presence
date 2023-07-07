@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:presence/components/custom_button.dart';
 // import 'package:google_fonts/google_fonts.dart';
 import 'package:presence/utility/individual_attendance_tile.dart';
 
@@ -19,7 +20,7 @@ class _HomeScreenState extends State<HomeScreen> {
         child: Padding(
           padding: const EdgeInsets.symmetric(horizontal: 25.0),
           child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SizedBox(
                 height: 10,
@@ -68,11 +69,27 @@ class _HomeScreenState extends State<HomeScreen> {
               ),
               Expanded(
                 child: ListView.builder(
+                    shrinkWrap: true,
                     itemCount: 10,
                     itemBuilder: (context, index) {
-                      return Individual_tile();
+                      return Individual_tile(
+                        name: 'Random',
+                        profilePic: 'A',
+                      );
                     }),
-              )
+              ),
+              // SizedBox(
+              //   height: 5,
+              // ),
+              CustomButton(
+                  height: 65,
+                  width: 210,
+                  child: Center(
+                    child: Text(
+                      "Confirm",
+                      style: TextStyle(color: Colors.white),
+                    ),
+                  ))
               // Padding(
               //   padding: EdgeInsets.symmetric(horizontal: 25.0),
               //   child: ListView.builder(itemBuilder: (context, index) {

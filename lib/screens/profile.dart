@@ -22,7 +22,7 @@ class ProfilePage extends StatefulWidget {
 }
 
 class _ProfilePageState extends State<ProfilePage> {
-  bool _isUploadingImage = false;
+  // bool _isUploadingImage = false;
   int? selectedTileIndex;
   void handleTileTap(int index) {
     setState(() {

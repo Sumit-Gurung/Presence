@@ -164,10 +164,10 @@ class _GroupsState extends State<Groups> {
 
                                 if (response.statusCode == 200 ||
                                     response.statusCode == 201) {
-                                  Group justCreated = Group.fromMap(
-                                      jsonDecode(response.body)['data']);
-                                  groups.add(justCreated);
-                                  setState(() {});
+                                  // Group justCreated = Group.fromMap(
+                                  //     jsonDecode(response.body)['data']);
+                                  // groups.add(justCreated);
+                                  // setState(() {});
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                           content: Text(
@@ -179,10 +179,10 @@ class _GroupsState extends State<Groups> {
                                           content: Text(
                                               " ${showResponse['name']}")));
                                 }
-                                setState(() {
-                                  groupProviderVariable
-                                      .addToList(groupNameAddController.text);
-                                });
+                                // setState(() {
+                                //   groupProviderVariable
+                                //       .addToList(groupNameAddController.text);
+                                // });
 
                                 Navigator.pop(context);
                               },

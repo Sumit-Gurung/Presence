@@ -3,9 +3,14 @@ import 'package:presence/components/constant.dart';
 
 class Individual_tile extends StatefulWidget {
   // final bool? showToogle;
+  final String name;
+  final String profilePic;
+
+  const Individual_tile(
+      {super.key, required this.name, required this.profilePic});
 
   // const Individual_tile({super.key, this.showToogle});
-  const Individual_tile({Key? key}) : super(key: key);
+  // const Individual_tile({Key? key}) : super(key: key);
 
   @override
   State<Individual_tile> createState() => _MyWidgetState();
@@ -16,7 +21,7 @@ class _MyWidgetState extends State<Individual_tile> {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.all(8.0),
+      padding: const EdgeInsets.all(6.0),
       child: Container(
         margin: EdgeInsets.only(bottom: 5),
         decoration: BoxDecoration(
@@ -31,11 +36,11 @@ class _MyWidgetState extends State<Individual_tile> {
           borderRadius: BorderRadius.circular(12),
         ),
         child: ListTile(
-          title: Text('Student Name'),
+          title: Text(widget.name),
           leading: CircleAvatar(
             radius: 15,
-            backgroundImage: NetworkImage(
-                'https://www.google.com/search?q=avatar+url&source=lnms&tbm=isch&sa=X&ved=2ahUKEwiegO6ty-X8AhXMI7cAHZr3AU8Q_AUoAXoECAEQAw&biw=1536&bih=754&dpr=1.25#imgrc=YYYLguVFuko0CM'),
+            backgroundImage: NetworkImage("${Endpoints.url} ${widget.profilePic}" ??
+                'https://i0.wp.com/sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png?ssl=1'),
           ),
           trailing: Switch.adaptive(
               value: isSwitch,

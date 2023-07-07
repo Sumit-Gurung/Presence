@@ -4,9 +4,12 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:presence/components/constant.dart';
+import 'package:presence/model/attendeeOfGroup.dart';
 import 'package:presence/providers/Individual_attendee_provider.dart';
 import 'package:presence/providers/group_Provider.dart';
-import 'package:presence/screens/searchModule.dart';
+// import 'package:presence/screens/homescreen.dart';
+import 'package:presence/screens/takeAttendance.dart';
+// import 'package:presence/screens/searchModule.dart';
 // import 'package:presence/utility/individual_attendance_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
@@ -40,28 +43,38 @@ class _ManageAttendeeState extends State<ManageAttendee> {
   TextEditingController nameAddController = TextEditingController();
   bool isSwitch = false;
   String selectedSortOption = '';
-  List<dynamic> attendeeList = [];
+  List<AttendeeOfGroup> attendeeList = [];
+  bool isSelected = false;
+  //List<dynamic>
 
   @override
   void initState() {
     super.initState();
     setGroupId();
 
-    fetchUsers();
-    setState(() {
-      final grpProviderVariable =
-          Provider.of<GroupProvider>(context, listen: false);
-      attendeeList =
-          grpProviderVariable.myGroups[widget.groupIndex]["attendeeList"];
-    });
+    AttendeeOfGroupRepo.getAttendeeOfGroup().then(
+      (value) {
+        setState(() {
+          attendeeList = value;
+        });
+      },
+    );
+
+    fetchAllUsers();
+    // setState(() {
+    //   final grpProviderVariable =
+    //       Provider.of<GroupProvider>(context, listen: false);
+    //   attendeeList =
+    //       grpProviderVariable.myGroups[widget.groupIndex]["attendeeList"];
+    // });
   }
 
   void setGroupId() async {
     var inst = await SharedPreferences.getInstance();
-    await inst.setInt("groupID", widget.groupId);
+    await inst.setInt("groupId", widget.groupId);
   }
 
-  Future<void> fetchUsers() async {
+  Future<void> fetchAllUsers() async {
     final response = await http.get(Uri.parse(Endpoints.forAllUsers));
 
     if (response.statusCode == 200) {
@@ -90,6 +103,7 @@ class _ManageAttendeeState extends State<ManageAttendee> {
 
   void selectUser(dynamic user) {
     setState(() {
+      isSelected = true;
       selectedUser = user;
       searchController.text = user['name'];
     });
@@ -174,6 +188,10 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                                                   AppColors.tilebackgroundColor,
                                               borderRadius:
                                                   BorderRadius.circular(12),
+                                              border: isSelected
+                                                  ? Border.all(
+                                                      color: Colors.green)
+                                                  : null,
                                               boxShadow: [
                                                 BoxShadow(
                                                     blurRadius: 7,
@@ -245,6 +263,10 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                                       body: jsonEncode(tosend));
                                   if (response.statusCode == 200 ||
                                       response.statusCode == 201) {
+                                    AttendeeOfGroup justCreated =
+                                        AttendeeOfGroup.fromMap(selectedUser);
+                                    attendeeList.add(justCreated);
+                                    setState(() {});
                                     ScaffoldMessenger.of(context).showSnackBar(
                                         SnackBar(
                                             content: Text(
@@ -273,6 +295,19 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                   label: 'Edit',
                   labelStyle: TextStyle(fontSize: 16),
                   onTap: () {},
+                ),
+                SpeedDialChild(
+                  child: Icon(Icons.camera),
+                  label: 'Take Attendance',
+                  labelStyle: TextStyle(fontSize: 16),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              TakeAttendance(groupName: widget.groupName),
+                        ));
+                  },
                 ),
               ],
             ),
@@ -387,9 +422,7 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                     Expanded(
                       child: ListView.builder(
                           // itemCount: attendeeVariable.attendeeName.length,
-                          itemCount: groupProviderVariable
-                              .myGroups[widget.groupIndex]["attendeeList"]
-                              .length,
+                          itemCount: attendeeList.length,
                           // attendeeVariable.attendeeName.length,
 
                           itemBuilder: (context, index) {
