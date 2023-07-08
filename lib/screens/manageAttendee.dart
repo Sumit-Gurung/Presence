@@ -74,6 +74,7 @@ class _ManageAttendeeState extends State<ManageAttendee> {
     await inst.setInt("groupId", widget.groupId);
   }
 
+//for searching fetchAllusers(),filterUSers(),selectedUser()
   Future<void> fetchAllUsers() async {
     final response = await http.get(Uri.parse(Endpoints.forAllUsers));
 
@@ -109,24 +110,25 @@ class _ManageAttendeeState extends State<ManageAttendee> {
     });
   }
 
-  List<dynamic> sortAttendees() {
-    switch (selectedSortOption) {
-      case 'nameAscending':
-        return List<Map<String, dynamic>>.from(attendeeList)
-          ..sort((a, b) => a["name"].compareTo(b["name"]));
-      case 'nameDescending':
-        return List<Map<String, dynamic>>.from(attendeeList)
-          ..sort((a, b) => b["name"].compareTo(a["name"]));
-      case 'presentDaysAscending':
-        return List<Map<String, dynamic>>.from(attendeeList)
-          ..sort((a, b) => a["presentDays"].compareTo(b["presentDays"]));
-      case 'presentDaysDescending':
-        return List<Map<String, dynamic>>.from(attendeeList)
-          ..sort((a, b) => b["presentDays"].compareTo(a["presentDays"]));
-      default:
-        return attendeeList;
-    }
-  }
+//for sorting
+  // List<dynamic> sortAttendees() {
+  //   switch (selectedSortOption) {
+  //     case 'nameAscending':
+  //       return List<Map<String, dynamic>>.from(attendeeList)
+  //         ..sort((a, b) => a["name"].compareTo(b["name"]));
+  //     case 'nameDescending':
+  //       return List<Map<String, dynamic>>.from(attendeeList)
+  //         ..sort((a, b) => b["name"].compareTo(a["name"]));
+  //     case 'presentDaysAscending':
+  //       return List<Map<String, dynamic>>.from(attendeeList)
+  //         ..sort((a, b) => a["presentDays"].compareTo(b["presentDays"]));
+  //     case 'presentDaysDescending':
+  //       return List<Map<String, dynamic>>.from(attendeeList)
+  //         ..sort((a, b) => b["presentDays"].compareTo(a["presentDays"]));
+  //     default:
+  //       return attendeeList;
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -155,136 +157,153 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                     showDialog(
                       context: context,
                       builder: (context) {
-                        return AlertDialog(
-                          backgroundColor: AppColors.backgroundColor,
-                          title: Text('Add Attendee'),
-                          content: Container(
-                            height: 400,
-                            width: double.maxFinite,
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: TextField(
-                                    controller: searchController,
-                                    onChanged: filterUsers,
-                                    decoration: InputDecoration(
-                                      labelText: 'Search',
-                                      prefixIcon: Icon(Icons.search),
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: ListView.builder(
-                                    itemCount: filteredUsers.length,
-                                    itemBuilder: (context, index) {
-                                      final user = filteredUsers[index];
-                                      return Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Container(
-                                          width: double.maxFinite,
-                                          decoration: BoxDecoration(
-                                              color:
-                                                  AppColors.tilebackgroundColor,
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                              border: isSelected
-                                                  ? Border.all(
-                                                      color: Colors.green)
-                                                  : null,
-                                              boxShadow: [
-                                                BoxShadow(
-                                                    blurRadius: 7,
-                                                    spreadRadius: 1,
-                                                    color: Colors.grey.shade500,
-                                                    offset: Offset(2, 6)),
-                                              ]),
-                                          child: ListTile(
-                                              onTap: () => selectUser(user),
-                                              leading: CircleAvatar(
-                                                backgroundImage: NetworkImage(
-                                                    "${Endpoints.url} ${user['profilePic']}" ??
-                                                        'https://i0.wp.com/sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png?ssl=1'),
-                                                // ('${user['profilePic']}' != null)
-                                                //     ? NetworkImage(
-                                                //             "${Endpoints.url} ${user['profilePic']}")
-                                                //         as ImageProvider
-                                                //     : AssetImage('assets/images/avatar.jpg'),
-                                              ),
-
-                                              // (user.user != null &&
-                                              //             user.user!.imagePath != null)
-                                              //         ? NetworkImage(user.user!.imagePath!)
-                                              //             as ImageProvider
-                                              //         : AssetImage('assets/images/avatar.jpg'),
-                                              title: Text(user['name']),
-                                              subtitle: Text(
-                                                user['email'],
-                                                overflow: TextOverflow.fade,
-                                                maxLines: 1,
-                                              ),
-                                              trailing: Icon(
-                                                  CupertinoIcons.person_add)),
+                        return StatefulBuilder(
+                          builder: (context, setState101) {
+                            return AlertDialog(
+                              backgroundColor: AppColors.backgroundColor,
+                              title: Text('Add Attendee'),
+                              content: Container(
+                                height: 400,
+                                width: double.maxFinite,
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: TextField(
+                                        controller: searchController,
+                                        onChanged: (value) {
+                                          setState101(
+                                            () {
+                                              filterUsers(value);
+                                            },
+                                          );
+                                        },
+                                        decoration: InputDecoration(
+                                          labelText: 'Search',
+                                          prefixIcon: Icon(Icons.search),
                                         ),
-                                      );
-                                    },
-                                  ),
+                                        // filterUsers,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: ListView.builder(
+                                        itemCount: filteredUsers.length,
+                                        itemBuilder: (context, index) {
+                                          // setState101(
+                                          //   () {},
+                                          // );
+                                          final user = filteredUsers[index];
+                                          return Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Container(
+                                              width: double.maxFinite,
+                                              decoration: BoxDecoration(
+                                                  color: AppColors
+                                                      .tilebackgroundColor,
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                  border: isSelected
+                                                      ? Border.all(
+                                                          color: Colors.green)
+                                                      : null,
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                        blurRadius: 7,
+                                                        spreadRadius: 1,
+                                                        color: Colors
+                                                            .grey.shade500,
+                                                        offset: Offset(2, 6)),
+                                                  ]),
+                                              child: ListTile(
+                                                  onTap: () => selectUser(user),
+                                                  leading: CircleAvatar(
+                                                    backgroundImage: NetworkImage(
+                                                        "${Endpoints.url}${user['profilePic']}" ??
+                                                            'https://i0.wp.com/sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png?ssl=1'),
+                                                    // ('${user['profilePic']}' != null)
+                                                    //     ? NetworkImage(
+                                                    //             "${Endpoints.url} ${user['profilePic']}")
+                                                    //         as ImageProvider
+                                                    //     : AssetImage('assets/images/avatar.jpg'),
+                                                  ),
+
+                                                  // (user.user != null &&
+                                                  //             user.user!.imagePath != null)
+                                                  //         ? NetworkImage(user.user!.imagePath!)
+                                                  //             as ImageProvider
+                                                  //         : AssetImage('assets/images/avatar.jpg'),
+                                                  title: Text(user['name']),
+                                                  subtitle: Text(
+                                                    user['email'],
+                                                    overflow: TextOverflow.fade,
+                                                    maxLines: 1,
+                                                  ),
+                                                  trailing: Icon(CupertinoIcons
+                                                      .person_add)),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ],
                                 ),
+                              ),
+                              actions: [
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text('cancel')),
+                                TextButton(
+                                    onPressed: () async {
+                                      Map tosend = {
+                                        "action": "add",
+                                        "user": selectedUser['id'],
+                                        "group": widget.groupId
+                                      };
+                                      var inst =
+                                          await SharedPreferences.getInstance();
+                                      String accessToken =
+                                          inst.getString('accessToken')!;
+
+                                      var headers = {
+                                        'Content-Type': 'application/json',
+                                        'Authorization': 'Bearer $accessToken',
+                                      };
+
+                                      var response = await http.post(
+                                          Uri.parse(Endpoints
+                                              .forAddingAttendeeToGroup),
+                                          headers: headers,
+                                          body: jsonEncode(tosend));
+                                      if (response.statusCode == 200 ||
+                                          response.statusCode == 201) {
+                                        AttendeeOfGroup justCreated =
+                                            AttendeeOfGroup.fromMap(
+                                                selectedUser);
+                                        attendeeList.add(justCreated);
+                                        setState(() {});
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                                content: Text(
+                                                    'Attendee has been added!')));
+                                      } else {
+                                        print(
+                                            "Unsucessfull with statuscode: ${response.statusCode} ");
+                                      }
+
+                                      print(response.body);
+
+                                      groupProviderVariable.addAttendeeToGroup(
+                                          selectedUser['name'],
+                                          widget.groupIndex);
+
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text('ok')),
                               ],
-                            ),
-                          ),
-                          actions: [
-                            TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: Text('cancel')),
-                            TextButton(
-                                onPressed: () async {
-                                  Map tosend = {
-                                    "action": "add",
-                                    "user": selectedUser['id'],
-                                    "group": widget.groupId
-                                  };
-                                  var inst =
-                                      await SharedPreferences.getInstance();
-                                  String accessToken =
-                                      inst.getString('accessToken')!;
-
-                                  var headers = {
-                                    'Content-Type': 'application/json',
-                                    'Authorization': 'Bearer $accessToken',
-                                  };
-
-                                  var response = await http.post(
-                                      Uri.parse(
-                                          Endpoints.forAddingAttendeeToGroup),
-                                      headers: headers,
-                                      body: jsonEncode(tosend));
-                                  if (response.statusCode == 200 ||
-                                      response.statusCode == 201) {
-                                    AttendeeOfGroup justCreated =
-                                        AttendeeOfGroup.fromMap(selectedUser);
-                                    attendeeList.add(justCreated);
-                                    setState(() {});
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                            content: Text(
-                                                'Attendee has been added!')));
-                                  } else {
-                                    print(
-                                        "Unsucessfull with statuscode: ${response.statusCode} ");
-                                  }
-
-                                  print(response.body);
-
-                                  groupProviderVariable.addAttendeeToGroup(
-                                      selectedUser['name'], widget.groupIndex);
-
-                                  Navigator.pop(context);
-                                },
-                                child: Text('ok')),
-                          ],
+                            );
+                          },
                         );
                       },
                     );
@@ -421,17 +440,17 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                     ),
                     Expanded(
                       child: ListView.builder(
-                          // itemCount: attendeeVariable.attendeeName.length,
                           itemCount: attendeeList.length,
                           // attendeeVariable.attendeeName.length,
 
                           itemBuilder: (context, index) {
-                            final sortedAttendees = sortAttendees();
+                            // final sortedAttendees = attendeeList;
                             return ManageAttendeeTile(
-                              attendee: sortedAttendees[index],
-                              attendeeIndex: index,
-                              groupIndex: widget.groupIndex,
-                            );
+                                attendeeName: attendeeList[index].name,
+                                presentDays: 0,
+                                attendeeId: attendeeList[index].id,
+                                ProfileImage:
+                                    '${Endpoints.url}${attendeeList[index].profilePic}');
                           }),
                     )
                   ],

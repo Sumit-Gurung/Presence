@@ -92,8 +92,9 @@ class _GroupsState extends State<Groups> {
                         },
                         groupName: '${groups[index].name}',
                         groupId: groups[index].id,
-                        group: groups,
-                        numberOfAttendee: 4,
+                        // group: groups,
+                        numberOfAttendee:
+                            4, //number of attendee inside this group
                         numberOfRecords: 1,
                         date: DateFormat.yMMMd()
                             .add_jm()
