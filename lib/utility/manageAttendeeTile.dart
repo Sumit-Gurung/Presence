@@ -113,7 +113,7 @@ class _ManageAttendeeTileState extends State<ManageAttendeeTile> {
                       widget.onAttendeeDeleted(widget.attendeeId);
                       setState(() {});
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text('${responseToShow['messages']}')));
+                          content: Text('${responseToShow['message']}')));
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           content: Text('${responseToShow['error']}')));
