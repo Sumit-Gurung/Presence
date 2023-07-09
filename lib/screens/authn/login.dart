@@ -194,11 +194,13 @@ class _LoginPageState extends State<LoginPage> {
                                     isValidated: isValid,
                                     onTap: () async {
                                       if (_formKey.currentState!.validate()) {
+                                        print('Tapp ta vacha ');
                                         try {
                                           Map toSendSignUp = {
                                             "email": _userNameController.text,
                                             "password": _passwordController.text
                                           };
+                                          print("yaha samma thik cha");
                                           String toSendAsStringSignUp =
                                               jsonEncode(toSendSignUp);
                                           var response = await http.post(
@@ -208,6 +210,7 @@ class _LoginPageState extends State<LoginPage> {
                                                     "application/json"
                                               },
                                               body: toSendAsStringSignUp);
+                                          print('sad');
                                           print(response.body);
                                           if (response.statusCode >= 200 &&
                                               response.statusCode < 300) {
@@ -249,11 +252,14 @@ class _LoginPageState extends State<LoginPage> {
                                                 inst.getString("accessToken")!);
 
                                             UserProviderVariable.setUser(user);
+                                            print('push huna parne ho');
+
                                             Navigator.push(
                                                 context,
                                                 MaterialPageRoute(
                                                     builder: (context) =>
                                                         StartPage()));
+                                            // print('push huna parne ho');
                                           }
                                         } catch (e) {
                                           print(

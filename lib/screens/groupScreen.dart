@@ -92,8 +92,9 @@ class _GroupsState extends State<Groups> {
                         },
                         groupName: '${groups[index].name}',
                         groupId: groups[index].id,
-                        group: groups,
-                        numberOfAttendee: 4,
+                        // group: groups,
+                        numberOfAttendee:
+                            4, //number of attendee inside this group
                         numberOfRecords: 1,
                         date: DateFormat.yMMMd()
                             .add_jm()
@@ -164,10 +165,10 @@ class _GroupsState extends State<Groups> {
 
                                 if (response.statusCode == 200 ||
                                     response.statusCode == 201) {
-                                  Group justCreated = Group.fromMap(
-                                      jsonDecode(response.body)['data']);
-                                  groups.add(justCreated);
-                                  setState(() {});
+                                  // Group justCreated = Group.fromMap(
+                                  //     jsonDecode(response.body)['data']);
+                                  // groups.add(justCreated);
+                                  // setState(() {});
                                   ScaffoldMessenger.of(context).showSnackBar(
                                       SnackBar(
                                           content: Text(
@@ -179,10 +180,10 @@ class _GroupsState extends State<Groups> {
                                           content: Text(
                                               " ${showResponse['name']}")));
                                 }
-                                setState(() {
-                                  groupProviderVariable
-                                      .addToList(groupNameAddController.text);
-                                });
+                                // setState(() {
+                                //   groupProviderVariable
+                                //       .addToList(groupNameAddController.text);
+                                // });
 
                                 Navigator.pop(context);
                               },

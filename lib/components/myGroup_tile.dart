@@ -14,7 +14,7 @@ class MyGroupTile extends StatefulWidget {
   final int index;
   final VoidCallback? ontap;
   final int groupId;
-  final dynamic group;
+  // final dynamic group;
   final Function? onGroupDelete;
 
   const MyGroupTile(
@@ -24,7 +24,7 @@ class MyGroupTile extends StatefulWidget {
       required this.numberOfRecords,
       required this.groupId,
       required this.index,
-      required this.group,
+      // required this.group,
       this.onGroupDelete,
       this.ontap,
       required this.date});

@@ -3,8 +3,13 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:presence/components/constant.dart';
+import 'package:presence/model/attendeeOfGroup.dart';
 import 'package:presence/providers/Individual_attendee_provider.dart';
 import 'package:presence/providers/group_Provider.dart';
+// import 'package:presence/screens/homescreen.dart';
+import 'package:presence/screens/takeAttendance.dart';
+// import 'package:presence/screens/searchModule.dart';
+// import 'package:presence/utility/individual_attendance_tile.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
@@ -36,21 +41,39 @@ class _ManageAttendeeState extends State<ManageAttendee> {
   TextEditingController nameAddController = TextEditingController();
   bool isSwitch = false;
   String selectedSortOption = '';
-  List<dynamic> attendeeList = [];
+  List<AttendeeOfGroup> attendeeList = [];
+  bool isSelected = false;
+  //List<dynamic>
 
   @override
   void initState() {
     super.initState();
-    fetchUsers();
-    setState(() {
-      final grpProviderVariable =
-          Provider.of<GroupProvider>(context, listen: false);
-      attendeeList =
-          grpProviderVariable.myGroups[widget.groupIndex]["attendeeList"];
-    });
+    setGroupId();
+
+    AttendeeOfGroupRepo.getAttendeeOfGroup().then(
+      (value) {
+        setState(() {
+          attendeeList = value;
+        });
+      },
+    );
+
+    fetchAllUsers();
+    // setState(() {
+    //   final grpProviderVariable =
+    //       Provider.of<GroupProvider>(context, listen: false);
+    //   attendeeList =
+    //       grpProviderVariable.myGroups[widget.groupIndex]["attendeeList"];
+    // });
   }
 
-  Future<void> fetchUsers() async {
+  void setGroupId() async {
+    var inst = await SharedPreferences.getInstance();
+    await inst.setInt("groupId", widget.groupId);
+  }
+
+//for searching fetchAllusers(),filterUSers(),selectedUser()
+  Future<void> fetchAllUsers() async {
     final response = await http.get(Uri.parse(Endpoints.forAllUsers));
 
     if (response.statusCode == 200) {
@@ -67,39 +90,43 @@ class _ManageAttendeeState extends State<ManageAttendee> {
   void filterUsers(String query) {
     setState(() {
       selectedUser = null;
-      filteredUsers = users
-          .where((user) =>
-              user['name'].toLowerCase().contains(query.toLowerCase()) ||
-              user['email'].toLowerCase().contains(query.toLowerCase()))
-          .toList();
+      filteredUsers = query.isEmpty
+          ? []
+          : users
+              .where((user) =>
+                  user['name'].toLowerCase().contains(query.toLowerCase()) ||
+                  user['email'].toLowerCase().contains(query.toLowerCase()))
+              .toList();
     });
   }
 
   void selectUser(dynamic user) {
     setState(() {
+      isSelected = true;
       selectedUser = user;
       searchController.text = user['name'];
     });
   }
 
-  List<dynamic> sortAttendees() {
-    switch (selectedSortOption) {
-      case 'nameAscending':
-        return List<Map<String, dynamic>>.from(attendeeList)
-          ..sort((a, b) => a["name"].compareTo(b["name"]));
-      case 'nameDescending':
-        return List<Map<String, dynamic>>.from(attendeeList)
-          ..sort((a, b) => b["name"].compareTo(a["name"]));
-      case 'presentDaysAscending':
-        return List<Map<String, dynamic>>.from(attendeeList)
-          ..sort((a, b) => a["presentDays"].compareTo(b["presentDays"]));
-      case 'presentDaysDescending':
-        return List<Map<String, dynamic>>.from(attendeeList)
-          ..sort((a, b) => b["presentDays"].compareTo(a["presentDays"]));
-      default:
-        return attendeeList;
-    }
-  }
+//for sorting
+  // List<dynamic> sortAttendees() {
+  //   switch (selectedSortOption) {
+  //     case 'nameAscending':
+  //       return List<Map<String, dynamic>>.from(attendeeList)
+  //         ..sort((a, b) => a["name"].compareTo(b["name"]));
+  //     case 'nameDescending':
+  //       return List<Map<String, dynamic>>.from(attendeeList)
+  //         ..sort((a, b) => b["name"].compareTo(a["name"]));
+  //     case 'presentDaysAscending':
+  //       return List<Map<String, dynamic>>.from(attendeeList)
+  //         ..sort((a, b) => a["presentDays"].compareTo(b["presentDays"]));
+  //     case 'presentDaysDescending':
+  //       return List<Map<String, dynamic>>.from(attendeeList)
+  //         ..sort((a, b) => b["presentDays"].compareTo(a["presentDays"]));
+  //     default:
+  //       return attendeeList;
+  //   }
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -128,128 +155,153 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                     showDialog(
                       context: context,
                       builder: (context) {
-                        return AlertDialog(
-                          backgroundColor: AppColors.backgroundColor,
-                          title: Text('Add Attendee'),
-                          content: Container(
-                            height: 400,
-                            width: double.maxFinite,
-                            child: Column(
-                              children: [
-                                Padding(
-                                  padding: EdgeInsets.all(8.0),
-                                  child: TextField(
-                                    controller: searchController,
-                                    onChanged: filterUsers,
-                                    decoration: InputDecoration(
-                                      labelText: 'Search',
-                                      prefixIcon: Icon(Icons.search),
-                                    ),
-                                  ),
-                                ),
-                                Expanded(
-                                  child: ListView.builder(
-                                    itemCount: filteredUsers.length,
-                                    itemBuilder: (context, index) {
-                                      final user = filteredUsers[index];
-                                      return Padding(
-                                        padding: const EdgeInsets.all(8.0),
-                                        child: Container(
-                                          width: double.maxFinite,
-                                          decoration: BoxDecoration(
-                                              color:
-                                                  AppColors.tilebackgroundColor,
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                              boxShadow: [
-                                                BoxShadow(
-                                                    blurRadius: 7,
-                                                    spreadRadius: 1,
-                                                    color: Colors.grey.shade500,
-                                                    offset: Offset(2, 6)),
-                                              ]),
-                                          child: ListTile(
-                                              onTap: () => selectUser(user),
-                                              leading: CircleAvatar(
-                                                backgroundImage: NetworkImage(
-                                                    "${Endpoints.url} ${user['profilePic']}" ??
-                                                        'https://i0.wp.com/sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png?ssl=1'),
-                                                // ('${user['profilePic']}' != null)
-                                                //     ? NetworkImage(
-                                                //             "${Endpoints.url} ${user['profilePic']}")
-                                                //         as ImageProvider
-                                                //     : AssetImage('assets/images/avatar.jpg'),
-                                              ),
-
-                                              // (user.user != null &&
-                                              //             user.user!.imagePath != null)
-                                              //         ? NetworkImage(user.user!.imagePath!)
-                                              //             as ImageProvider
-                                              //         : AssetImage('assets/images/avatar.jpg'),
-                                              title: Text(user['name']),
-                                              subtitle: Text(
-                                                user['email'],
-                                                overflow: TextOverflow.fade,
-                                                maxLines: 1,
-                                              ),
-                                              trailing: Icon(
-                                                  CupertinoIcons.person_add)),
+                        return StatefulBuilder(
+                          builder: (context, setState101) {
+                            return AlertDialog(
+                              backgroundColor: AppColors.backgroundColor,
+                              title: Text('Add Attendee'),
+                              content: Container(
+                                height: 400,
+                                width: double.maxFinite,
+                                child: Column(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.all(8.0),
+                                      child: TextField(
+                                        controller: searchController,
+                                        onChanged: (value) {
+                                          setState101(
+                                            () {
+                                              filterUsers(value);
+                                            },
+                                          );
+                                        },
+                                        decoration: InputDecoration(
+                                          labelText: 'Search',
+                                          prefixIcon: Icon(Icons.search),
                                         ),
-                                      );
-                                    },
-                                  ),
+                                        // filterUsers,
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: ListView.builder(
+                                        itemCount: filteredUsers.length,
+                                        itemBuilder: (context, index) {
+                                          // setState101(
+                                          //   () {},
+                                          // );
+                                          final user = filteredUsers[index];
+                                          return Padding(
+                                            padding: const EdgeInsets.all(8.0),
+                                            child: Container(
+                                              width: double.maxFinite,
+                                              decoration: BoxDecoration(
+                                                  color: AppColors
+                                                      .tilebackgroundColor,
+                                                  borderRadius:
+                                                      BorderRadius.circular(12),
+                                                  border: isSelected
+                                                      ? Border.all(
+                                                          color: Colors.green)
+                                                      : null,
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                        blurRadius: 7,
+                                                        spreadRadius: 1,
+                                                        color: Colors
+                                                            .grey.shade500,
+                                                        offset: Offset(2, 6)),
+                                                  ]),
+                                              child: ListTile(
+                                                  onTap: () => selectUser(user),
+                                                  leading: CircleAvatar(
+                                                    backgroundImage: NetworkImage(
+                                                        "${Endpoints.url}${user['profilePic']}" ??
+                                                            'https://i0.wp.com/sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png?ssl=1'),
+                                                    // ('${user['profilePic']}' != null)
+                                                    //     ? NetworkImage(
+                                                    //             "${Endpoints.url} ${user['profilePic']}")
+                                                    //         as ImageProvider
+                                                    //     : AssetImage('assets/images/avatar.jpg'),
+                                                  ),
+
+                                                  // (user.user != null &&
+                                                  //             user.user!.imagePath != null)
+                                                  //         ? NetworkImage(user.user!.imagePath!)
+                                                  //             as ImageProvider
+                                                  //         : AssetImage('assets/images/avatar.jpg'),
+                                                  title: Text(user['name']),
+                                                  subtitle: Text(
+                                                    user['email'],
+                                                    overflow: TextOverflow.fade,
+                                                    maxLines: 1,
+                                                  ),
+                                                  trailing: Icon(CupertinoIcons
+                                                      .person_add)),
+                                            ),
+                                          );
+                                        },
+                                      ),
+                                    ),
+                                  ],
                                 ),
+                              ),
+                              actions: [
+                                TextButton(
+                                    onPressed: () {
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text('cancel')),
+                                TextButton(
+                                    onPressed: () async {
+                                      Map tosend = {
+                                        "action": "add",
+                                        "user": selectedUser['id'],
+                                        "group": widget.groupId
+                                      };
+                                      var inst =
+                                          await SharedPreferences.getInstance();
+                                      String accessToken =
+                                          inst.getString('accessToken')!;
+
+                                      var headers = {
+                                        'Content-Type': 'application/json',
+                                        'Authorization': 'Bearer $accessToken',
+                                      };
+
+                                      var response = await http.post(
+                                          Uri.parse(Endpoints
+                                              .forAddingAttendeeToGroup),
+                                          headers: headers,
+                                          body: jsonEncode(tosend));
+                                      if (response.statusCode == 200 ||
+                                          response.statusCode == 201) {
+                                        AttendeeOfGroup justCreated =
+                                            AttendeeOfGroup.fromMap(
+                                                selectedUser);
+                                        attendeeList.add(justCreated);
+                                        setState(() {});
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                                content: Text(
+                                                    'Attendee has been added!')));
+                                      } else {
+                                        print(
+                                            "Unsucessfull with statuscode: ${response.statusCode} ");
+                                      }
+
+                                      print(response.body);
+
+                                      groupProviderVariable.addAttendeeToGroup(
+                                          selectedUser['name'],
+                                          widget.groupIndex);
+
+                                      Navigator.pop(context);
+                                    },
+                                    child: Text('ok')),
                               ],
-                            ),
-                          ),
-                          actions: [
-                            TextButton(
-                                onPressed: () {
-                                  Navigator.pop(context);
-                                },
-                                child: Text('cancel')),
-                            TextButton(
-                                onPressed: () async {
-                                  Map tosend = {
-                                    "action": "add",
-                                    "user": selectedUser['id'],
-                                    "group": widget.groupId
-                                  };
-                                  var inst =
-                                      await SharedPreferences.getInstance();
-                                  String accessToken =
-                                      inst.getString('accessToken')!;
-
-                                  var headers = {
-                                    'Content-Type': 'application/json',
-                                    'Authorization': 'Bearer $accessToken',
-                                  };
-
-                                  var response = await http.post(
-                                      Uri.parse(
-                                          Endpoints.forAddingAttendeeToGroup),
-                                      headers: headers,
-                                      body: jsonEncode(tosend));
-                                  if (response.statusCode == 200 ||
-                                      response.statusCode == 201) {
-                                    ScaffoldMessenger.of(context).showSnackBar(
-                                        SnackBar(
-                                            content: Text(
-                                                'Attendee has been added!')));
-                                  } else {
-                                    print(
-                                        "Unsucessfull with statuscode: ${response.statusCode} ");
-                                  }
-
-                                  print(response.body);
-
-                                  groupProviderVariable.addAttendeeToGroup(
-                                      selectedUser['name'], widget.groupIndex);
-
-                                  Navigator.pop(context);
-                                },
-                                child: Text('ok')),
-                          ],
+                            );
+                          },
                         );
                       },
                     );
@@ -260,6 +312,19 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                   label: 'Edit',
                   labelStyle: TextStyle(fontSize: 16),
                   onTap: () {},
+                ),
+                SpeedDialChild(
+                  child: Icon(Icons.camera),
+                  label: 'Take Attendance',
+                  labelStyle: TextStyle(fontSize: 16),
+                  onTap: () {
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) =>
+                              TakeAttendance(groupName: widget.groupName),
+                        ));
+                  },
                 ),
               ],
             ),
@@ -373,19 +438,17 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                     ),
                     Expanded(
                       child: ListView.builder(
-                          // itemCount: attendeeVariable.attendeeName.length,
-                          itemCount: groupProviderVariable
-                              .myGroups[widget.groupIndex]["attendeeList"]
-                              .length,
+                          itemCount: attendeeList.length,
                           // attendeeVariable.attendeeName.length,
 
                           itemBuilder: (context, index) {
-                            final sortedAttendees = sortAttendees();
+                            // final sortedAttendees = attendeeList;
                             return ManageAttendeeTile(
-                              attendee: sortedAttendees[index],
-                              attendeeIndex: index,
-                              groupIndex: widget.groupIndex,
-                            );
+                                attendeeName: attendeeList[index].name,
+                                presentDays: 0,
+                                attendeeId: attendeeList[index].id,
+                                ProfileImage:
+                                    '${Endpoints.url}${attendeeList[index].profilePic}');
                           }),
                     )
                   ],

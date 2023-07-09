@@ -12,15 +12,20 @@ class ManageAttendeeTile extends StatefulWidget {
 
   // const Individual_tile({super.key, this.showToogle});
   // const ManageAttendeeTile({Key? key}) : super(key: key);
-  final int attendeeIndex;
-  final int groupIndex;
-  final Map attendee;
+  final int attendeeId;
+  // final int groupIndex;
+  final String attendeeName;
+  final String ProfileImage;
+  final int presentDays;
 
-  const ManageAttendeeTile(
-      {super.key,
-      required this.attendee,
-      required this.attendeeIndex,
-      required this.groupIndex});
+  const ManageAttendeeTile({
+    super.key,
+    required this.attendeeName,
+    required this.presentDays,
+    required this.attendeeId,
+    required this.ProfileImage,
+    // required this.groupIndex
+  });
   // final String attendeeName;
 
   // const ManageAttendeeTile({super.key, required this.index});
@@ -55,13 +60,12 @@ class _ManageAttendeeTileState extends State<ManageAttendeeTile> {
               child: ListTile(
                   // title: Text(
                   // "${AttendeeVariable.attendeeName[widget.index]["name"]}"),
-                  title: Text(widget.attendee["name"]),
-                  subtitle:
-                      Text("Present Days: ${widget.attendee["presentDays"]}"),
+                  title: Text(widget.attendeeName),
+                  subtitle: Text("Present Days: ${widget.presentDays}"),
                   //
                   leading: CircleAvatar(
                     radius: 15,
-                    backgroundImage: NetworkImage(
+                    backgroundImage: NetworkImage(widget.ProfileImage ??
                         'https://www.google.com/search?q=avatar+url&source=lnms&tbm=isch&sa=X&ved=2ahUKEwiegO6ty-X8AhXMI7cAHZr3AU8Q_AUoAXoECAEQAw&biw=1536&bih=754&dpr=1.25#imgrc=YYYLguVFuko0CM'),
                   ),
                   trailing: Icon(Icons.room_preferences_outlined)),
@@ -71,12 +75,12 @@ class _ManageAttendeeTileState extends State<ManageAttendeeTile> {
                 SlidableAction(
                   // padding: EdgeInsets.all(10),
                   onPressed: (context) {
-                    setState(() {
-                      groupProviderVariable.deleteAttendeeFromGroup(
-                          widget.groupIndex,
-                          widget.attendeeIndex,
-                          widget.attendee["name"]);
-                    });
+                    // setState(() {
+                    //   groupProviderVariable.deleteAttendeeFromGroup(
+                    //       widget.groupIndex,
+                    //       widget.attendeeId,
+                    //       widget.attendeeName);
+                    // });
                   },
                   backgroundColor: Color(0xFFFE4A49),
                   foregroundColor: Colors.white,
