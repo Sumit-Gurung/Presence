@@ -1,8 +1,11 @@
+import 'dart:convert';
+
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:presence/components/constant.dart';
 import 'package:presence/model/attendeeOfGroup.dart';
+import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
-
 import '../components/custom_button.dart';
 import '../utility/individual_attendance_tile.dart';
 
@@ -18,25 +21,24 @@ class TakeAttendance extends StatefulWidget {
 
 class _TakeAttendanceState extends State<TakeAttendance> {
   List<AttendeeOfGroup> attendeeList = [];
+  List listOfIdOfPresentAttendee = [];
+
   @override
   void initState() {
     super.initState();
-    setGroupId();
+    // setState(() {});
+
     setState(() {
-      AttendeeOfGroupRepo.getAttendeeOfGroup().then((value) {
+      AttendeeOfGroupRepo.getAttendeeOfGroup(widget.groupId).then((value) {
         attendeeList = value;
       });
     });
   }
 
-  void setGroupId() async {
-    var inst = await SharedPreferences.getInstance();
-    await inst.setInt("groupId", widget.groupId);
-  }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      backgroundColor: AppColors.backgroundColor,
       body: Padding(
         padding: const EdgeInsets.symmetric(
           horizontal: 25,
@@ -101,7 +103,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
               ],
             ),
             SizedBox(
-              height: 30,
+              height: 5,
             ),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
@@ -110,13 +112,13 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                   widget.groupName,
                   style: TextStyle(
                       color: Colors.grey[800],
-                      fontSize: 20,
+                      fontSize: 22,
                       fontWeight: FontWeight.bold),
                 ),
               ],
             ),
             SizedBox(
-              height: 25,
+              height: 0,
             ),
             ListView.builder(
                 shrinkWrap: true,
@@ -125,12 +127,59 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                   return Individual_tile(
                     name: attendeeList[index].name,
                     profilePic: attendeeList[index].profilePic,
+                    // attendeeId: attendeeList[index].id,
+                    onSwitchChanged: (bool isSwitchOn) {
+                      setState(() {
+                        if (isSwitchOn) {
+                          listOfIdOfPresentAttendee.add(attendeeList[index].id);
+                        } else {
+                          listOfIdOfPresentAttendee
+                              .remove(attendeeList[index].id);
+                        }
+                      });
+                    },
                   );
                 }),
+            SizedBox(
+              height: 5,
+            ),
             Center(
               child: CustomButton(
                   height: 65,
                   width: 210,
+                  onTap: () async {
+                    print(listOfIdOfPresentAttendee);
+                    Map toSend = {
+                      "present_user": listOfIdOfPresentAttendee,
+                      "group": widget.groupId,
+                      "status": true
+                    };
+                    var toSendAsString = jsonEncode(toSend);
+                    final inst = await SharedPreferences.getInstance();
+                    String authToken = inst.getString('accessToken')!;
+                    var headers = {
+                      'Content-Type': 'application/json',
+                      "Authorization": "Bearer $authToken"
+                    };
+                    var response = await http.post(
+                        Uri.parse(Endpoints.forTakingAttendance),
+                        headers: headers,
+                        body: toSendAsString);
+                    var responseToShow = jsonDecode(response.body);
+
+                    if (response.statusCode == 200 ||
+                        response.statusCode == 201) {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          duration: Duration(milliseconds: 1000),
+                          content: Text('${responseToShow["message"]}')));
+                    } else {
+                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                          duration: Duration(milliseconds: 1000),
+                          content: Text('${responseToShow["error"]}')));
+                    }
+                    print(response.body);
+                    // print(attendeeList[0].id);
+                  },
                   child: Center(
                     child: Text(
                       "Confirm",

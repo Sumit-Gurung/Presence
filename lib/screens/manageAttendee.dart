@@ -48,9 +48,9 @@ class _ManageAttendeeState extends State<ManageAttendee> {
   @override
   void initState() {
     super.initState();
-    setGroupId();
+    // setGroupId();
 
-    AttendeeOfGroupRepo.getAttendeeOfGroup().then(
+    AttendeeOfGroupRepo.getAttendeeOfGroup(widget.groupId).then(
       (value) {
         setState(() {
           attendeeList = value;
@@ -67,10 +67,10 @@ class _ManageAttendeeState extends State<ManageAttendee> {
     // });
   }
 
-  void setGroupId() async {
-    var inst = await SharedPreferences.getInstance();
-    await inst.setInt("groupId", widget.groupId);
-  }
+  // void setGroupId() async {
+  //   var inst = await SharedPreferences.getInstance();
+  //   await inst.setInt("groupId", widget.groupId);
+  // }
 
 //for searching fetchAllusers(),filterUSers(),selectedUser()
   Future<void> fetchAllUsers() async {

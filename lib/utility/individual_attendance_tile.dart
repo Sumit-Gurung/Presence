@@ -5,9 +5,16 @@ class Individual_tile extends StatefulWidget {
   // final bool? showToogle;
   final String name;
   final String profilePic;
+  // final int attendeeId;
+  final ValueChanged<bool> onSwitchChanged;
 
-  const Individual_tile(
-      {super.key, required this.name, required this.profilePic});
+  const Individual_tile({
+    super.key,
+    required this.name,
+    required this.profilePic,
+    required this.onSwitchChanged,
+    // required this.attendeeId
+  });
 
   // const Individual_tile({super.key, this.showToogle});
   // const Individual_tile({Key? key}) : super(key: key);
@@ -18,6 +25,7 @@ class Individual_tile extends StatefulWidget {
 
 class _MyWidgetState extends State<Individual_tile> {
   bool isSwitch = false;
+  List idListOfPresentAttendee = [];
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -36,6 +44,9 @@ class _MyWidgetState extends State<Individual_tile> {
           borderRadius: BorderRadius.circular(12),
         ),
         child: ListTile(
+          onTap: () {
+            print(idListOfPresentAttendee);
+          },
           title: Text(widget.name),
           leading: CircleAvatar(
             radius: 15,
@@ -47,6 +58,8 @@ class _MyWidgetState extends State<Individual_tile> {
               onChanged: (v) {
                 setState(() {
                   isSwitch = v;
+                  widget.onSwitchChanged(v);
+                  // idListOfPresentAttendee.add(widget.attendeeId);
                 });
               }),
         ),

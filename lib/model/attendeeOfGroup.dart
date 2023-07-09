@@ -31,10 +31,10 @@ class AttendeeOfGroup {
 }
 
 class AttendeeOfGroupRepo {
-  static Future<List<AttendeeOfGroup>> getAttendeeOfGroup() async {
+  static Future<List<AttendeeOfGroup>> getAttendeeOfGroup(int groupKoId) async {
     var inst = await SharedPreferences.getInstance();
     String authToken = inst.getString('accessToken')!;
-    int groupId = inst.getInt('groupId')!;
+    // int groupId = inst.getInt('groupId')!;
 
     var headers = {
       'Content-Type': 'application/json',
@@ -44,7 +44,7 @@ class AttendeeOfGroupRepo {
     // Map toSend = {"group": groupId};
 
     final response = await http.get(
-      Uri.parse('${Endpoints.forShowingAttendeeOfGroup}$groupId'),
+      Uri.parse('${Endpoints.forShowingAttendeeOfGroup}$groupKoId'),
       headers: headers,
       // body: jsonEncode(toSend)
     );
