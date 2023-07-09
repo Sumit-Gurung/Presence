@@ -323,8 +323,10 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                     Navigator.push(
                         context,
                         MaterialPageRoute(
-                          builder: (context) =>
-                              TakeAttendance(groupName: widget.groupName),
+                          builder: (context) => TakeAttendance(
+                            groupName: widget.groupName,
+                            groupId: widget.groupId,
+                          ),
                         ));
                   },
                 ),

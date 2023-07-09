@@ -1,13 +1,16 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:presence/model/attendeeOfGroup.dart';
+import 'package:shared_preferences/shared_preferences.dart';
 
 import '../components/custom_button.dart';
 import '../utility/individual_attendance_tile.dart';
 
 class TakeAttendance extends StatefulWidget {
   final String groupName;
-  const TakeAttendance({super.key, required this.groupName});
+  final int groupId;
+  const TakeAttendance(
+      {super.key, required this.groupName, required this.groupId});
 
   @override
   State<TakeAttendance> createState() => _TakeAttendanceState();
@@ -18,11 +21,17 @@ class _TakeAttendanceState extends State<TakeAttendance> {
   @override
   void initState() {
     super.initState();
+    setGroupId();
     setState(() {
       AttendeeOfGroupRepo.getAttendeeOfGroup().then((value) {
         attendeeList = value;
       });
     });
+  }
+
+  void setGroupId() async {
+    var inst = await SharedPreferences.getInstance();
+    await inst.setInt("groupId", widget.groupId);
   }
 
   @override
