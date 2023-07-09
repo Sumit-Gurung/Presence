@@ -56,7 +56,8 @@ class _OnBoarding1stState extends State<OnBoarding1st> {
             // SizedBox(
             //   height: ,
             // ),
-            Text('Pahela Group banune lah. ane tespache sochamla k garne ',
+            Text(
+                'Begin by creating your own group and harness the power of AI.',
                 textAlign: TextAlign.justify,
                 style: TextStyle(
                   fontSize: 18,

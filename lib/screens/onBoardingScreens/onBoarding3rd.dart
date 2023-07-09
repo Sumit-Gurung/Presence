@@ -56,7 +56,8 @@ class _onBoarding3rdState extends State<onBoarding3rd> {
             // SizedBox(
             //   height: ,
             // ),
-            Text('Photo soto kechne ane voilaaa attendance huncha! ',
+            Text(
+                'Capture attendance effortlessly with just a single click of a photo.',
                 textAlign: TextAlign.justify,
                 style: TextStyle(
                   fontSize: 18,

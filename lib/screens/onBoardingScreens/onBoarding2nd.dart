@@ -47,7 +47,7 @@ class _OnBoarding2ndState extends State<onBoarding2nd> {
                               color: Colors.yellow.shade700,
                               fontWeight: FontWeight.w600)),
                       Text(
-                          'Group banapache attendee haru add garnu parcha lah! ',
+                          'Easily add members to your group to manage attendance and much more..',
                           textAlign: TextAlign.justify,
                           style: TextStyle(
                             fontSize: 18,
