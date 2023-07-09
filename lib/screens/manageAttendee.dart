@@ -288,6 +288,10 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                                         setState(() {});
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(SnackBar(
+                                                backgroundColor:
+                                                    AppColors.authBasicColor,
+                                                duration: Duration(
+                                                    milliseconds: 1400),
                                                 content: Text(
                                                     'Attendee has been added!')));
                                       } else {

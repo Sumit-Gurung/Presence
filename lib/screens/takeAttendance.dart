@@ -167,12 +167,22 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                     if (response.statusCode == 200 ||
                         response.statusCode == 201) {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          duration: Duration(milliseconds: 1000),
-                          content: Text('${responseToShow["message"]}')));
+                          backgroundColor: AppColors.authBasicColor,
+                          duration: Duration(milliseconds: 1750),
+                          content: Text(
+                            '${responseToShow["message"]}',
+                            style: TextStyle(color: Colors.white),
+                          )));
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          duration: Duration(milliseconds: 1000),
-                          content: Text('${responseToShow["error"]}')));
+                          backgroundColor: AppColors.authBasicColor,
+                          duration: Duration(milliseconds: 2000),
+                          content: Text(
+                            '${responseToShow["error"]}',
+                            style: TextStyle(
+                                color: Colors.white,
+                                fontWeight: FontWeight.w600),
+                          )));
                     }
                     print(response.body);
                     // print(attendeeList[0].id);
