@@ -51,154 +51,152 @@ class _HomeScreenState extends State<HomeScreen> {
     return Scaffold(
       backgroundColor: Colors.grey[300],
       body: SafeArea(
-          child: Column(
-        mainAxisAlignment: MainAxisAlignment.start,
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          //discover new...
+          child: SingleChildScrollView(
+        scrollDirection: Axis.vertical,
+        child: Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            //discover new...
 
-          SizedBox(
-            height: 15,
-          ),
-
-          Padding(
-            padding: const EdgeInsets.only(left: 25.0),
-            child: Text(
-              'Join Groups Now',
-              style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
+            SizedBox(
+              height: 15,
             ),
-          ),
-          // search bar
-          SizedBox(
-            height: 15,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 25.0),
-            child: Row(
-              children: [
-                Expanded(
-                  child: Container(
-                    decoration: BoxDecoration(
-                        border: Border.all(color: Colors.white),
-                        color: Colors.grey[200],
-                        borderRadius: BorderRadius.circular(15)),
-                    child: Row(
-                      children: [
-                        SizedBox(
-                          width: 10,
-                        ),
-                        Icon(
-                          Icons.search,
-                          size: 35,
-                        ),
-                        Expanded(
-                          child: Padding(
-                            padding: const EdgeInsets.only(left: 25.0),
-                            child: TextField(
-                              decoration: InputDecoration(
-                                  hintText: 'Type bruhh..',
-                                  border: InputBorder.none),
-                            ),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                SizedBox(
-                  width: 15,
-                ),
-                Container(
-                  height: 50,
-                  decoration: BoxDecoration(
-                      border: Border.all(color: Colors.white),
-                      color: Colors.grey[700],
-                      borderRadius: BorderRadius.circular(15)),
-                  padding: EdgeInsets.all(10),
-                  child: Image.asset(
-                    'assets/images/preferences.png',
-                    color: Colors.white,
-                  ),
-                )
-              ],
-            ),
-          ),
-          // for you
-          //discover new...
 
-          SizedBox(
-            height: 20,
-          ),
-
-          Padding(
-            padding: const EdgeInsets.only(left: 25.0),
-            child: Text(
-              'For You',
-              style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
-            ),
-          ),
-
-          //cards
-
-          Padding(
-            padding: const EdgeInsets.fromLTRB(15, 5, 0, 0),
-            child: Container(
-              height: 200,
-              // color: Colors.amber,
-              child: ListView.builder(
-                scrollDirection: Axis.horizontal,
-                itemBuilder: (context, index) {
-                  return HomePageGroupCard(
-                    iconPath: groupList[index][1],
-                    jobTitle: groupList[index][0],
-                    horlyRate: groupList[index][2],
-                  );
-                },
-                itemCount: groupList.length,
+            Padding(
+              padding: const EdgeInsets.only(left: 25.0),
+              child: Text(
+                'Join Groups Now',
+                style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
               ),
             ),
-          ),
-          //recently added
-          SizedBox(
-            height: 8,
-          ),
-
-          Padding(
-            padding: const EdgeInsets.only(left: 25.0),
-            child: Text(
-              'Recently Added',
-              style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
+            // search bar
+            SizedBox(
+              height: 15,
             ),
-          ),
-          // SizedBox(
-          //   height: 5,
-          // ),
-          // GridView.builder(
-          //     shrinkWrap: true,
-          //     itemCount: 2,
-          //     gridDelegate:
-          //         SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-          //     itemBuilder: (context, index) {
-          //       return Container(
-          //         margin: EdgeInsets.all(20),
-          //         // height: 10,
-          //         color: Colors.red,
-          //         child: GridTile(
-          //             // header: Text('header'),
-          //             footer: Text('footer'),
-          //             child: Text('body')),
-          //       );
-          //     }),
-          Expanded(
-            child: ListView.separated(
-                // physics: NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: filteredUsers.length,
-                itemBuilder: (context, index) {
-                  final user = filteredUsers[index];
-                  return Padding(
-                    padding: const EdgeInsets.symmetric(horizontal: 25.0),
-                    // we can wrap listtile with a materail widget and add elevetion for shadow
+            Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 25.0),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: Container(
+                      decoration: BoxDecoration(
+                          border: Border.all(color: Colors.white),
+                          color: Colors.grey[200],
+                          borderRadius: BorderRadius.circular(15)),
+                      child: Row(
+                        children: [
+                          SizedBox(
+                            width: 10,
+                          ),
+                          Icon(
+                            Icons.search,
+                            size: 35,
+                          ),
+                          Expanded(
+                            child: Padding(
+                              padding: const EdgeInsets.only(left: 25.0),
+                              child: TextField(
+                                decoration: InputDecoration(
+                                    hintText: 'Type bruhh..',
+                                    border: InputBorder.none),
+                              ),
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                  ),
+                  SizedBox(
+                    width: 15,
+                  ),
+                  Container(
+                    height: 50,
+                    decoration: BoxDecoration(
+                        border: Border.all(color: Colors.white),
+                        color: Colors.grey[700],
+                        borderRadius: BorderRadius.circular(15)),
+                    padding: EdgeInsets.all(10),
+                    child: Image.asset(
+                      'assets/images/preferences.png',
+                      color: Colors.white,
+                    ),
+                  )
+                ],
+              ),
+            ),
+            // for you
+            //discover new...
+
+            SizedBox(
+              height: 20,
+            ),
+
+            Padding(
+              padding: const EdgeInsets.only(left: 25.0),
+              child: Text(
+                'For You',
+                style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
+              ),
+            ),
+
+            //cards
+
+            Padding(
+              padding: const EdgeInsets.fromLTRB(15, 5, 0, 0),
+              child: Container(
+                height: 200,
+                // color: Colors.amber,
+                child: ListView.builder(
+                  scrollDirection: Axis.horizontal,
+                  itemBuilder: (context, index) {
+                    return HomePageGroupCard(
+                      iconPath: groupList[index][1],
+                      jobTitle: groupList[index][0],
+                      horlyRate: groupList[index][2],
+                    );
+                  },
+                  itemCount: groupList.length,
+                ),
+              ),
+            ),
+            //recently added
+            SizedBox(
+              height: 8,
+            ),
+
+            Padding(
+              padding: const EdgeInsets.only(left: 25.0),
+              child: Text(
+                'Recently Added',
+                style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
+              ),
+            ),
+            // SizedBox(
+            //   height: 5,
+            // ),
+            // GridView.builder(
+            //     shrinkWrap: true,
+            //     itemCount: 2,
+            //     gridDelegate:
+            //         SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
+            //     itemBuilder: (context, index) {
+            //       return Container(
+            //         margin: EdgeInsets.all(20),
+            //         // height: 10,
+            //         color: Colors.red,
+            //         child: GridTile(
+            //             // header: Text('header'),
+            //             footer: Text('footer'),
+            //             child: Text('body')),
+            //       );
+            //     }),
+            Column(
+              children: [
+                for (var user in filteredUsers)
+                  Padding(
+                    padding: const EdgeInsets.symmetric(
+                        horizontal: 25.0, vertical: 10),
                     child: ListTile(
                       shape: RoundedRectangleBorder(
                           side: BorderSide(color: Colors.white),
@@ -211,23 +209,14 @@ class _HomeScreenState extends State<HomeScreen> {
                         backgroundImage: NetworkImage(
                             "${Endpoints.url}${user['profilePic']}" ??
                                 'https://i0.wp.com/sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png?ssl=1'),
-                        // ('${user['profilePic']}' != null)
-                        //     ? NetworkImage(
-                        //             "${Endpoints.url} ${user['profilePic']}")
-                        //         as ImageProvider
-                        //     : AssetImage('assets/images/avatar.jpg'),
                       ),
                       subtitle: Text(user['email']),
                     ),
-                  );
-                },
-                separatorBuilder: (context, indexx) {
-                  return SizedBox(
-                    height: 10,
-                  );
-                }),
-          )
-        ],
+                  ),
+              ],
+            ),
+          ],
+        ),
       )),
     );
   }
