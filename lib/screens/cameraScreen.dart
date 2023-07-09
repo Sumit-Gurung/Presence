@@ -1,4 +1,5 @@
 import 'package:camera/camera.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -13,7 +14,7 @@ class CameraScreen extends StatefulWidget {
 }
 
 class _CameraScreenState extends State<CameraScreen> {
-  late CameraController _controller;
+  CameraController? _controller;
   late Future<void> _initializeControllerFuture;
 
   @override
@@ -29,7 +30,7 @@ class _CameraScreenState extends State<CameraScreen> {
     final permissionStatus = await Permission.camera.request();
     if (permissionStatus.isGranted) {
       _controller = CameraController(cameras[0], ResolutionPreset.medium);
-      _initializeControllerFuture = _controller.initialize();
+      _initializeControllerFuture = _controller!.initialize();
       setState(() {});
     } else {
       // Handle permission not granted
@@ -39,13 +40,13 @@ class _CameraScreenState extends State<CameraScreen> {
 
   @override
   void dispose() {
-    _controller.dispose();
+    _controller?.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
-    if (_controller == null || !_controller.value.isInitialized) {
+    if (_controller == null || !_controller!.value.isInitialized) {
       return Container();
     }
 
@@ -53,15 +54,25 @@ class _CameraScreenState extends State<CameraScreen> {
       appBar: AppBar(
         title: Text('Camera'),
       ),
-      body: FutureBuilder<void>(
-        future: _initializeControllerFuture,
-        builder: (context, snapshot) {
-          if (snapshot.connectionState == ConnectionState.done) {
-            return CameraPreview(_controller);
-          } else {
-            return Center(child: CircularProgressIndicator());
-          }
-        },
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {},
+        child: Icon(
+          CupertinoIcons.camera,
+          size: 32,
+        ),
+      ),
+      floatingActionButtonLocation: FloatingActionButtonLocation.centerFloat,
+      body: SafeArea(
+        child: FutureBuilder<void>(
+          future: _initializeControllerFuture,
+          builder: (context, snapshot) {
+            if (snapshot.connectionState == ConnectionState.done) {
+              return CameraPreview(_controller!);
+            } else {
+              return Center(child: CircularProgressIndicator());
+            }
+          },
+        ),
       ),
     );
   }
