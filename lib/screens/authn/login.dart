@@ -55,7 +55,14 @@ class _LoginPageState extends State<LoginPage> {
               height: heightt / 2,
               width: double.infinity,
               decoration: BoxDecoration(
-                  color: AppColors.authBasicColor,
+                  // color: AppColors.authBasicColor,
+                  gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color.fromARGB(255, 32, 237, 216),
+                        Color(0xff004A57),
+                      ]),
                   borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(62),
                       bottomRight: Radius.circular(62))),
@@ -69,11 +76,11 @@ class _LoginPageState extends State<LoginPage> {
                         height: 100,
                         padding: EdgeInsets.all(10),
                         child: Image.asset(
-                          'assets/images/GoogleImage.png',
+                          'assets/images/authLogo.png',
                         ),
                       ),
                       Text(
-                        'Presence',
+                        'Presencee',
                         style: TextStyle(
                             fontSize: 32,
                             fontWeight: FontWeight.bold,
@@ -82,7 +89,7 @@ class _LoginPageState extends State<LoginPage> {
                     ],
                   ),
                   SizedBox(
-                    height: 10,
+                    height: 2,
                   ),
                   Text(
                     'AI-Based Attendace App!',
@@ -210,12 +217,12 @@ class _LoginPageState extends State<LoginPage> {
                                                     "application/json"
                                               },
                                               body: toSendAsStringSignUp);
-                                          print('sad');
+                                          var loginResponseInJson =
+                                              jsonDecode(response.body);
+                                          // print('sad');
                                           print(response.body);
                                           if (response.statusCode >= 200 &&
                                               response.statusCode < 300) {
-                                            var loginResponseInJson =
-                                                jsonDecode(response.body);
                                             final user = UserDetails(
                                                 name:
                                                     loginResponseInJson['user']
@@ -260,6 +267,13 @@ class _LoginPageState extends State<LoginPage> {
                                                     builder: (context) =>
                                                         StartPage()));
                                             // print('push huna parne ho');
+                                          } else {
+                                            ScaffoldMessenger.of(context)
+                                                .showSnackBar(SnackBar(
+                                                    duration: Duration(
+                                                        milliseconds: 1000),
+                                                    content: Text(
+                                                        '${loginResponseInJson["message"]}')));
                                           }
                                         } catch (e) {
                                           print(

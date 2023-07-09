@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:presence/components/constant.dart';
+import 'package:presence/providers/user_provider.dart';
 import 'package:presence/start_page.dart';
+import 'package:provider/provider.dart';
 
 // ignore: must_be_immutable
 class MyDrawer extends StatefulWidget {
@@ -21,78 +23,88 @@ class _MyDrawerState extends State<MyDrawer> {
 
   @override
   Widget build(BuildContext context) {
-    return Drawer(
-      backgroundColor: AppColors.drawerbackgroundColor,
-      // backgroundColor: Colors.grey[200],
-      child: ListView(
-        // shrinkWrap: true,
-        children: [
-          SizedBox(
-            height: 200,
-            child: DrawerHeader(
-                decoration: BoxDecoration(color: AppColors.authBasicColor),
-                padding: EdgeInsets.only(top: 15, bottom: 0),
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.max,
-                  children: const [
-                    CircleAvatar(
-                      backgroundImage: AssetImage('assets/images/avatar.jpg'),
-                      radius: 55,
-                    ),
-                    SizedBox(
-                      // height: 200,
-                      child: Text(
-                        'Name Gurung',
-                        style: TextStyle(
-                            fontSize: 23,
-                            fontWeight: FontWeight.w600,
-                            color: Colors.white),
-                      ),
-                    )
-                  ],
-                )),
+    return Consumer<UserProvider>(
+      builder: (context, userProviderVariable, child) {
+        final user = userProviderVariable;
+
+        return Drawer(
+          backgroundColor: AppColors.drawerbackgroundColor,
+          // backgroundColor: Colors.grey[200],
+          child: ListView(
+            // shrinkWrap: true,
+            children: [
+              SizedBox(
+                height: 200,
+                child: DrawerHeader(
+                    decoration: BoxDecoration(color: AppColors.authBasicColor),
+                    padding: EdgeInsets.only(top: 15, bottom: 0),
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      mainAxisSize: MainAxisSize.max,
+                      children: [
+                        CircleAvatar(
+                          radius: 60,
+                          backgroundImage: (user.user != null &&
+                                  user.user!.imagePath != null)
+                              ? NetworkImage(user.user!.imagePath!)
+                                  as ImageProvider
+                              : AssetImage('assets/images/avatar.jpg'),
+                        ),
+                        SizedBox(
+                          // height: 200,
+                          child: Text(
+                            userProviderVariable.user?.name ?? "Name Gurung",
+                            style: TextStyle(
+                                fontSize: 23,
+                                fontWeight: FontWeight.w600,
+                                color: Colors.white),
+                          ),
+                        )
+                      ],
+                    )),
+              ),
+
+              // Divider(
+              //   color: Colors.grey[800],
+              //   thickness: 2,
+              // ),
+              DrawerTile(
+                  title: 'Home',
+                  onTap: () {
+                    onSelectt(0);
+                  },
+                  isSelected: selectedIndex == 0,
+                  navigateIndex: 0,
+                  iconData: Icons.home),
+              DrawerTile(
+                  title: 'Groups',
+                  onTap: () {
+                    onSelectt(1);
+                  },
+                  isSelected: selectedIndex == 1,
+                  navigateIndex: 1,
+                  iconData: Icons.group),
+
+              DrawerTile(
+                  title: 'Reports',
+                  onTap: () {
+                    onSelectt(2);
+                  },
+                  isSelected: selectedIndex == 2,
+                  navigateIndex: 2,
+                  iconData: Icons.note_alt),
+              DrawerTile(
+                  title: 'Profile',
+                  onTap: () {
+                    onSelectt(3);
+                  },
+                  isSelected: selectedIndex == 3,
+                  navigateIndex: 3,
+                  iconData: Icons.person),
+            ],
           ),
-
-          // Divider(
-          //   color: Colors.grey[800],
-          //   thickness: 2,
-          // ),
-          DrawerTile(
-              title: 'Home',
-              onTap: () {
-                onSelectt(0);
-              },
-              isSelected: selectedIndex == 0,
-              navigateIndex: 0,
-              iconData: Icons.home),
-          DrawerTile(
-              title: 'Groups',
-              onTap: () {
-                onSelectt(1);
-              },
-              isSelected: selectedIndex == 1,
-              navigateIndex: 1,
-              iconData: Icons.group),
-
-          DrawerTile(
-              title: 'Reports',
-              onTap: () {
-                onSelectt(2);
-              },
-              isSelected: selectedIndex == 2,
-              navigateIndex: 2,
-              iconData: Icons.note_alt),
-          DrawerTile(
-              title: 'Profile',
-              onTap: () {
-                onSelectt(3);
-              },
-              isSelected: selectedIndex == 3,
-              navigateIndex: 3,
-              iconData: Icons.person),
-        ],
-      ),
+        );
+      },
     );
   }
 }

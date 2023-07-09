@@ -149,11 +149,13 @@ class _ProfilePageState extends State<ProfilePage> {
                         children: [
                           CircleAvatar(
                             radius: 90,
-                            backgroundImage: (user.user != null &&
-                                    user.user!.imagePath != null)
-                                ? NetworkImage(user.user!.imagePath!)
-                                    as ImageProvider
-                                : AssetImage('assets/images/avatar.jpg'),
+                            backgroundImage:
+                                (userProviderVariable.user != null &&
+                                        userProviderVariable.user!.imagePath !=
+                                            null)
+                                    ? NetworkImage(user.user!.imagePath!)
+                                        as ImageProvider
+                                    : AssetImage('assets/images/avatar.jpg'),
                           ),
                           Positioned(
                             bottom: 0,
@@ -277,7 +279,7 @@ class _ProfilePageState extends State<ProfilePage> {
                         ],
                       ),
                       SizedBox(
-                        height: 26,
+                        height: 20,
                       ),
 //
                       Text(
@@ -285,9 +287,9 @@ class _ProfilePageState extends State<ProfilePage> {
                         style: TextStyle(
                             fontSize: 24, fontWeight: FontWeight.w600),
                       ),
-                      SizedBox(
-                        height: 11,
-                      ),
+                      // SizedBox(
+                      //   height: 11,
+                      // ),
                       // user.phoneNumber,
 
                       Text(
@@ -295,9 +297,9 @@ class _ProfilePageState extends State<ProfilePage> {
                         style: TextStyle(
                             fontSize: 16, fontWeight: FontWeight.w400),
                       ),
-                      SizedBox(height: 35),
+                      // SizedBox(height: 35),
 
-                      SizedBox(height: 15),
+                      SizedBox(height: 20),
                       CustomListTile(
                         onTap: () => handleTileTap(0),
                         isSelected: selectedTileIndex == 0,

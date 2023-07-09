@@ -61,7 +61,14 @@ class _SignUpPageState extends State<SignUpPage> {
               height: heightt / 4.3,
               width: double.infinity,
               decoration: BoxDecoration(
-                  color: AppColors.authBasicColor,
+                  // color: AppColors.authBasicColor,
+                  gradient: LinearGradient(
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                      colors: [
+                        Color.fromARGB(255, 32, 237, 216),
+                        Color(0xff004A57),
+                      ]),
                   borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(62),
                       bottomRight: Radius.circular(62))),
@@ -73,7 +80,7 @@ class _SignUpPageState extends State<SignUpPage> {
                     height: 100,
                     padding: EdgeInsets.all(10),
                     child: Image.asset(
-                      'assets/images/GoogleImage.png',
+                      'assets/images/authLogo.png',
                     ),
                   ),
                   Text(
