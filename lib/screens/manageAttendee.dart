@@ -215,9 +215,14 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                                               child: ListTile(
                                                   onTap: () => selectUser(user),
                                                   leading: CircleAvatar(
-                                                    backgroundImage: NetworkImage(
-                                                        "${Endpoints.url}${user['profilePic']}" ??
-                                                            'https://i0.wp.com/sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png?ssl=1'),
+                                                    backgroundImage: user[
+                                                                'profilePic'] !=
+                                                            null
+                                                        ? NetworkImage(
+                                                                "${Endpoints.url}${user['profilePic']}")
+                                                            as ImageProvider
+                                                        : AssetImage(
+                                                            "assets/images/avatar.jpg"),
                                                     // ('${user['profilePic']}' != null)
                                                     //     ? NetworkImage(
                                                     //             "${Endpoints.url} ${user['profilePic']}")

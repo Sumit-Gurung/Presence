@@ -1,7 +1,6 @@
 // import 'dart:io';
 
-
-import 'dart:io';
+// import 'dart:io';
 
 import 'package:flutter/material.dart';
 
@@ -15,15 +14,16 @@ class AppColors {
   static Color authBasicColor = Color.fromARGB(255, 4, 133, 155);
   static Color authFocusedBorderColor = Colors.green;
 
-  static const Color mainGradientOne = Color.fromARGB(255, 21, 180, 66);
-  static const Color mainGradientTwo = Color(0xff5A5BF3);
+  static const Color mainGradientOne = Color.fromARGB(255, 48, 201, 243);
+
+  static const Color mainGradientTwo = Color(0xff004A57);
+
   static const Color iconColor = Colors.black;
 }
 
 class Endpoints {
-  static get url =>
-  //  'http://192.168.1.67:7000';
-  Platform.isAndroid ? "http://10.0.2.2:8000" : "http://localhost:8000";
+  static get url => 'http://192.168.1.67:7000';
+  // Platform.isAndroid ? "http://10.0.2.2:8000" : "http://localhost:8000";
   static String forSignup = "$url/auth/register/";
   static String forLogin = "$url/auth/login/";
   static String forProfileImage = "$url/auth/profilePic/";

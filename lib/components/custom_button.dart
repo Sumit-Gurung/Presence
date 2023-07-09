@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 
+import 'constant.dart';
+
 class CustomButton extends StatelessWidget {
   final double height;
   final double width;
@@ -32,10 +34,7 @@ class CustomButton extends StatelessWidget {
                 begin: Alignment.topCenter,
                 end: Alignment.bottomCenter,
                 colors: isValidated == null || isValidated == false
-                    ? [
-                        Color.fromARGB(255, 48, 201, 243),
-                        Color(0xff004A57),
-                      ]
+                    ? [AppColors.mainGradientOne, AppColors.mainGradientTwo]
                     : [
                         Color(0xff00FFBB),
                         Color(0xff2EB200),

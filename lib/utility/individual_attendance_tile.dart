@@ -4,14 +4,14 @@ import 'package:presence/components/constant.dart';
 class Individual_tile extends StatefulWidget {
   // final bool? showToogle;
   final String name;
-  final String profilePic;
+  final String? profilePic;
   // final int attendeeId;
   final ValueChanged<bool> onSwitchChanged;
 
   const Individual_tile({
     super.key,
     required this.name,
-    required this.profilePic,
+    this.profilePic,
     required this.onSwitchChanged,
     // required this.attendeeId
   });
@@ -50,9 +50,13 @@ class _MyWidgetState extends State<Individual_tile> {
           title: Text(widget.name),
           leading: CircleAvatar(
             radius: 15,
-            backgroundImage: NetworkImage("${Endpoints.url} ${widget.profilePic}" ??
-                'https://i0.wp.com/sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png?ssl=1'),
+            backgroundImage: (widget.profilePic != null)
+                ? NetworkImage("${Endpoints.url} ${widget.profilePic}")
+                    as ImageProvider
+                : AssetImage("assets/images/avatar.jpg"),
           ),
+          // NetworkImage("${Endpoints.url} ${widget.profilePic}" ??
+          //       'https://i0.wp.com/sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png?ssl=1'),
           trailing: Switch.adaptive(
               value: isSwitch,
               onChanged: (v) {

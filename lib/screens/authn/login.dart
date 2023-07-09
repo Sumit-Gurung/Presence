@@ -60,8 +60,8 @@ class _LoginPageState extends State<LoginPage> {
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        Color.fromARGB(255, 48, 201, 243),
-                        Color(0xff004A57),
+                        AppColors.mainGradientOne,
+                        AppColors.mainGradientTwo
                       ]),
                   borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(62),

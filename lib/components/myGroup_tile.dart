@@ -90,7 +90,7 @@ class _MyGroupTileState extends State<MyGroupTile> {
                                       );
 
                                       print(
-                                          '${Endpoints.forDeleteGroup} ${widget.groupId}');
+                                          '${Endpoints.forDeleteGroup}${widget.groupId}');
 
                                       if (response.statusCode == 200) {
                                         setState11(() {

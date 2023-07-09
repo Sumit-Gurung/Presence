@@ -66,8 +66,8 @@ class _SignUpPageState extends State<SignUpPage> {
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        Color.fromARGB(255, 32, 237, 216),
-                        Color(0xff004A57),
+                        AppColors.mainGradientOne,
+                        AppColors.mainGradientTwo
                       ]),
                   borderRadius: BorderRadius.only(
                       bottomLeft: Radius.circular(62),
