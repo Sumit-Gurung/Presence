@@ -27,9 +27,9 @@ class _HomeScreenState extends State<HomeScreen> {
   }
 
   List groupList = [
-    ['Math-iii', 'assets/images/uber.png', 'No.of Members: 21'],
-    ['Programming', 'assets/images/apple.png', 'No.of of Members: 13'],
-    ['Data Mining', 'assets/images/uber.png', 'No.of of Members: 33']
+    ['Math-iii', 'assets/images/mathh.png', 'No.of Members: 21'],
+    ['Programming', 'assets/images/programming.png', 'No.of of Members: 13'],
+    ['Data Mining', 'assets/images/dataMinig.png', 'No.of of Members: 33']
   ];
 
   Future<void> fetchAllUsers() async {

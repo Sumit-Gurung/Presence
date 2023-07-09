@@ -1,5 +1,6 @@
-import 'package:flutter/material.dart';
 import 'package:camera/camera.dart';
+import 'package:flutter/material.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 Future<List<CameraDescription>> getAvailableCameras() async {
   WidgetsFlutterBinding.ensureInitialized();
@@ -18,11 +19,22 @@ class _CameraScreenState extends State<CameraScreen> {
   @override
   void initState() {
     super.initState();
-    getAvailableCameras().then((cameras) {
+    _initializeCamera();
+  }
+
+  Future<void> _initializeCamera() async {
+    final cameras = await getAvailableCameras();
+
+    // Request camera permission
+    final permissionStatus = await Permission.camera.request();
+    if (permissionStatus.isGranted) {
       _controller = CameraController(cameras[0], ResolutionPreset.medium);
       _initializeControllerFuture = _controller.initialize();
       setState(() {});
-    });
+    } else {
+      // Handle permission not granted
+      // You can display an error message or take appropriate action
+    }
   }
 
   @override

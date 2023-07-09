@@ -271,7 +271,7 @@ class _ManageAttendeeState extends State<ManageAttendee> {
 
                                       var response = await http.post(
                                           Uri.parse(Endpoints
-                                              .forAddingAttendeeToGroup),
+                                              .forAddingOrRemovingAttendeeToGroup),
                                           headers: headers,
                                           body: jsonEncode(tosend));
                                       if (response.statusCode == 200 ||
@@ -447,8 +447,15 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                             // final sortedAttendees = attendeeList;
                             return ManageAttendeeTile(
                                 attendeeName: attendeeList[index].name,
+                                groupId: widget.groupId,
                                 presentDays: 0,
                                 attendeeId: attendeeList[index].id,
+                                onAttendeeDeleted: (attendeeId) {
+                                  setState(() {
+                                    attendeeList.removeWhere(
+                                        (item) => item.id == attendeeId);
+                                  });
+                                },
                                 ProfileImage:
                                     '${Endpoints.url}${attendeeList[index].profilePic}');
                           }),

@@ -29,7 +29,7 @@ class Endpoints {
   static String forCreateGroup = "$url/group/create/";
   static String forShowMyGroups = "$url/group/groups/";
   static String forDeleteGroup = "$url/group/delete/";
-  static String forAddingAttendeeToGroup = "$url/group/attendees/";
+  static String forAddingOrRemovingAttendeeToGroup = "$url/group/attendees/";
   static String forShowingAttendeeOfGroup = "$url/group/attendeesOfGroup/";
   static String forTakingAttendance = "$url/attendance/takeAttendance/";
 }

@@ -38,7 +38,8 @@ class HomePageGroupCard extends StatelessWidget {
               children: [
                 Container(
                   padding: EdgeInsets.all(10),
-                  height: 80,
+                  height: 82,
+                  width: 90,
                   decoration:
                       BoxDecoration(borderRadius: BorderRadius.circular(12)),
                   child: Image.asset(iconPath),
