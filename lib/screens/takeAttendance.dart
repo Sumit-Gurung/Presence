@@ -26,12 +26,9 @@ class _TakeAttendanceState extends State<TakeAttendance> {
   @override
   void initState() {
     super.initState();
-    // setState(() {});
-
-    setState(() {
-      AttendeeOfGroupRepo.getAttendeeOfGroup(widget.groupId).then((value) {
-        attendeeList = value;
-      });
+    AttendeeOfGroupRepo.getAttendeeOfGroup(widget.groupId).then((value) {
+      attendeeList = value;
+      setState(() {});
     });
   }
 
