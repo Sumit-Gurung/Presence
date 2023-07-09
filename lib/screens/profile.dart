@@ -6,6 +6,7 @@ import 'package:file_picker/file_picker.dart';
 import 'package:flutter/material.dart';
 import 'package:presence/components/constant.dart';
 import 'package:presence/providers/user_provider.dart';
+import 'package:presence/screens/onBoardingScreens/onBoardingController.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import "package:http_parser/http_parser.dart";
@@ -342,6 +343,15 @@ class _ProfilePageState extends State<ProfilePage> {
                   CustomListTile(
                       isSelected: selectedTileIndex == 5,
                       onTap: () => handleTileTap(5),
+                      onLongPress: () async {
+                        // var inst = await SharedPreferences.getInstance();
+                        // await inst.setString("accessToken", '');
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => OnBoardingController(),
+                            ));
+                      },
                       icon: Icons.logout,
                       title: 'Logout',
                       subtitle: ' Signout from this deveice')

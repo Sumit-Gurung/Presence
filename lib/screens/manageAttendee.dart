@@ -102,7 +102,7 @@ class _ManageAttendeeState extends State<ManageAttendee> {
 
   void selectUser(dynamic user) {
     setState(() {
-      isSelected = true;
+      // isSelected = true;
       selectedUser = user;
       searchController.text = user['name'];
     });
