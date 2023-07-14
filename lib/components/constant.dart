@@ -1,6 +1,6 @@
 // import 'dart:io';
 
-// import 'dart:io';
+import 'dart:io' show Platform;
 
 import 'package:flutter/material.dart';
 
@@ -22,8 +22,9 @@ class AppColors {
 }
 
 class Endpoints {
-  static get url => 'http://192.168.1.67:7000';
-  // Platform.isAndroid ? "http://10.0.2.2:8000" : "http://localhost:8000";
+  static get url =>
+      // 'http://127.0.0.1:8000';
+      Platform.isAndroid ? "http://10.0.2.2:8000" : "http://127.0.0.1:8000/";
   static String forSignup = "$url/auth/register/";
   static String forLogin = "$url/auth/login/";
   static String forProfileImage = "$url/auth/profilePic/";

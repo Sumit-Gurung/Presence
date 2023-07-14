@@ -22,26 +22,29 @@ class _OnBoarding1stState extends State<OnBoarding1st> {
             SizedBox(
               height: 40,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '1.',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontSize: 40,
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '1.',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontSize: 40,
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 350,
-                  width: 310,
-                  child: Image.asset(
-                    'assets/images/onBoarding1.png',
-                    fit: BoxFit.fill,
+                  SizedBox(
+                    height: 350,
+                    width: 310,
+                    child: Image.asset(
+                      'assets/images/onBoarding1.png',
+                      fit: BoxFit.fill,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
 
             SizedBox(

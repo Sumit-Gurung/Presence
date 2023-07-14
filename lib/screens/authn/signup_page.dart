@@ -298,23 +298,28 @@ class _SignUpPageState extends State<SignUpPage> {
 
                                           print(response.body);
                                           print("sucess");
+                                          Navigator.push(
+                                              context,
+                                              MaterialPageRoute(
+                                                  builder: (context) =>
+                                                      LoginPage()));
                                         } catch (e) {
                                           print(
                                               "--------Exception catched!---------");
-                                          print(e);
-                                        }
-                                        print("sucessssss");
 
-                                        Navigator.push(
-                                            context,
-                                            MaterialPageRoute(
-                                                builder: (context) =>
-                                                    LoginPage()));
-                                      } else {
-                                        ScaffoldMessenger.of(context)
-                                            .showSnackBar(SnackBar(
-                                                content:
-                                                    Text("SIGN-UP FAILED!")));
+                                          print(e);
+
+                                          ScaffoldMessenger.of(context)
+                                              .showSnackBar(SnackBar(
+                                            backgroundColor:
+                                                AppColors.authBasicColor,
+                                            content: Text(
+                                              'Failed to Register, Try again',
+                                              style: TextStyle(
+                                                  color: Colors.black),
+                                            ),
+                                          ));
+                                        }
                                       }
                                     },
                                     child: Text(
