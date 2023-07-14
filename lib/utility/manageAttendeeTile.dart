@@ -13,6 +13,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 // import '../model/attendeeOfGroup.dart';
 import 'package:http/http.dart' as http;
 
+import '../model/attendeeOfGroup.dart';
+
 class ManageAttendeeTile extends StatefulWidget {
   // final bool? showToogle;
 
@@ -21,7 +23,7 @@ class ManageAttendeeTile extends StatefulWidget {
   final int attendeeId;
   // final int groupIndex;
   final String attendeeName;
-  final String ProfileImage;
+  final int attendeeIndex;
   final int groupId;
   final ValueChanged<int> onAttendeeDeleted;
   final int presentDays;
@@ -33,7 +35,7 @@ class ManageAttendeeTile extends StatefulWidget {
     required this.presentDays,
     required this.onAttendeeDeleted,
     required this.attendeeId,
-    required this.ProfileImage,
+    required this.attendeeIndex,
     // required this.groupIndex
   });
   // final String attendeeName;
@@ -45,6 +47,21 @@ class ManageAttendeeTile extends StatefulWidget {
 }
 
 class _ManageAttendeeTileState extends State<ManageAttendeeTile> {
+  List<AttendeeOfGroup> attendeeList = [];
+  @override
+  void initState() {
+    super.initState();
+    // setGroupId();
+
+    AttendeeOfGroupRepo.getAttendeeOfGroup(widget.groupId).then(
+      (value) {
+        setState(() {
+          attendeeList = value;
+        });
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Consumer2<AttendeeProvider, GroupProvider>(
@@ -75,8 +92,17 @@ class _ManageAttendeeTileState extends State<ManageAttendeeTile> {
                   //
                   leading: CircleAvatar(
                     radius: 15,
-                    backgroundImage: NetworkImage(widget.ProfileImage ??
-                        'https://www.google.com/search?q=avatar+url&source=lnms&tbm=isch&sa=X&ved=2ahUKEwiegO6ty-X8AhXMI7cAHZr3AU8Q_AUoAXoECAEQAw&biw=1536&bih=754&dpr=1.25#imgrc=YYYLguVFuko0CM'),
+                    backgroundImage: (attendeeList[widget.attendeeIndex]
+                                .profilePic !=
+                            null)
+                        ? NetworkImage(
+                                '${Endpoints.url}${attendeeList[widget.attendeeIndex].profilePic}')
+                            as ImageProvider
+                        : AssetImage("assets/images/avatar.jpg"),
+
+                    //   backgroundImage: NetworkImage(widget.ProfileImage ??
+                    //       'https://www.google.com/search?q=avatar+url&source=lnms&tbm=isch&sa=X&ved=2ahUKEwiegO6ty-X8AhXMI7cAHZr3AU8Q_AUoAXoECAEQAw&biw=1536&bih=754&dpr=1.25#imgrc=YYYLguVFuko0CM'),
+                    // ),
                   ),
                   trailing: Icon(Icons.room_preferences_outlined)),
             ),

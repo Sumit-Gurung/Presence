@@ -19,14 +19,16 @@ class AttendeeOfGroup {
       required this.phoneNumber,
       required this.profilePic});
 
+  //can we do as factory AttendeeOfGroup.fromMap(){
+  //return AttendeeGroup();}
+
   static AttendeeOfGroup fromMap(Map<String, dynamic> rawAttendee) {
     return AttendeeOfGroup(
         name: rawAttendee['name']!,
         id: rawAttendee['id']!,
         email: rawAttendee['email']!,
         phoneNumber: rawAttendee['phoneNumber']!,
-        profilePic: rawAttendee['profilePic'] ??
-            'https://i0.wp.com/sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png?ssl=1');
+        profilePic: rawAttendee['profilePic']);
   }
 }
 
