@@ -26,6 +26,7 @@ class ManageAttendeeTile extends StatefulWidget {
   final int attendeeIndex;
   final int groupId;
   final ValueChanged<int> onAttendeeDeleted;
+  final String profileImage;
   final int presentDays;
 
   const ManageAttendeeTile({
@@ -35,6 +36,7 @@ class ManageAttendeeTile extends StatefulWidget {
     required this.presentDays,
     required this.onAttendeeDeleted,
     required this.attendeeId,
+    required this.profileImage,
     required this.attendeeIndex,
     // required this.groupIndex
   });
@@ -92,17 +94,16 @@ class _ManageAttendeeTileState extends State<ManageAttendeeTile> {
                   //
                   leading: CircleAvatar(
                     radius: 15,
-                    backgroundImage: (attendeeList[widget.attendeeIndex]
-                                .profilePic !=
-                            null)
-                        ? NetworkImage(
-                                '${Endpoints.url}${attendeeList[widget.attendeeIndex].profilePic}')
-                            as ImageProvider
-                        : AssetImage("assets/images/avatar.jpg"),
+                    // backgroundImage: (attendeeList[widget.attendeeIndex]
+                    //             .profilePic !=
+                    //         null)
+                    //     ? NetworkImage(
+                    //             '${Endpoints.url}${attendeeList[widget.attendeeIndex].profilePic}')
+                    //         as ImageProvider
+                    //     : AssetImage("assets/images/avatar.jpg"),
 
-                    //   backgroundImage: NetworkImage(widget.ProfileImage ??
-                    //       'https://www.google.com/search?q=avatar+url&source=lnms&tbm=isch&sa=X&ved=2ahUKEwiegO6ty-X8AhXMI7cAHZr3AU8Q_AUoAXoECAEQAw&biw=1536&bih=754&dpr=1.25#imgrc=YYYLguVFuko0CM'),
-                    // ),
+                    backgroundImage: NetworkImage(widget.profileImage ??
+                        'https://www.google.com/search?q=avatar+url&source=lnms&tbm=isch&sa=X&ved=2ahUKEwiegO6ty-X8AhXMI7cAHZr3AU8Q_AUoAXoECAEQAw&biw=1536&bih=754&dpr=1.25#imgrc=YYYLguVFuko0CM'),
                   ),
                   trailing: Icon(Icons.room_preferences_outlined)),
             ),

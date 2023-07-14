@@ -2,7 +2,6 @@ import 'dart:convert';
 
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:intl/intl.dart';
 import 'package:presence/components/constant.dart';
 import 'package:presence/model/attendeeOfGroup.dart';
 import 'package:http/http.dart' as http;
@@ -23,7 +22,7 @@ class TakeAttendance extends StatefulWidget {
 class _TakeAttendanceState extends State<TakeAttendance> {
   List<AttendeeOfGroup> attendeeList = [];
   List listOfIdOfPresentAttendee = [];
-  Map<String, String> headers = {};
+  // Map<String, String> headers = {};
 
   @override
   void initState() {
@@ -32,24 +31,17 @@ class _TakeAttendanceState extends State<TakeAttendance> {
       attendeeList = value;
       setState(() {});
     });
-    initilizeHeaders();
+    // initilizeHeaders();
   }
 
-  Future<void> initilizeHeaders() async {
-    final inst = await SharedPreferences.getInstance();
-    String authToken = inst.getString('accessToken')!;
-    var headers = {
-      'Content-Type': 'application/json',
-      "Authorization": "Bearer $authToken"
-    };
-  }
-
-  String getFormattedDate() {
-    final now = DateTime.now();
-    final formatter = DateFormat('yyyy-MM-dd');
-    final formattedDate = formatter.format(now);
-    return formattedDate;
-  }
+  // Future<void> initilizeHeaders() async {
+  //   final inst = await SharedPreferences.getInstance();
+  //   String authToken = inst.getString('accessToken')!;
+  //   var headers = {
+  //     'Content-Type': 'application/json',
+  //     "Authorization": "Bearer $authToken"
+  //   };
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -165,7 +157,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                   width: 210,
                   onTap: () async {
                     print(listOfIdOfPresentAttendee);
-                    print(headers);
+                    // print(headers);
                     // print(headers); //chatgpt why can't i access headers here
                     Map toSend = {
                       "present_user": listOfIdOfPresentAttendee,
@@ -173,6 +165,12 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                       "status": true
                     };
                     var toSendAsString = jsonEncode(toSend);
+                    final inst = await SharedPreferences.getInstance();
+                    String authToken = inst.getString('accessToken')!;
+                    var headers = {
+                      'Content-Type': 'application/json',
+                      "Authorization": "Bearer $authToken"
+                    };
 
                     var response = await http.post(
                         Uri.parse(Endpoints.forTakingAttendance),
@@ -190,40 +188,31 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                             style: TextStyle(color: Colors.white),
                           )));
                     } else if (response.statusCode == 400) {
-                      Map updateDetails = {
-                        "present_user": listOfIdOfPresentAttendee,
-                        "group": widget.groupId,
+                      Map toupdate = {
+                        "present_user": [1],
+                        "group": 2,
                         "status": false,
-                        "date": getFormattedDate()
+                        "date": "2023-07-09"
                       };
-                      var toSendUpdateAsString = jsonEncode(updateDetails);
-                      final responseUpdate = await http.put(
+                      final inst = await SharedPreferences.getInstance();
+                      String authToken = inst.getString('accessToken')!;
+                      var headers = {
+                        'Content-Type': 'application/json',
+                        "Authorization": "Bearer $authToken"
+                      };
+                      var updateresoponse = await http.put(
                           Uri.parse(Endpoints.forUpdatingAttendance),
                           headers: headers,
-                          body: toSendUpdateAsString);
-
-                      var updateresponseToshow =
-                          jsonDecode(responseUpdate.body);
-
-                      if (responseUpdate.statusCode == 200) {
+                          body: jsonEncode(toupdate));
+                      var responseUpdateToshow =
+                          jsonDecode(updateresoponse.body);
+                      if (updateresoponse.statusCode == 200) {
                         ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                             backgroundColor: AppColors.authBasicColor,
-                            duration: Duration(milliseconds: 2000),
+                            duration: Duration(milliseconds: 1750),
                             content: Text(
-                              '${updateresponseToshow["error"]}',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600),
-                            )));
-                      } else {
-                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                            backgroundColor: AppColors.authBasicColor,
-                            duration: Duration(milliseconds: 2000),
-                            content: Text(
-                              'Sorry! Attendance could\'nt be Updated',
-                              style: TextStyle(
-                                  color: Colors.white,
-                                  fontWeight: FontWeight.w600),
+                              '${responseUpdateToshow["message"]}',
+                              style: TextStyle(color: Colors.white),
                             )));
                       }
                     } else {

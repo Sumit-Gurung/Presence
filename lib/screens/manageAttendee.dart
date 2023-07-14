@@ -455,20 +455,19 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                           itemBuilder: (context, index) {
                             // final sortedAttendees = attendeeList;
                             return ManageAttendeeTile(
-                              attendeeName: attendeeList[index].name,
-                              groupId: widget.groupId,
-                              presentDays: 0,
-                              attendeeId: attendeeList[index].id,
-                              onAttendeeDeleted: (attendeeId) {
-                                setState(() {
-                                  attendeeList.removeWhere(
-                                      (item) => item.id == attendeeId);
-                                });
-                              },
-                              attendeeIndex: index,
-                              // ProfileImage:
-                              //     '${Endpoints.url}${attendeeList[index].profilePic}'
-                            );
+                                attendeeName: attendeeList[index].name,
+                                groupId: widget.groupId,
+                                presentDays: 0,
+                                attendeeId: attendeeList[index].id,
+                                onAttendeeDeleted: (attendeeId) {
+                                  setState(() {
+                                    attendeeList.removeWhere(
+                                        (item) => item.id == attendeeId);
+                                  });
+                                },
+                                attendeeIndex: index,
+                                profileImage:
+                                    '${Endpoints.url}${attendeeList[index].profilePic}');
                           }),
                     )
                   ],

@@ -10,7 +10,7 @@ class AttendeeOfGroup {
   final int id;
   final String email;
   final String phoneNumber;
-  final String profilePic;
+  final String? profilePic;
 
   AttendeeOfGroup(
       {required this.name,
