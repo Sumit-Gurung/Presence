@@ -20,7 +20,7 @@ class AppColors {
 }
 
 class Endpoints {
-  static get url => 'http://192.168.1.93:7000';
+  static get url => 'http://192.168.1.73:7000';
   // Platform.isAndroid ? "http://10.0.2.2:8000" : "http://localhost:8000";
   static String forSignup = "$url/auth/register/";
   static String forLogin = "$url/auth/login/";

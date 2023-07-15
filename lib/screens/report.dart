@@ -1,7 +1,9 @@
+import 'package:fl_chart/fl_chart.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import 'package:presence/components/graphTile.dart';
 import 'package:presence/graphs/barGraphs/myBarGraph.dart';
+import 'package:presence/graphs/pieChart/piechart_section.dart';
 
 class Report extends StatefulWidget {
   const Report({super.key});
@@ -13,6 +15,7 @@ class Report extends StatefulWidget {
 final List weeklyReport = [50.0, 12.4, 19.3, 30.2, 25.66, 26.3, 36.5];
 final List<String> labels = ['Group Report', 'My Report'];
 int selectedTabIndex = 0;
+int touchedIndex = -1;
 
 class _ReportState extends State<Report> {
   @override
@@ -40,8 +43,8 @@ class _ReportState extends State<Report> {
                 //         color: Colors.black, size: 25)),
                 Expanded(
                   child: Text(
-                    'My Reports',
-                    textAlign: TextAlign.right,
+                    'Reports',
+                    textAlign: TextAlign.center,
                     style: TextStyle(fontSize: 30, fontWeight: FontWeight.bold),
                   ),
                 )
@@ -50,7 +53,7 @@ class _ReportState extends State<Report> {
             FlutterToggleTab(
               labels: labels,
               width: 87,
-              icons: [
+              icons: const [
                 Icons.group,
                 Icons.person,
               ],
@@ -86,13 +89,85 @@ class _ReportState extends State<Report> {
                     ),
                   )
                 : MyGraphTile(
-                    attendee: 33,
-                    groupName: 'Personal ',
+                    attendee: 29,
+                    groupName: 'Data Mining ',
                     totalIndividual: 20,
-                    child: MyBarGraph(
-                      MyWeeklyReport: weeklyReport,
-                    ),
-                  )
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      children: [
+                        AspectRatio(
+                            aspectRatio: 1.0,
+                            child: PieChart(
+                              PieChartData(
+                                pieTouchData: PieTouchData(
+                                  touchCallback: (FlTouchEvent event,
+                                      PieTouchResponse? pieTouchResponse) {
+                                    if (event is FlLongPressEnd ||
+                                        event is FlPanEndEvent ||
+                                        pieTouchResponse?.touchedSection ==
+                                            null) {
+                                      setState(() {
+                                        touchedIndex = -1;
+                                      });
+                                    } else {
+                                      setState(() {
+                                        touchedIndex = pieTouchResponse!
+                                            .touchedSection!
+                                            .touchedSectionIndex;
+                                      });
+                                    }
+                                  },
+                                ),
+                                borderData: null,
+                                centerSpaceRadius: 40,
+                                sections: getSection(touchedIndex),
+                              ),
+                            )),
+                        SizedBox(
+                          width: 10,
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Container(
+                                  height: 20,
+                                  width: 20,
+                                  margin: EdgeInsets.only(right: 10),
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.grey[300]),
+                                ),
+                                Text(
+                                  'Absent Days',
+                                  style: TextStyle(color: Colors.grey[700]),
+                                )
+                              ],
+                            ),
+                            Row(
+                              mainAxisAlignment: MainAxisAlignment.start,
+                              children: [
+                                Container(
+                                  height: 20,
+                                  width: 20,
+                                  margin: EdgeInsets.only(right: 10),
+                                  decoration: BoxDecoration(
+                                      shape: BoxShape.circle,
+                                      color: Colors.grey[800]),
+                                ),
+                                Text(
+                                  'Present Days',
+                                  style: TextStyle(color: Colors.grey[700]),
+                                )
+                              ],
+                            )
+                          ],
+                        )
+                      ],
+                    ))
           ],
         ),
       ),

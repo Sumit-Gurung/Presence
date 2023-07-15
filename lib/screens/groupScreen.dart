@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import 'package:intl/intl.dart';
 import 'package:presence/components/constant.dart';
 import 'package:presence/components/myGroup_tile.dart';
@@ -24,6 +25,8 @@ TextEditingController groupNameAddController = TextEditingController();
 
 class _GroupsState extends State<Groups> {
   List<Group> groups = [];
+  int selectedTabIndex = 0;
+  List<String> labels = ['My Groups', 'Enrolled Groups'];
   @override
   void initState() {
     super.initState();
@@ -57,50 +60,80 @@ class _GroupsState extends State<Groups> {
                   children: const [
                     Expanded(
                       child: Text(
-                        'My Groups',
-                        textAlign: TextAlign.right,
+                        'Groups',
+                        textAlign: TextAlign.center,
                         style: TextStyle(
                             fontSize: 30, fontWeight: FontWeight.bold),
                       ),
                     )
                   ],
                 ),
+                FlutterToggleTab(
+                  labels: labels,
+                  width: 87,
+                  icons: const [
+                    Icons.person,
+                    Icons.group,
+                  ],
+                  selectedLabelIndex: (index) {
+                    setState(() {
+                      selectedTabIndex = index;
+                    });
+                  },
+                  selectedTextStyle: TextStyle(
+                      fontSize: 12,
+                      fontWeight: FontWeight.w700,
+                      color: Colors.white),
+                  marginSelected:
+                      EdgeInsets.symmetric(horizontal: 6, vertical: 6),
+                  unSelectedTextStyle: TextStyle(
+                      fontSize: 10,
+                      fontWeight: FontWeight.w400,
+                      color: Colors.black),
+                  selectedBackgroundColors: [Colors.grey.shade800],
+                  unSelectedBackgroundColors: [Colors.grey.shade200],
+                  selectedIndex: selectedTabIndex,
+                  isScroll: false,
+                ),
                 SizedBox(
                   height: 25,
                 ),
-                Expanded(
-                    child: ListView.builder(
-                  itemCount: groups.length,
-                  itemBuilder: (context, index) {
-                    return MyGroupTile(
-                        index: index,
-                        onGroupDelete: () {
-                          setState(() {
-                            groups.removeAt(index);
-                          });
+                (selectedTabIndex == 0)
+                    ? Expanded(
+                        child: ListView.builder(
+                        // physics: NeverScrollableScrollPhysics(),
+                        itemCount: groups.length,
+                        itemBuilder: (context, index) {
+                          return MyGroupTile(
+                              index: index,
+                              onGroupDelete: () {
+                                setState(() {
+                                  groups.removeAt(index);
+                                });
+                              },
+                              ontap: () {
+                                Navigator.push(
+                                    context,
+                                    MaterialPageRoute(
+                                      builder: (context) => ManageAttendee(
+                                        groupName: groups[index].name,
+                                        groupId: groups[index].id,
+                                        groupIndex: index,
+                                      ),
+                                    ));
+                              },
+                              groupName: '${groups[index].name}',
+                              groupId: groups[index].id,
+                              // group: groups,
+                              numberOfAttendee:
+                                  4, //number of attendee inside this group
+                              numberOfRecords: 1,
+                              date: DateFormat.yMMMd()
+                                  .add_jm()
+                                  .format(groups[index].created_at));
                         },
-                        ontap: () {
-                          Navigator.push(
-                              context,
-                              MaterialPageRoute(
-                                builder: (context) => ManageAttendee(
-                                  groupName: groups[index].name,
-                                  groupId: groups[index].id,
-                                  groupIndex: index,
-                                ),
-                              ));
-                        },
-                        groupName: '${groups[index].name}',
-                        groupId: groups[index].id,
-                        // group: groups,
-                        numberOfAttendee:
-                            4, //number of attendee inside this group
-                        numberOfRecords: 1,
-                        date: DateFormat.yMMMd()
-                            .add_jm()
-                            .format(groups[index].created_at));
-                  },
-                )),
+                      ))
+                    : Text('sadsd')
               ],
             ),
           ),

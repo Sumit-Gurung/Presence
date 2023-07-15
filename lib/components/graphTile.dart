@@ -40,7 +40,7 @@ class MyGraphTile extends StatelessWidget {
                 TextStyle(color: Colors.grey[700], fontWeight: FontWeight.w600),
           ),
           SizedBox(
-            height: 15,
+            height: 12,
           ),
           SizedBox(
             height: 150,

@@ -3,7 +3,7 @@ import 'dart:io';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:presence/components/constant.dart';
-import 'package:presence/screens/cameraScreen.dart';
+// import 'package:presence/screens/cameraScreen.dart';
 
 import 'package:presence/screens/groupScreen.dart';
 import 'package:presence/screens/homescreen.dart';
@@ -128,9 +128,9 @@ class _StartPageState extends State<StartPage> {
   Future pickImage() async {
     try {
       final image = await ImagePicker().pickImage(source: ImageSource.camera);
-      if (image == null)
+      if (image == null) {
         return;
-      else {
+      } else {
         final imageFile = File(image.path);
         this.image = imageFile;
       }

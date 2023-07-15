@@ -58,7 +58,7 @@ class AttendeeOfGroupRepo {
           List.of(userData).map((e) => AttendeeOfGroup.fromMap(e)).toList();
       return myAllGroups;
     } else {
-      throw Exception('Failed to load groups');
+      throw Exception('Failed to load Attendees of groups');
     }
   }
 }
