@@ -89,9 +89,9 @@ class _ReportState extends State<Report> {
                     ),
                   )
                 : MyGraphTile(
-                    attendee: 29,
+                    attendee: 40,
                     groupName: 'Data Mining ',
-                    totalIndividual: 20,
+                    totalIndividual: 100,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.spaceEvenly,
                       children: [

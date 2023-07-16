@@ -7,6 +7,7 @@ import 'package:intl/intl.dart';
 import 'package:presence/components/constant.dart';
 import 'package:presence/components/myGroup_tile.dart';
 import 'package:presence/providers/group_Provider.dart';
+import 'package:presence/screens/enrolledGroupsScreen.dart';
 import 'package:presence/screens/manageAttendee.dart';
 import 'package:provider/provider.dart';
 import 'package:http/http.dart' as http;
@@ -133,7 +134,7 @@ class _GroupsState extends State<Groups> {
                                   .format(groups[index].created_at));
                         },
                       ))
-                    : Text('sadsd')
+                    : EnrolledGroupPage()
               ],
             ),
           ),
