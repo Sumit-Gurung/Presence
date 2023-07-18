@@ -52,6 +52,10 @@ class _ProfilePageState extends State<ProfilePage> {
   bool isLoading = false;
 
   Future<void> pickFile() async {
+    setState(() {
+      isLoading = true;
+    });
+
     try {
       result = await FilePicker.platform.pickFiles(
         type: FileType.any,

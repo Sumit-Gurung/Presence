@@ -7,6 +7,7 @@ class CustomButton extends StatelessWidget {
   final double width;
   final double? borderRadius;
   final VoidCallback? onTap;
+  final VoidCallback? onLongPressed;
   final bool? isValidated;
 
   final Widget child;
@@ -15,6 +16,7 @@ class CustomButton extends StatelessWidget {
     required this.width,
     required this.child,
     this.onTap,
+    this.onLongPressed,
     this.borderRadius,
     this.isValidated,
     super.key,
@@ -24,6 +26,7 @@ class CustomButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: onTap,
+      onLongPress: onLongPressed,
       child: Container(
         height: height,
         width: width,

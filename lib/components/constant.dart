@@ -1,7 +1,4 @@
-// import 'dart:io';
-
 import 'dart:io' show Platform;
-
 import 'package:flutter/material.dart';
 
 class AppColors {
@@ -35,6 +32,8 @@ class Endpoints {
   static String forAddingOrRemovingAttendeeToGroup = "$url/group/attendees/";
   static String forShowingAttendeeOfGroup = "$url/group/attendeesOfGroup/";
   static String forTakingAttendance = "$url/attendance/takeAttendance/";
+  static String forUpdatingAttendance = "$url/attendance/updateAttendance/";
+  static String forShowingEnrolledGroups = "$url/group/involvement";
 }
 
 Color unSelecteddrawerIconColor = Colors.grey.shade600;
