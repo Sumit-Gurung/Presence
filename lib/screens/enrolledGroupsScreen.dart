@@ -6,6 +6,8 @@ import 'package:presence/components/Enrolled_group_tile.dart';
 import 'package:presence/model/enrolled_group_model.dart';
 import 'package:presence/screens/enrolledMembers.dart';
 
+import '../model/allUsers.dart';
+
 class EnrolledGroupPage extends StatefulWidget {
   const EnrolledGroupPage({super.key});
 
@@ -15,6 +17,7 @@ class EnrolledGroupPage extends StatefulWidget {
 
 class _EnrolledGroupPageState extends State<EnrolledGroupPage> {
   List<EnrolledGroup> enrolledGroups = [];
+  String creatorNamme = '';
   // List<dynamic> enrolledgroups = [];
   // List<dynamic> filteredEnrolledgroups = [];
   @override
@@ -27,6 +30,31 @@ class _EnrolledGroupPageState extends State<EnrolledGroupPage> {
         enrolledGroups = value;
       });
     });
+  }
+
+  Future<String> getCreatorName(int id) async {
+    try {
+      final List<AllUsers> allUsers = await AllUsersRepository.getAllUsers();
+      final user = allUsers.firstWhere(
+        (user) => user.id == id,
+        orElse: () => AllUsers(
+            id: 99,
+            email: 'dsa@gma.com',
+            name: 'random',
+            phoneNumber: '9874563210',
+            profilePic: 'saddas'),
+      );
+
+      if (user != null) {
+        return user.name;
+      } else {
+        return 'Unknown User';
+      }
+    } catch (e) {
+      // Handle any errors or exceptions that occur during the retrieval
+      print('Error: $e');
+      return 'Error retrieving user';
+    }
   }
 
   // Future<void> fetchEnrolledGroups() async {
@@ -56,22 +84,40 @@ class _EnrolledGroupPageState extends State<EnrolledGroupPage> {
       child: ListView.builder(
         itemCount: enrolledGroups.length,
         itemBuilder: (context, index) {
-          return EnrolledGroupTile(
-              groupName: enrolledGroups[index].name,
-              createrName: 'Sumit Gurung',
-              ontap: () {
-                print('tap vacha');
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => EnrolledMembers(
+          return FutureBuilder<String>(
+            future: getCreatorName(enrolledGroups[index].creatorId),
+            builder: (context, snapshot) {
+              if (snapshot.connectionState == ConnectionState.waiting) {
+                // While waiting for the result, you can show a loading indicator or placeholder
+                return CircularProgressIndicator();
+              } else if (snapshot.hasError) {
+                // If there's an error, you can show an error message or handle it accordingly
+                return Text('Error: ${snapshot.error}');
+              } else {
+                // Once the result is available, you can use the data
+                final createrName = snapshot.data;
+                return EnrolledGroupTile(
+                  groupName: enrolledGroups[index].name,
+                  createrName: createrName!,
+                  ontap: () {
+                    print('tap vacha');
+                    Navigator.push(
+                      context,
+                      MaterialPageRoute(
+                        builder: (context) => EnrolledMembers(
                           userlist: enrolledGroups[index].users,
-                          groupName: enrolledGroups[index].name),
-                    ));
-              },
-              date:
-                  '${DateFormat.yMMMd().add_jm().format(enrolledGroups[index].date)}',
-              totalMembers: enrolledGroups[index].users.length);
+                          groupName: enrolledGroups[index].name,
+                        ),
+                      ),
+                    );
+                  },
+                  date:
+                      '${DateFormat.yMMMd().add_jm().format(enrolledGroups[index].date)}',
+                  totalMembers: enrolledGroups[index].users.length,
+                );
+              }
+            },
+          );
         },
       ),
     );

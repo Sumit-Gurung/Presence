@@ -9,6 +9,7 @@ import 'package:http/http.dart' as http;
 class EnrolledGroup {
   final String name;
   final int id;
+  final int creatorId;
   final DateTime date;
   final List<User> users; // New property to store the list of users
 
@@ -16,6 +17,7 @@ class EnrolledGroup {
     required this.id,
     required this.name,
     required this.date,
+    required this.creatorId,
     required this.users,
   });
 
@@ -32,6 +34,7 @@ class EnrolledGroup {
     return EnrolledGroup(
       id: rawEnrolledGroup['id']!,
       name: rawEnrolledGroup['name']!,
+      creatorId: rawEnrolledGroup['creator'],
       date: DateTime.parse(rawEnrolledGroup['created_at']!),
       users: userList,
     );

@@ -16,9 +16,9 @@ class EnrolledMembers extends StatefulWidget {
 }
 
 class _EnrolledMembersState extends State<EnrolledMembers> {
-  @override
   String selectedSortOption = '';
 
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
@@ -139,6 +139,13 @@ class _EnrolledMembersState extends State<EnrolledMembers> {
                     padding: EdgeInsets.all(8),
                     decoration: BoxDecoration(
                         color: AppColors.tilebackgroundColor,
+                        boxShadow: [
+                          BoxShadow(
+                              blurRadius: 10,
+                              spreadRadius: -2,
+                              color: Colors.grey.shade500,
+                              offset: Offset(1, 6)),
+                        ],
                         borderRadius: BorderRadius.circular(12)),
                     child: ListTile(
                       title: Text(widget.userlist[index].name),

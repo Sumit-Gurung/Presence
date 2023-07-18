@@ -20,6 +20,7 @@ class MyGraphTile extends StatelessWidget {
     return Container(
       // height: 400,
       padding: EdgeInsets.all(18),
+      margin: EdgeInsets.only(bottom: 15),
       decoration: BoxDecoration(
           color: AppColors.tilebackgroundColor,
           borderRadius: BorderRadius.circular(12),

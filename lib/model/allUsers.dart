@@ -58,3 +58,30 @@ class AllUsers {
   factory AllUsers.fromJson(String source) =>
       AllUsers.fromMap(json.decode(source) as Map<String, dynamic>);
 }
+
+class UserRepository {
+  static Future<String> getUserNameById(int id) async {
+    try {
+      final List<AllUsers> allUsers = await AllUsersRepository.getAllUsers();
+      final user = allUsers.firstWhere(
+        (AllUsers user) => user.id == id,
+        orElse: () => AllUsers(
+            id: 99,
+            email: 'dsa@gma.com',
+            name: 'random',
+            phoneNumber: '9874563210',
+            profilePic: 'saddas'),
+      );
+
+      if (user != null) {
+        return user.name;
+      } else {
+        return 'User not found';
+      }
+    } catch (e) {
+      // Handle any errors or exceptions that occur during the retrieval
+      print('Error: $e');
+      return 'Error retrieving user';
+    }
+  }
+}
