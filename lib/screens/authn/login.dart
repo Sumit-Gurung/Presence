@@ -36,8 +36,8 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
     //set email and password to defaults
-    _userNameController.text = 'sumitgur1169@gmail.com';
-    _passwordController.text = 'sumit123';
+    // _userNameController.text = 'sumitgur1169@gmail.com';
+    // _passwordController.text = 'sumit123';
   }
 
   @override
