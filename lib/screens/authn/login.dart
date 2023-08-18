@@ -200,6 +200,7 @@ class _LoginPageState extends State<LoginPage> {
                                     borderRadius: 20,
                                     isValidated: isValid,
                                     onTap: () async {
+                                      print('before validation!');
                                       if (_formKey.currentState!.validate()) {
                                         print('Tapp ta vacha ');
                                         try {

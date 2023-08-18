@@ -465,7 +465,8 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                                         (item) => item.id == attendeeId);
                                   });
                                 },
-                                ProfileImage:
+                                attendeeIndex: index,
+                                profileImage:
                                     '${Endpoints.url}${attendeeList[index].profilePic}');
                           }),
                     )

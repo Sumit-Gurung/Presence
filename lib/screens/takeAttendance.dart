@@ -22,6 +22,7 @@ class TakeAttendance extends StatefulWidget {
 class _TakeAttendanceState extends State<TakeAttendance> {
   List<AttendeeOfGroup> attendeeList = [];
   List listOfIdOfPresentAttendee = [];
+  // Map<String, String> headers = {};
 
   @override
   void initState() {
@@ -30,7 +31,17 @@ class _TakeAttendanceState extends State<TakeAttendance> {
       attendeeList = value;
       setState(() {});
     });
+    // initilizeHeaders();
   }
+
+  // Future<void> initilizeHeaders() async {
+  //   final inst = await SharedPreferences.getInstance();
+  //   String authToken = inst.getString('accessToken')!;
+  //   var headers = {
+  //     'Content-Type': 'application/json',
+  //     "Authorization": "Bearer $authToken"
+  //   };
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -146,6 +157,8 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                   width: 210,
                   onTap: () async {
                     print(listOfIdOfPresentAttendee);
+                    // print(headers);
+                    // print(headers); //chatgpt why can't i access headers here
                     Map toSend = {
                       "present_user": listOfIdOfPresentAttendee,
                       "group": widget.groupId,
@@ -158,6 +171,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                       'Content-Type': 'application/json',
                       "Authorization": "Bearer $authToken"
                     };
+
                     var response = await http.post(
                         Uri.parse(Endpoints.forTakingAttendance),
                         headers: headers,
@@ -173,6 +187,34 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                             '${responseToShow["message"]}',
                             style: TextStyle(color: Colors.white),
                           )));
+                    } else if (response.statusCode == 400) {
+                      Map toupdate = {
+                        "present_user": [1],
+                        "group": 2,
+                        "status": false,
+                        "date": "2023-07-09"
+                      };
+                      final inst = await SharedPreferences.getInstance();
+                      String authToken = inst.getString('accessToken')!;
+                      var headers = {
+                        'Content-Type': 'application/json',
+                        "Authorization": "Bearer $authToken"
+                      };
+                      var updateresoponse = await http.put(
+                          Uri.parse(Endpoints.forUpdatingAttendance),
+                          headers: headers,
+                          body: jsonEncode(toupdate));
+                      var responseUpdateToshow =
+                          jsonDecode(updateresoponse.body);
+                      if (updateresoponse.statusCode == 200) {
+                        ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+                            backgroundColor: AppColors.authBasicColor,
+                            duration: Duration(milliseconds: 1750),
+                            content: Text(
+                              '${responseUpdateToshow["message"]}',
+                              style: TextStyle(color: Colors.white),
+                            )));
+                      }
                     } else {
                       ScaffoldMessenger.of(context).showSnackBar(SnackBar(
                           backgroundColor: AppColors.authBasicColor,
@@ -187,6 +229,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                     print(response.body);
                     // print(attendeeList[0].id);
                   },
+                  onLongPressed: () async {},
                   child: Center(
                     child: Text(
                       "Confirm",

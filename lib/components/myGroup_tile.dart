@@ -8,10 +8,10 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class MyGroupTile extends StatefulWidget {
   final String groupName;
-  final int numberOfAttendee;
-  final int numberOfRecords;
+  final int? numberOfAttendee;
+  final int? numberOfRecords;
   final String date;
-  final int index;
+  final int? index;
   final VoidCallback? ontap;
   final int groupId;
   // final dynamic group;
@@ -20,10 +20,10 @@ class MyGroupTile extends StatefulWidget {
   const MyGroupTile(
       {super.key,
       required this.groupName,
-      required this.numberOfAttendee,
-      required this.numberOfRecords,
+      this.numberOfAttendee,
+      this.numberOfRecords,
       required this.groupId,
-      required this.index,
+      this.index,
       // required this.group,
       this.onGroupDelete,
       this.ontap,

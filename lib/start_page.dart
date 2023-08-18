@@ -1,7 +1,11 @@
+import 'dart:io';
+
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:presence/components/constant.dart';
-import 'package:presence/screens/cameraScreen.dart';
 // import 'package:presence/screens/cameraScreen.dart';
+
 import 'package:presence/screens/groupScreen.dart';
 import 'package:presence/screens/homescreen.dart';
 import 'package:presence/screens/notificationScreen.dart';
@@ -120,6 +124,22 @@ class _StartPageState extends State<StartPage> {
     }
   }
 
+  File? image;
+
+  Future pickImage() async {
+    try {
+      final image = await ImagePicker().pickImage(source: ImageSource.camera);
+      if (image == null) {
+        return;
+      } else {
+        final imageFile = File(image.path);
+        this.image = imageFile;
+      }
+    } catch (e) {
+      print('Exception Catched! : $e');
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -178,11 +198,7 @@ class _StartPageState extends State<StartPage> {
         },
         child: FloatingActionButton(
           onPressed: () {
-            Navigator.push(
-                context,
-                MaterialPageRoute(
-                  builder: (context) => CameraScreen(),
-                ));
+            pickImage();
           },
           child: Icon(
             Icons.camera_enhance_outlined,
@@ -205,10 +221,10 @@ class _StartPageState extends State<StartPage> {
             mainAxisAlignment: MainAxisAlignment.spaceAround,
             mainAxisSize: MainAxisSize.max,
             children: [
-              mycolumn(Icons.home, 'Hoooome', 0, 0, 0),
-              mycolumn(Icons.people_alt_outlined, 'Group', 1, 0, 20),
-              mycolumn(Icons.book_online_outlined, 'Report', 2, 20, 0),
-              mycolumn(Icons.person_2_outlined, 'Profile', 3, 0, 0),
+              mycolumn(CupertinoIcons.home, 'Hoooome', 0, 0, 0),
+              mycolumn(CupertinoIcons.group, 'Group', 1, 0, 20),
+              mycolumn(CupertinoIcons.doc_chart, 'Report', 2, 20, 0),
+              mycolumn(Icons.person_4_outlined, 'Profile', 3, 0, 0),
             ]),
       ),
       // bottomNavigationBar: SizedBox(

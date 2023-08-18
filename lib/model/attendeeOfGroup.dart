@@ -10,7 +10,7 @@ class AttendeeOfGroup {
   final int id;
   final String email;
   final String phoneNumber;
-  final String profilePic;
+  final String? profilePic;
 
   AttendeeOfGroup(
       {required this.name,
@@ -19,14 +19,16 @@ class AttendeeOfGroup {
       required this.phoneNumber,
       required this.profilePic});
 
+  //can we do as factory AttendeeOfGroup.fromMap(){
+  //return AttendeeGroup();}
+
   static AttendeeOfGroup fromMap(Map<String, dynamic> rawAttendee) {
     return AttendeeOfGroup(
         name: rawAttendee['name']!,
         id: rawAttendee['id']!,
         email: rawAttendee['email']!,
         phoneNumber: rawAttendee['phoneNumber']!,
-        profilePic: rawAttendee['profilePic'] ??
-            'https://i0.wp.com/sbcf.fr/wp-content/uploads/2018/03/sbcf-default-avatar.png?ssl=1');
+        profilePic: rawAttendee['profilePic']);
   }
 }
 
@@ -56,7 +58,7 @@ class AttendeeOfGroupRepo {
           List.of(userData).map((e) => AttendeeOfGroup.fromMap(e)).toList();
       return myAllGroups;
     } else {
-      throw Exception('Failed to load groups');
+      throw Exception('Failed to load Attendees of groups');
     }
   }
 }

@@ -22,26 +22,29 @@ class _onBoarding3rdState extends State<onBoarding3rd> {
             SizedBox(
               height: 40,
             ),
-            Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  '3.',
-                  textAlign: TextAlign.left,
-                  style: TextStyle(
-                    fontSize: 40,
+            SingleChildScrollView(
+              scrollDirection: Axis.horizontal,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    '3.',
+                    textAlign: TextAlign.left,
+                    style: TextStyle(
+                      fontSize: 40,
+                    ),
                   ),
-                ),
-                SizedBox(
-                  height: 350,
-                  width: 310,
-                  child: Image.asset(
-                    'assets/images/onBoarding3.png',
-                    fit: BoxFit.fill,
+                  SizedBox(
+                    height: 350,
+                    width: 310,
+                    child: Image.asset(
+                      'assets/images/onBoarding3.png',
+                      fit: BoxFit.fill,
+                    ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
 
             SizedBox(
