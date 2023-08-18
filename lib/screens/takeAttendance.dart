@@ -5,6 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:presence/components/constant.dart';
 import 'package:presence/model/attendeeOfGroup.dart';
 import 'package:http/http.dart' as http;
+import 'package:presence/model/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import '../components/custom_button.dart';
 import '../utility/individual_attendance_tile.dart';
@@ -20,7 +21,7 @@ class TakeAttendance extends StatefulWidget {
 }
 
 class _TakeAttendanceState extends State<TakeAttendance> {
-  List<AttendeeOfGroup> attendeeList = [];
+  List<UserDetails> attendeeList = [];
   List listOfIdOfPresentAttendee = [];
   // Map<String, String> headers = {};
 

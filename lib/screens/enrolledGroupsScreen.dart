@@ -4,6 +4,7 @@ import 'package:presence/components/Enrolled_group_tile.dart';
 // import 'package:presence/components/constant.dart';
 
 import 'package:presence/model/enrolled_group_model.dart';
+import 'package:presence/model/user.dart';
 import 'package:presence/screens/enrolledMembers.dart';
 
 import '../model/allUsers.dart';
@@ -34,10 +35,10 @@ class _EnrolledGroupPageState extends State<EnrolledGroupPage> {
 
   Future<String> getCreatorName(int id) async {
     try {
-      final List<AllUsers> allUsers = await AllUsersRepository.getAllUsers();
+      final List<UserDetails> allUsers = await AllUsersRepository.getAllUsers();
       final user = allUsers.firstWhere(
         (user) => user.id == id,
-        orElse: () => AllUsers(
+        orElse: () => UserDetails(
             id: 99,
             email: 'dsa@gma.com',
             name: 'random',
@@ -50,9 +51,10 @@ class _EnrolledGroupPageState extends State<EnrolledGroupPage> {
       } else {
         return 'Unknown User';
       }
-    } catch (e) {
+    } catch (e, s) {
       // Handle any errors or exceptions that occur during the retrieval
       print('Error: $e');
+      print(s);
       return 'Error retrieving user';
     }
   }

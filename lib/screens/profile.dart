@@ -156,9 +156,9 @@ class _ProfilePageState extends State<ProfilePage> {
                             radius: 90,
                             backgroundImage:
                                 (userProviderVariable.user != null &&
-                                        userProviderVariable.user!.imagePath !=
+                                        userProviderVariable.user!.profilePic !=
                                             null)
-                                    ? NetworkImage(user.user!.imagePath!)
+                                    ? NetworkImage(user.user!.profilePic!)
                                         as ImageProvider
                                     : AssetImage('assets/images/avatar.jpg'),
                           ),

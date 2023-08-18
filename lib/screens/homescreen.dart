@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:presence/components/constant.dart';
+import 'package:presence/model/user.dart';
 
 import '../components/homeScreenGroupCard.dart';
 import 'package:http/http.dart' as http;
@@ -17,7 +18,7 @@ class HomeScreen extends StatefulWidget {
 
 class _HomeScreenState extends State<HomeScreen> {
   List<dynamic> users = [];
-  List<dynamic> filteredUsers = [];
+  List<UserDetails> filteredUsers = [];
 
   @override
   void initState() {
@@ -37,7 +38,7 @@ class _HomeScreenState extends State<HomeScreen> {
     if (response.statusCode == 200) {
       setState(() {
         users = json.decode(response.body)['users'];
-        filteredUsers = users;
+        filteredUsers = (users).map((e) => UserDetails.fromMap(e)).toList();
       });
     } else {
       // Handle error if necessary
@@ -203,15 +204,13 @@ class _HomeScreenState extends State<HomeScreen> {
                               topLeft: Radius.circular(42),
                               bottomRight: Radius.circular(42))),
                       tileColor: Colors.grey[200],
-                      title: Text(user["name"]),
+                      title: Text(user.name),
                       leading: CircleAvatar(
-                        backgroundImage: user['profilePic'] != null
-                            ? NetworkImage(
-                                    "${Endpoints.url}${user['profilePic']}")
-                                as ImageProvider
+                        backgroundImage: user.profilePic != null
+                            ? NetworkImage(user.profilePic!) as ImageProvider
                             : AssetImage("assets/images/avatar.jpg"),
                       ),
-                      subtitle: Text(user['email']),
+                      subtitle: Text(user.email),
                     ),
                   ),
               ],

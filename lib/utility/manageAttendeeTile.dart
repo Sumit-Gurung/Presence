@@ -5,6 +5,7 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:presence/components/constant.dart';
+import 'package:presence/model/user.dart';
 import 'package:presence/providers/Individual_attendee_provider.dart';
 import 'package:presence/providers/group_Provider.dart';
 import 'package:provider/provider.dart';
@@ -49,7 +50,7 @@ class ManageAttendeeTile extends StatefulWidget {
 }
 
 class _ManageAttendeeTileState extends State<ManageAttendeeTile> {
-  List<AttendeeOfGroup> attendeeList = [];
+  List<UserDetails> attendeeList = [];
   @override
   void initState() {
     super.initState();

@@ -45,8 +45,8 @@ class _MyDrawerState extends State<MyDrawer> {
                         CircleAvatar(
                           radius: 60,
                           backgroundImage: (user.user != null &&
-                                  user.user!.imagePath != null)
-                              ? NetworkImage(user.user!.imagePath!)
+                                  user.user!.profilePic != null)
+                              ? NetworkImage(user.user!.profilePic!)
                                   as ImageProvider
                               : AssetImage('assets/images/avatar.jpg'),
                         ),

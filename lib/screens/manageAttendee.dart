@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:presence/components/constant.dart';
 import 'package:presence/model/attendeeOfGroup.dart';
+import 'package:presence/model/user.dart';
 import 'package:presence/providers/Individual_attendee_provider.dart';
 import 'package:presence/providers/group_Provider.dart';
 // import 'package:presence/screens/homescreen.dart';
@@ -41,7 +42,7 @@ class _ManageAttendeeState extends State<ManageAttendee> {
   TextEditingController nameAddController = TextEditingController();
   bool isSwitch = false;
   String selectedSortOption = '';
-  List<AttendeeOfGroup> attendeeList = [];
+  List<UserDetails> attendeeList = [];
   bool isSelected = false;
   //List<dynamic>
 
@@ -281,8 +282,8 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                                           body: jsonEncode(tosend));
                                       if (response.statusCode == 200 ||
                                           response.statusCode == 201) {
-                                        AttendeeOfGroup justCreated =
-                                            AttendeeOfGroup.fromMap(
+                                        UserDetails justCreated =
+                                            UserDetails.fromMap(
                                                 selectedUser);
                                         attendeeList.add(justCreated);
                                         setState(() {});
@@ -467,7 +468,7 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                                 },
                                 attendeeIndex: index,
                                 profileImage:
-                                    '${Endpoints.url}${attendeeList[index].profilePic}');
+                                    '${attendeeList[index].profilePic}');
                           }),
                     )
                   ],

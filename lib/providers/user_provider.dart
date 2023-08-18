@@ -1,6 +1,6 @@
 import 'package:flutter/cupertino.dart';
 
-import 'package:presence/model/userDetail.dart';
+import 'package:presence/model/user.dart';
 
 class UserProvider with ChangeNotifier {
   UserDetails? _user;

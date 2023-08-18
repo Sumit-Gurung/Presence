@@ -6,7 +6,7 @@ import 'package:http/http.dart' as http;
 import 'package:flutter/material.dart';
 import 'package:presence/components/constant.dart';
 import 'package:presence/components/cutomFormField.dart';
-import 'package:presence/model/userDetail.dart';
+import 'package:presence/model/user.dart';
 import 'package:presence/providers/user_provider.dart';
 import 'package:presence/screens/authn/signup_page.dart';
 import 'package:provider/provider.dart';
@@ -224,25 +224,8 @@ class _LoginPageState extends State<LoginPage> {
                                           print(response.body);
                                           if (response.statusCode >= 200 &&
                                               response.statusCode < 300) {
-                                            final user = UserDetails(
-                                                name:
-                                                    loginResponseInJson['user']
-                                                        ["name"],
-                                                email:
-                                                    loginResponseInJson['user']
-                                                        ["email"],
-                                                imagePath: loginResponseInJson[
-                                                                'user']
-                                                            ["profilePic"] !=
-                                                        null
-                                                    ? Endpoints.url +
-                                                        loginResponseInJson[
-                                                                'user']
-                                                            ["profilePic"]
-                                                    : null,
-                                                phoneNumber:
-                                                    loginResponseInJson['user']
-                                                        ["phoneNumber"]);
+                                            final user = UserDetails.fromMap(
+                                                loginResponseInJson['user']);
                                             final UserProviderVariable =
                                                 Provider.of<UserProvider>(
                                                     context,

@@ -51,8 +51,7 @@ class _MyWidgetState extends State<Individual_tile> {
           leading: CircleAvatar(
             radius: 15,
             backgroundImage: (widget.profilePic != null)
-                ? NetworkImage("${Endpoints.url} ${widget.profilePic}")
-                    as ImageProvider
+                ? NetworkImage("${widget.profilePic}") as ImageProvider
                 : AssetImage("assets/images/avatar.jpg"),
           ),
           // NetworkImage("${Endpoints.url} ${widget.profilePic}" ??
