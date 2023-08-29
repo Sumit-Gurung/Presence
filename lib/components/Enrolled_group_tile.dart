@@ -24,7 +24,7 @@ class EnrolledGroupTile extends StatelessWidget {
       onTap: ontap,
       child: Container(
         padding: EdgeInsets.all(14),
-        margin: EdgeInsets.only(bottom: 20),
+        margin: EdgeInsets.fromLTRB(8, 0, 8, 20),
         width: double.maxFinite,
         // height: double.maxFinite,
 

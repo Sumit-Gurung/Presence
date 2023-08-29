@@ -28,13 +28,13 @@ class ManageAttendeeTile extends StatefulWidget {
   final int groupId;
   final ValueChanged<int> onAttendeeDeleted;
   final String profileImage;
-  final int presentDays;
+  final String attendeeEmail;
 
   const ManageAttendeeTile({
     super.key,
     required this.attendeeName,
     required this.groupId,
-    required this.presentDays,
+    required this.attendeeEmail,
     required this.onAttendeeDeleted,
     required this.attendeeId,
     required this.profileImage,
@@ -91,7 +91,7 @@ class _ManageAttendeeTileState extends State<ManageAttendeeTile> {
                   // title: Text(
                   // "${AttendeeVariable.attendeeName[widget.index]["name"]}"),
                   title: Text(widget.attendeeName),
-                  subtitle: Text("Present Days: ${widget.presentDays}"),
+                  subtitle: Text("${widget.attendeeEmail}"),
                   //
                   leading: CircleAvatar(
                     radius: 15,

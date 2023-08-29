@@ -48,33 +48,13 @@ class _EnrolledGroupPageState extends State<EnrolledGroupPage> {
 
       return user.name;
     } catch (e, s) {
-      // Handle any errors or exceptions that occur during the retrieval
       print('Error: $e');
       print(s);
       return 'Error retrieving user';
     }
   }
 
-  // Future<void> fetchEnrolledGroups() async {
-  //   var inst = await SharedPreferences.getInstance();
-  //   String authToken = inst.getString('accessToken')!;
-
-  //   var headers = {
-  //     'Content-Type': 'application/json',
-  //     'Authorization': 'Bearer $authToken',
-  //   };
-  //   final response = await http
-  //       .get(Uri.parse(Endpoints.forShowingEnrolledGroups), headers: headers);
-
-  //   if (response.statusCode == 200) {
-  //     setState(() {
-  //       enrolledgroups = json.decode(response.body)['involvement'];
-  //       filteredEnrolledgroups = enrolledgroups;
-  //     });
-  //   } else {
-  //     print('Failed to load data');
-  //   }
-  // }
+  //
 
   @override
   Widget build(BuildContext context) {

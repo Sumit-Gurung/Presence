@@ -628,7 +628,7 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                             return ManageAttendeeTile(
                                 attendeeName: attendeeList[index].name,
                                 groupId: widget.groupId,
-                                presentDays: 0,
+                                attendeeEmail: attendeeList[index].email,
                                 attendeeId: attendeeList[index].id,
                                 onAttendeeDeleted: (attendeeId) {
                                   setState(() {

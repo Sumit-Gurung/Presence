@@ -44,7 +44,7 @@ class _MyGroupTileState extends State<MyGroupTile> {
           child: Container(
             width: double.maxFinite,
             // height: double.maxFinite,
-            margin: EdgeInsets.only(bottom: 20),
+            margin: EdgeInsets.fromLTRB(8, 0, 8, 20),
             decoration: BoxDecoration(
                 color: AppColors.tilebackgroundColor,
                 boxShadow: [
@@ -175,7 +175,7 @@ class _MyGroupTileState extends State<MyGroupTile> {
                                   fontWeight: FontWeight.w500),
                             ),
                             Text(
-                              'since ${widget.date}',
+                              'Created on: ${widget.date}',
                               style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w400,
@@ -184,13 +184,13 @@ class _MyGroupTileState extends State<MyGroupTile> {
                             ),
                           ],
                         ),
-                        Text(
-                          '${widget.numberOfRecords}  Records',
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey[700],
-                              fontWeight: FontWeight.w500),
-                        )
+                        // Text(
+                        //   '${widget.numberOfRecords}  Records',
+                        //   style: TextStyle(
+                        //       fontSize: 16,
+                        //       color: Colors.grey[700],
+                        //       fontWeight: FontWeight.w500),
+                        // )
                       ],
                     )
                   ],
