@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:presence/components/constant.dart';
 import 'package:presence/providers/user_provider.dart';
 import 'package:presence/screens/onBoardingScreens/onBoardingController.dart';
+import 'package:presence/start_page.dart';
 import 'package:provider/provider.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import "package:http_parser/http_parser.dart";
@@ -255,7 +256,7 @@ class _ProfilePageState extends State<ProfilePage> {
                                                   }
                                                 } else {
                                                   print('No file selected.');
-                                                } // Replace with your image file path
+                                                }
                                               },
                                               child: Text("Upload")),
                                         ],
@@ -306,6 +307,15 @@ class _ProfilePageState extends State<ProfilePage> {
 
                       SizedBox(height: 20),
                       CustomListTile(
+                        onLongPress: () {
+                          Navigator.push(
+                              context,
+                              MaterialPageRoute(
+                                builder: (context) => StartPage(
+                                  selectedIndexFromOutside: 3,
+                                ),
+                              ));
+                        },
                         onTap: () => handleTileTap(0),
                         isSelected: selectedTileIndex == 0,
                         icon: Icons.home,
@@ -317,18 +327,30 @@ class _ProfilePageState extends State<ProfilePage> {
                   CustomListTile(
                       isSelected: selectedTileIndex == 1,
                       onTap: () => handleTileTap(1),
+                      onLongPress: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => StartPage(
+                                selectedIndexFromOutside: 2,
+                              ),
+                            ));
+                      },
                       icon: Icons.my_library_books_rounded,
                       title: 'My Reports',
                       subtitle: 'See Your Progress'),
                   CustomListTile(
                       isSelected: selectedTileIndex == 2,
                       onTap: () => handleTileTap(2),
-                      // onLongPress: () {
-                      //   Navigator.push(
-                      //       context,
-                      //       MaterialPageRoute(
-                      //           builder: (context) => MyDevices()));
-                      // },
+                      onLongPress: () {
+                        Navigator.push(
+                            context,
+                            MaterialPageRoute(
+                              builder: (context) => StartPage(
+                                selectedIndexFromOutside: 2,
+                              ),
+                            ));
+                      },
                       icon: Icons.groups,
                       title: 'My Groups',
                       subtitle: ' Manage your Groups and More'),
@@ -400,7 +422,10 @@ class CustomListTile extends StatelessWidget {
             color: isSelected ? null : Colors.grey[200],
             gradient: isSelected
                 ? (LinearGradient(
-                    colors: const [Color(0xff65F4CD), Color(0xff5A5BF3)],
+                    colors: const [
+                      AppColors.mainGradientOne,
+                      AppColors.mainGradientTwo
+                    ],
                     begin: Alignment.topCenter,
                     end: Alignment.bottomCenter,
                   ))
@@ -411,6 +436,7 @@ class CustomListTile extends StatelessWidget {
             const SizedBox(width: 22),
             Icon(
               icon,
+              color: isSelected ? Colors.white : Colors.black,
               size: 25,
             ),
             SizedBox(width: 36),

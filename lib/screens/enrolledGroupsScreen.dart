@@ -18,7 +18,7 @@ class EnrolledGroupPage extends StatefulWidget {
 
 class _EnrolledGroupPageState extends State<EnrolledGroupPage> {
   List<EnrolledGroup> enrolledGroups = [];
-  String creatorNamme = '';
+  // String creatorNamme = '';
   // List<dynamic> enrolledgroups = [];
   // List<dynamic> filteredEnrolledgroups = [];
   @override
@@ -46,11 +46,7 @@ class _EnrolledGroupPageState extends State<EnrolledGroupPage> {
             profilePic: 'saddas'),
       );
 
-      if (user != null) {
-        return user.name;
-      } else {
-        return 'Unknown User';
-      }
+      return user.name;
     } catch (e, s) {
       // Handle any errors or exceptions that occur during the retrieval
       print('Error: $e');
@@ -90,13 +86,10 @@ class _EnrolledGroupPageState extends State<EnrolledGroupPage> {
             future: getCreatorName(enrolledGroups[index].creatorId),
             builder: (context, snapshot) {
               if (snapshot.connectionState == ConnectionState.waiting) {
-                // While waiting for the result, you can show a loading indicator or placeholder
                 return CircularProgressIndicator();
               } else if (snapshot.hasError) {
-                // If there's an error, you can show an error message or handle it accordingly
                 return Text('Error: ${snapshot.error}');
               } else {
-                // Once the result is available, you can use the data
                 final createrName = snapshot.data;
                 return EnrolledGroupTile(
                   groupName: enrolledGroups[index].name,

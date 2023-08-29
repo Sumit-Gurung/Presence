@@ -7,6 +7,7 @@ import 'package:presence/graphs/pieChart/piechart_section.dart';
 import 'package:presence/model/enrolled_Group_Report.dart';
 
 import '../graphs/pieChart/pichart_data.dart';
+import '../model/myGroupReport.dart';
 
 class Report extends StatefulWidget {
   const Report({super.key});
@@ -25,14 +26,19 @@ int touchedIndex = -1;
 
 class _ReportState extends State<Report> {
   List<EnrolledGroupReport> enrolledGrpReport = [];
+  List<MyGroupsReport> myGroupReport = [];
+
   @override
   void initState() {
     super.initState();
-    EnrolledGroupReportRepo.getEnrolledGroupReport().then((value) {
-      setState(() {
-        enrolledGrpReport = value;
-      });
-    });
+    MyGroupReportRepo.getMyGroupReport().then(
+      (value) {
+        setState(() {
+          myGroupReport = value;
+        });
+      },
+    );
+
     fetchReportData();
   }
 
@@ -112,19 +118,33 @@ class _ReportState extends State<Report> {
               height: 25,
             ),
             (selectedTabIndex == 0)
-                ? MyGraphTile(
-                    attendee: 33,
-                    groupName: 'Programming in C',
-                    totalIndividual: 47,
-                    child: MyBarGraph(
-                      MyWeeklyReport: weeklyReport,
+                ? Expanded(
+                    child: ListView.builder(
+                      shrinkWrap: true,
+                      itemCount: myGroupReport.length,
+                      itemBuilder: (context, index) {
+                        return MyGraphTile(
+                          isMyreport: false,
+                          groupName: myGroupReport[index].group!.name!,
+                          totalIndividual:
+                              myGroupReport[index].group!.totalStudent!,
+                          child: MyBarGraph(
+                            totalMember:
+                                myGroupReport[index].group!.totalStudent!,
+                            presentAttendee: myGroupReport[index].attendance!,
+                            // presentAttendee: myGroupReport[index].attendance!,
+                          ),
+                        );
+                      },
                     ),
                   )
+                //
                 : Expanded(
                     child: ListView.builder(
                       itemCount: enrolledGrpReport.length,
                       itemBuilder: (context, index) {
                         return MyGraphTile(
+                            isMyreport: true,
                             attendee: enrolledGrpReport[index].presentDays,
                             groupName: enrolledGrpReport[index].name,
                             totalIndividual: enrolledGrpReport[index].totalDays,
@@ -136,27 +156,27 @@ class _ReportState extends State<Report> {
                                     child: PieChart(
                                       PieChartData(
                                         sectionsSpace: 0,
-                                        pieTouchData: PieTouchData(
-                                          touchCallback: (FlTouchEvent event,
-                                              PieTouchResponse?
-                                                  pieTouchResponse) {
-                                            if (event is FlLongPressEnd ||
-                                                event is FlPanEndEvent ||
-                                                pieTouchResponse
-                                                        ?.touchedSection ==
-                                                    null) {
-                                              setState(() {
-                                                touchedIndex = -1;
-                                              });
-                                            } else {
-                                              setState(() {
-                                                touchedIndex = pieTouchResponse!
-                                                    .touchedSection!
-                                                    .touchedSectionIndex;
-                                              });
-                                            }
-                                          },
-                                        ),
+                                        // pieTouchData: PieTouchData(
+                                        //   touchCallback: (FlTouchEvent event,
+                                        //       PieTouchResponse?
+                                        //           pieTouchResponse) {
+                                        //     if (event is FlLongPressEnd ||
+                                        //         event is FlPanEndEvent ||
+                                        //         pieTouchResponse
+                                        //                 ?.touchedSection ==
+                                        //             null) {
+                                        //       setState(() {
+                                        //         touchedIndex = -1;
+                                        //       });
+                                        //     } else {
+                                        //       setState(() {
+                                        //         touchedIndex = pieTouchResponse!
+                                        //             .touchedSection!
+                                        //             .touchedSectionIndex;
+                                        //       });
+                                        //     }
+                                        //   },
+                                        // ),
                                         borderData: null,
                                         centerSpaceRadius: 40,
                                         sections: getSection(touchedIndex),

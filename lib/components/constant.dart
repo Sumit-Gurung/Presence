@@ -1,9 +1,5 @@
 // import 'dart:io';
 
-// import 'dart:io';
-
-import 'dart:io';
-
 import 'package:flutter/material.dart';
 
 class AppColors {
@@ -24,9 +20,8 @@ class AppColors {
 }
 
 class Endpoints {
-  static get url =>
-      //  'http://192.168.1.67:7000';
-      Platform.isAndroid ? "http://10.0.2.2:8000" : "http://localhost:8000";
+  static get url => 'http://192.168.1.66:7000';
+  // Platform.isAndroid ? "http://10.0.2.2:8000" : "http://localhost:8000";
   static String forSignup = "$url/auth/register/";
   static String forLogin = "$url/auth/login/";
   static String forProfileImage = "$url/auth/profilePic/";
@@ -36,10 +31,13 @@ class Endpoints {
   static String forDeleteGroup = "$url/group/delete/";
   static String forAddingOrRemovingAttendeeToGroup = "$url/group/attendees/";
   static String forShowingAttendeeOfGroup = "$url/group/attendeesOfGroup/";
+  static String forRecommendationOfGroup = "$url/group/recomendation/";
   static String forTakingAttendance = "$url/attendance/takeAttendance/";
   static String forUpdatingAttendance = "$url/attendance/updateAttendance/";
   static String forShowingEnrolledGroups = "$url/group/involvement";
   static String forEnrolledGroupsReport = "$url/attendance/reports/my/";
+  static String forMyGroupsReport = "$url/attendance/reports/myGroups/";
+  static String forUploadPhotoForAttendance = "$url/capture/photo/";
 }
 
 Color unSelecteddrawerIconColor = Colors.grey.shade600;

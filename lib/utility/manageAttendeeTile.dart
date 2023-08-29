@@ -103,8 +103,7 @@ class _ManageAttendeeTileState extends State<ManageAttendeeTile> {
                     //         as ImageProvider
                     //     : AssetImage("assets/images/avatar.jpg"),
 
-                    backgroundImage: NetworkImage(widget.profileImage ??
-                        'https://www.google.com/search?q=avatar+url&source=lnms&tbm=isch&sa=X&ved=2ahUKEwiegO6ty-X8AhXMI7cAHZr3AU8Q_AUoAXoECAEQAw&biw=1536&bih=754&dpr=1.25#imgrc=YYYLguVFuko0CM'),
+                    backgroundImage: NetworkImage(widget.profileImage),
                   ),
                   trailing: Icon(Icons.room_preferences_outlined)),
             ),
@@ -115,7 +114,7 @@ class _ManageAttendeeTileState extends State<ManageAttendeeTile> {
                   onPressed: (context) async {
                     Map tosend = {
                       "action": "remove",
-                      "user": widget.attendeeId,
+                      "user": "${widget.attendeeId}",
                       "group": widget.groupId
                     };
                     var inst = await SharedPreferences.getInstance();
@@ -130,11 +129,12 @@ class _ManageAttendeeTileState extends State<ManageAttendeeTile> {
                         Uri.parse(Endpoints.forAddingOrRemovingAttendeeToGroup),
                         headers: headers,
                         body: jsonEncode(tosend));
-                    print(response.body);
-                    print(response.statusCode);
+                    // print(response.body);
+                    print(
+                        "The staus code when user is deleted is:  ${response.statusCode}");
                     // var responseDecoded = jsonDecode(response.body);
                     // print(responseDecoded['message']);
-                    print('print huna parne ho!');
+
                     var responseToShow = jsonDecode(response.body);
                     if (response.statusCode == 200 ||
                         response.statusCode == 201) {
@@ -148,8 +148,6 @@ class _ManageAttendeeTileState extends State<ManageAttendeeTile> {
                             style: TextStyle(color: Colors.white),
                           )));
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text('${responseToShow['error']}')));
                       print(
                           "Unsucessfull with statuscode: ${response.statusCode} ");
                     }

@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:presence/components/constant.dart';
 import 'package:presence/providers/user_provider.dart';
+import 'package:presence/screens/onBoardingScreens/onBoardingController.dart';
 import 'package:presence/start_page.dart';
 import 'package:provider/provider.dart';
 
@@ -13,7 +14,7 @@ class MyDrawer extends StatefulWidget {
 }
 
 class _MyDrawerState extends State<MyDrawer> {
-  int selectedIndex = 0;
+  int selectedIndex = 4;
 
   void onSelectt(int index) {
     setState(() {
@@ -93,6 +94,7 @@ class _MyDrawerState extends State<MyDrawer> {
                   isSelected: selectedIndex == 2,
                   navigateIndex: 2,
                   iconData: Icons.note_alt),
+
               DrawerTile(
                   title: 'Profile',
                   onTap: () {
@@ -101,6 +103,48 @@ class _MyDrawerState extends State<MyDrawer> {
                   isSelected: selectedIndex == 3,
                   navigateIndex: 3,
                   iconData: Icons.person),
+              Divider(
+                thickness: 2,
+                indent: 20,
+                endIndent: 20,
+              ),
+              DrawerTile(
+                  title: 'About',
+                  onTap: () {
+                    onSelectt(4);
+                  },
+                  isSelected: selectedIndex == 4,
+                  navigateIndex: 0,
+                  iconData: Icons.info_outline_rounded),
+              DrawerTile(
+                  title: 'Share',
+                  onTap: () {
+                    onSelectt(5);
+                  },
+                  isSelected: selectedIndex == 5,
+                  navigateIndex: 0,
+                  iconData: Icons.share_rounded),
+              DrawerTile(
+                  title: 'Rate Us',
+                  onTap: () {
+                    onSelectt(6);
+                  },
+                  isSelected: selectedIndex == 6,
+                  navigateIndex: 0,
+                  iconData: Icons.star_border_rounded),
+              DrawerTile(
+                  title: 'Log Out',
+                  onTap: () {
+                    onSelectt(7);
+                    Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => OnBoardingController(),
+                        ));
+                  },
+                  isSelected: selectedIndex == 7,
+                  // navigateIndex: 0,
+                  iconData: Icons.logout_rounded),
             ],
           ),
         );
@@ -111,7 +155,7 @@ class _MyDrawerState extends State<MyDrawer> {
 
 class DrawerTile extends StatefulWidget {
   final String title;
-  final int navigateIndex;
+  final int? navigateIndex;
   final IconData iconData;
 
   final bool isSelected;
@@ -122,7 +166,7 @@ class DrawerTile extends StatefulWidget {
       {super.key,
       required this.title,
       required this.isSelected,
-      required this.navigateIndex,
+      this.navigateIndex,
       required this.onTap,
       required this.iconData});
 
@@ -140,7 +184,9 @@ class _DrawerTileState extends State<DrawerTile> {
       child: Container(
         // margin: EdgeInsets.only(bottom: 10),
         // constraints: BoxConstraints.,
-        color: widget.isSelected ? AppColors.authBasicColor : Colors.white,
+        color: widget.isSelected
+            ? AppColors.authBasicColor
+            : AppColors.drawerbackgroundColor,
         child: ListTile(
           leading: Icon(
             widget.iconData,
@@ -156,13 +202,19 @@ class _DrawerTileState extends State<DrawerTile> {
                       widget.isSelected ? Colors.white : Colors.grey.shade700)),
           trailing: IconButton(
               onPressed: () {
-                Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                      builder: (context) => StartPage(
-                        selectedIndexFromOutside: widget.navigateIndex,
-                      ),
-                    ));
+                (widget.navigateIndex != null)
+                    ? Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => StartPage(
+                            selectedIndexFromOutside: widget.navigateIndex,
+                          ),
+                        ))
+                    : Navigator.push(
+                        context,
+                        MaterialPageRoute(
+                          builder: (context) => OnBoardingController(),
+                        ));
               },
               icon: Icon(
                 Icons.arrow_forward_outlined,

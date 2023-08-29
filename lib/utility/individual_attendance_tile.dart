@@ -1,31 +1,38 @@
 import 'package:flutter/material.dart';
 import 'package:presence/components/constant.dart';
 
-class Individual_tile extends StatefulWidget {
+class IndividualTakeAttendanceTile extends StatefulWidget {
   // final bool? showToogle;
   final String name;
   final String? profilePic;
-  // final int attendeeId;
+  final int attendeeId;
   final ValueChanged<bool> onSwitchChanged;
+  final bool isPresent;
 
-  const Individual_tile({
-    super.key,
-    required this.name,
-    this.profilePic,
-    required this.onSwitchChanged,
-    // required this.attendeeId
-  });
+  const IndividualTakeAttendanceTile(
+      {super.key,
+      required this.name,
+      this.profilePic,
+      required this.onSwitchChanged,
+      required this.attendeeId,
+      required this.isPresent});
 
-  // const Individual_tile({super.key, this.showToogle});
-  // const Individual_tile({Key? key}) : super(key: key);
+  // const IndividualTakeAttendanceTile({super.key, this.showToogle});
+  // const IndividualTakeAttendanceTile({Key? key}) : super(key: key);
 
   @override
-  State<Individual_tile> createState() => _MyWidgetState();
+  State<IndividualTakeAttendanceTile> createState() => _MyWidgetState();
 }
 
-class _MyWidgetState extends State<Individual_tile> {
-  bool isSwitch = false;
+class _MyWidgetState extends State<IndividualTakeAttendanceTile> {
   List idListOfPresentAttendee = [];
+  bool isSwitch = false;
+  @override
+  void initState() {
+    super.initState();
+    isSwitch = widget.isPresent;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Padding(

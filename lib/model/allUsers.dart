@@ -77,11 +77,7 @@ class UserRepository {
             profilePic: 'saddas'),
       );
 
-      if (user != null) {
-        return user.name;
-      } else {
-        return 'User not found';
-      }
+      return user.name;
     } catch (e) {
       // Handle any errors or exceptions that occur during the retrieval
       print('Error: $e');

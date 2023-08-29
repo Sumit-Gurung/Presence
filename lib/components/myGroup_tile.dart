@@ -101,9 +101,9 @@ class _MyGroupTileState extends State<MyGroupTile> {
                                         });
                                         if (widget.onGroupDelete != null) {
                                           widget.onGroupDelete!();
+                                          print(
+                                              'Group has been deleted successfully');
                                         }
-                                        print(
-                                            'Group has been deleted successfully');
                                       } else {
                                         print(
                                             'Request failed with status: ${response.statusCode}');

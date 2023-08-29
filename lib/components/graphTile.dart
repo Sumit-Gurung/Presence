@@ -5,13 +5,15 @@ class MyGraphTile extends StatelessWidget {
   final Widget child;
   final String groupName;
   final int totalIndividual;
-  final int attendee;
+  final int? attendee;
+  final bool isMyreport;
 
   const MyGraphTile(
       {super.key,
       required this.groupName,
       required this.totalIndividual,
-      required this.attendee,
+      this.attendee,
+      required this.isMyreport,
       required this.child});
   // const MyGrpahTile({super.key, required this.child});
 
@@ -35,11 +37,17 @@ class MyGraphTile extends StatelessWidget {
           // SizedBox(
           //   height: 10,
           // ),
-          Text(
-            'Present: $attendee / $totalIndividual  ',
-            style:
-                TextStyle(color: Colors.grey[700], fontWeight: FontWeight.w600),
-          ),
+          isMyreport
+              ? Text(
+                  'Present: $attendee / $totalIndividual  ',
+                  style: TextStyle(
+                      color: Colors.grey[700], fontWeight: FontWeight.w600),
+                )
+              : Text(
+                  'Total Attendee: $totalIndividual  ',
+                  style: TextStyle(
+                      color: Colors.grey[700], fontWeight: FontWeight.w600),
+                ),
           SizedBox(
             height: 12,
           ),

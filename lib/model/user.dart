@@ -19,7 +19,7 @@ class UserDetails {
     return UserDetails(
       id: map['id'] as int,
       email: map['email'] as String,
-      name: map['name'] as String,
+      name: map['name'],
       phoneNumber: map['phoneNumber'] as String,
       profilePic: (map['profilePic'] != null)
           ? Endpoints.url + map['profilePic']
