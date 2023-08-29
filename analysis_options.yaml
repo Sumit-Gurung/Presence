@@ -42,6 +42,7 @@ linter:
     prefer_collection_literals: false
     prefer_const_literals_to_create_immutables: false
     unnecessary_brace_in_string_interps: false
+
         
     
     

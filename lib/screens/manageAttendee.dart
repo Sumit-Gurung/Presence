@@ -637,6 +637,7 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                                   });
                                 },
                                 attendeeIndex: index,
+                                phoneNumber: attendeeList[index].phoneNumber,
                                 profileImage:
                                     '${attendeeList[index].profilePic}');
                           }),
