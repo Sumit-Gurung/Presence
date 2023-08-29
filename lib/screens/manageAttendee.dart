@@ -100,7 +100,7 @@ class _ManageAttendeeState extends State<ManageAttendee> {
     setState(() {
       selectedUser = null;
       filteredUsers = query.isEmpty
-          ? []
+          ? users
           : users
               .where((user) =>
                   user['name'].toLowerCase().contains(query.toLowerCase()) ||
@@ -187,8 +187,8 @@ class _ManageAttendeeState extends State<ManageAttendee> {
     var length = await imageFile.length();
 
     //add field to req
-    request.fields['group'] = widget.groupId.toString();
-
+    // request.fields['group'] = widget.groupId.toString();
+    request.fields.addAll({'group': widget.groupId.toString()});
 //The http.MultipartFile class is used to create a new multipart file. It takes the field name 'image',
 //the byte stream of the image, its length, the filename, and the content type of the image file.
 // The lookupMimeType function is used to determine the content type based on the file extension.
@@ -203,14 +203,27 @@ class _ManageAttendeeState extends State<ManageAttendee> {
     request.files.add(multipartFile);
 
     var response = await http.Response.fromStream(await request.send());
-    var responsetoShow = jsonDecode(response.body)['message'];
+    var decodedResponse = jsonDecode(response.body);
+    var responsetoShow = decodedResponse['message'];
+    List<int> presentAttendeeIdList = decodedResponse['present_users'];
 
-    if (response.statusCode == 200) {
-      // Image uploaded successfully
+    if (response.statusCode == 201) {
+      // Image uploaded succesfully
       print('Image uploaded! for attendance');
+      print('$responsetoShow');
 
-      ScaffoldMessenger.of(context)
-          .showSnackBar(SnackBar(content: Text("$responsetoShow")));
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TakeAttendance(
+              groupName: widget.groupName,
+              groupId: widget.groupId,
+              presentAttendeeIdList: presentAttendeeIdList,
+            ),
+          ));
+
+      // ScaffoldMessenger.of(context)
+      //     .showSnackBar(SnackBar(content: Text("$responsetoShow")));
       // Navigator.of(context).pop();
     } else {
       // Error occurred while uploading image
@@ -257,6 +270,9 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                         return StatefulBuilder(
                           builder: (context, setState101) {
                             return AlertDialog(
+                              shape: ContinuousRectangleBorder(
+                                  borderRadius: BorderRadius.circular(40)),
+                              contentPadding: EdgeInsets.fromLTRB(20, 8, 20, 0),
                               backgroundColor: AppColors.backgroundColor,
                               title: Text('Add Attendee'),
                               content: Container(
@@ -264,84 +280,105 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                                 width: double.maxFinite,
                                 child: Column(
                                   children: [
-                                    Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: TextField(
-                                        controller: searchController,
-                                        onChanged: (value) {
-                                          setState101(
-                                            () {
-                                              filterUsers(value);
-                                            },
-                                          );
-                                        },
-                                        decoration: InputDecoration(
-                                          labelText: 'Search',
-                                          prefixIcon: Icon(Icons.search),
-                                        ),
-                                        // filterUsers,
+                                    Container(
+                                      decoration: BoxDecoration(
+                                          border:
+                                              Border.all(color: Colors.white),
+                                          color: Colors.grey[200],
+                                          borderRadius:
+                                              BorderRadius.circular(15)),
+                                      child: Row(
+                                        children: [
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Icon(
+                                            Icons.search,
+                                            size: 35,
+                                          ),
+                                          Expanded(
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 25.0),
+                                              child: TextField(
+                                                onChanged: (value) {
+                                                  setState101(
+                                                    () {
+                                                      filterUsers(value);
+                                                    },
+                                                  );
+                                                },
+                                                decoration: InputDecoration(
+                                                    hintText: 'Search User....',
+                                                    border: InputBorder.none),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
+                                    ),
+                                    SizedBox(
+                                      height: 15,
                                     ),
                                     Expanded(
                                       child: ListView.builder(
                                         itemCount: filteredUsers.length,
                                         itemBuilder: (context, index) {
                                           final user = filteredUsers[index];
-                                          return Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Container(
-                                              width: double.maxFinite,
-                                              decoration: BoxDecoration(
-                                                  color: AppColors
-                                                      .tilebackgroundColor,
-                                                  borderRadius:
-                                                      BorderRadius.circular(12),
-                                                  border: isSelected
-                                                      ? Border.all(
-                                                          color: Colors.green)
-                                                      : null,
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                        blurRadius: 7,
-                                                        spreadRadius: 1,
-                                                        color: Colors
-                                                            .grey.shade500,
-                                                        offset: Offset(2, 6)),
-                                                  ]),
-                                              child: ListTile(
-                                                  onTap: () {
-                                                    setState101(
-                                                      () {
-                                                        selectUser(user);
-                                                      },
-                                                    );
-                                                  },
-                                                  leading: CircleAvatar(
-                                                    backgroundImage: user[
-                                                                'profilePic'] !=
-                                                            null
-                                                        ? NetworkImage(
-                                                                "${Endpoints.url}${user['profilePic']}")
-                                                            as ImageProvider
-                                                        : AssetImage(
-                                                            "assets/images/avatar.jpg"),
-                                                  ),
-                                                  title: Text(user['name']),
-                                                  subtitle: Text(
-                                                    user['email'],
-                                                    overflow: TextOverflow.fade,
-                                                    maxLines: 1,
-                                                  ),
-                                                  trailing: selectedUserIds
-                                                          .contains(user['id'])
-                                                      ? Icon(
-                                                          CupertinoIcons
-                                                              .check_mark_circled_solid,
-                                                          color: Colors.green,
-                                                        )
-                                                      : Icon(CupertinoIcons
-                                                          .person_add)),
-                                            ),
+                                          return Container(
+                                            margin: EdgeInsets.fromLTRB(
+                                                5, 0, 5, 12),
+                                            width: double.maxFinite,
+                                            decoration: BoxDecoration(
+                                                color: AppColors
+                                                    .tilebackgroundColor,
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                                border: isSelected
+                                                    ? Border.all(
+                                                        color: Colors.green)
+                                                    : null,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                      blurRadius: 7,
+                                                      spreadRadius: 1,
+                                                      color:
+                                                          Colors.grey.shade500,
+                                                      offset: Offset(2, 6)),
+                                                ]),
+                                            child: ListTile(
+                                                onTap: () {
+                                                  setState101(
+                                                    () {
+                                                      selectUser(user);
+                                                    },
+                                                  );
+                                                },
+                                                leading: CircleAvatar(
+                                                  backgroundImage: user[
+                                                              'profilePic'] !=
+                                                          null
+                                                      ? NetworkImage(
+                                                              "${Endpoints.url}${user['profilePic']}")
+                                                          as ImageProvider
+                                                      : AssetImage(
+                                                          "assets/images/avatar.jpg"),
+                                                ),
+                                                title: Text(user['name']),
+                                                subtitle: Text(
+                                                  user['email'],
+                                                  overflow: TextOverflow.fade,
+                                                  maxLines: 1,
+                                                ),
+                                                trailing: selectedUserIds
+                                                        .contains(user['id'])
+                                                    ? Icon(
+                                                        CupertinoIcons
+                                                            .check_mark_circled_solid,
+                                                        color: Colors.green,
+                                                      )
+                                                    : Icon(CupertinoIcons
+                                                        .person_add)),
                                           );
                                         },
                                       ),
@@ -354,7 +391,12 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                                     onPressed: () {
                                       Navigator.pop(context);
                                     },
-                                    child: Text('cancel')),
+                                    child: Text(
+                                      'cancel',
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          color: AppColors.authBasicColor),
+                                    )),
                                 TextButton(
                                     onPressed: () async {
                                       Map tosend = {
@@ -393,6 +435,7 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                                         // UserDetails justCreated =
                                         //     UserDetails.fromMap(selectedUser);
                                         // attendeeList.add(justCreated);
+                                        selectedUserIds = [];
                                         setState(() {});
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(SnackBar(
@@ -403,6 +446,9 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                                                 content:
                                                     Text('$responsetoShow')));
                                       } else {
+                                        selectedUserIds = [];
+                                        setState(() {});
+
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(SnackBar(
                                                 backgroundColor:
@@ -423,7 +469,12 @@ class _ManageAttendeeState extends State<ManageAttendee> {
 
                                       Navigator.pop(context);
                                     },
-                                    child: Text('ok')),
+                                    child: Text(
+                                      'ok',
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          color: AppColors.authBasicColor),
+                                    )),
                               ],
                             );
                           },

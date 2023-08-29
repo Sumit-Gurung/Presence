@@ -55,8 +55,11 @@ class _MyGroupTileState extends State<MyGroupTile> {
                       offset: Offset(1, 6)),
                 ],
                 borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(12),
-                    bottomLeft: Radius.circular(12))),
+                  topLeft: Radius.circular(12),
+                  bottomLeft: Radius.circular(12),
+                  bottomRight: Radius.circular(12),
+                  topRight: Radius.circular(12),
+                )),
             child: Slidable(
               endActionPane: ActionPane(motion: ScrollMotion(), children: [
                 SlidableAction(
