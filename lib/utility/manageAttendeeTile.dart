@@ -14,7 +14,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // import '../model/attendeeOfGroup.dart';
 import 'package:http/http.dart' as http;
-import 'package:url_launcher/url_launcher.dart';
 
 import '../model/attendeeOfGroup.dart';
 

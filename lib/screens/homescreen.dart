@@ -207,6 +207,7 @@ class _HomeScreenState extends State<HomeScreen> {
                   itemBuilder: (context, index) {
                     return HomePageGroupCard(
                       groupName: filteredRecommendedGroups[index].name,
+                      groupId: filteredRecommendedGroups[index].id,
                       creatorName:
                           getCreatorName(filteredRecommendedGroups[index].id),
                       date: DateFormat('MMM d, y')
@@ -228,25 +229,7 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
-            // SizedBox(
-            //   height: 5,
-            // ),
-            // GridView.builder(
-            //     shrinkWrap: true,
-            //     itemCount: 2,
-            //     gridDelegate:
-            //         SliverGridDelegateWithFixedCrossAxisCount(crossAxisCount: 2),
-            //     itemBuilder: (context, index) {
-            //       return Container(
-            //         margin: EdgeInsets.all(20),
-            //         // height: 10,
-            //         color: Colors.red,
-            //         child: GridTile(
-            //             // header: Text('header'),
-            //             footer: Text('footer'),
-            //             child: Text('body')),
-            //       );
-            //     }),
+
             Column(
               children: [
                 for (var user in filteredUsers)

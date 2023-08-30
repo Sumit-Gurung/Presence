@@ -1,9 +1,15 @@
 // ignore_for_file: unnecessary_brace_in_string_interps
 
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
+import 'package:presence/components/constant.dart';
+import 'package:http/http.dart' as http;
+import 'package:shared_preferences/shared_preferences.dart';
 
 class HomePageGroupCard extends StatelessWidget {
   final String groupName;
+  final int groupId;
 
   final int numberOfMembers;
   final String date;
@@ -12,6 +18,7 @@ class HomePageGroupCard extends StatelessWidget {
   const HomePageGroupCard(
       {super.key,
       required this.groupName,
+      required this.groupId,
       required this.numberOfMembers,
       required this.creatorName,
       required this.date});
@@ -84,19 +91,50 @@ class HomePageGroupCard extends StatelessWidget {
             SizedBox(
               height: 10,
             ),
-            Container(
-              margin: EdgeInsets.only(right: 15, left: 15.0),
-              // padding: EdgeInsets.all(5),
-              height: 38,
-              decoration: BoxDecoration(
-                  color: Colors.grey[600],
-                  // border:
-                  // Border.all(color: AppColors.authBasicColor, width: 2),
-                  borderRadius: BorderRadius.circular(7)),
-              child: Center(
-                child: Text(
-                  'Request To Join',
-                  style: TextStyle(fontSize: 13, color: Colors.white),
+            GestureDetector(
+              onTap: () async {
+                Map toSendNotification = {
+                  "message": "add me to ur group",
+                  "group": groupId
+                };
+                var inst = await SharedPreferences.getInstance();
+                String accessToken = inst.getString('accessToken')!;
+
+                String toSendAsStringNotification =
+                    jsonEncode(toSendNotification);
+                var response = await http.post(
+                    Uri.parse(Endpoints.forSendNotification),
+                    headers: {
+                      "Content-Type": "application/json",
+                      'Authorization': 'Bearer $accessToken'
+                    },
+                    body: toSendAsStringNotification);
+
+                var notificationResponseInJson =
+                    jsonDecode(response.body)['message'];
+
+                if (response.statusCode == 200 || response.statusCode == 201) {
+                  ScaffoldMessenger.of(context).showSnackBar(
+                      SnackBar(content: Text('$notificationResponseInJson')));
+                } else {
+                  ScaffoldMessenger.of(context)
+                      .showSnackBar(SnackBar(content: Text('Failed')));
+                }
+              },
+              child: Container(
+                margin: EdgeInsets.only(right: 15, left: 15.0),
+                // padding: EdgeInsets.all(5),
+                height: 38,
+                decoration: BoxDecoration(
+                    color: Colors.grey[600],
+                    // border:
+                    // Border.all(color: AppColors.authBasicColor, width: 2),
+                    borderRadius: BorderRadius.circular(7)),
+                child: Center(
+                  child: Text(
+                    'Request To Join',
+                    style: TextStyle(fontSize: 13, color: Colors.white),
+                  ),
                 ),
               ),
             ),

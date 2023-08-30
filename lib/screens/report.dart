@@ -16,7 +16,7 @@ class Report extends StatefulWidget {
   State<Report> createState() => _ReportState();
 }
 
-final List weeklyReport = [50.0, 12.4, 19.3, 30.2, 25.66, 26.3, 36.5];
+// final List weeklyReport = [50.0, 12.4, 19.3, 30.2, 25.66, 26.3, 36.5];
 
 final List<String> labels = ['Group Report', 'My Report'];
 

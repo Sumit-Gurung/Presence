@@ -1,5 +1,6 @@
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:presence/components/constant.dart';
 import 'package:presence/model/enrolled_group_model.dart';
 
@@ -150,7 +151,12 @@ class _EnrolledMembersState extends State<EnrolledMembers> {
                     child: ListTile(
                       title: Text(widget.userlist[index].name),
                       subtitle: Text(widget.userlist[index].email),
-                      trailing: Icon(Icons.phone),
+                      trailing: IconButton(
+                          onPressed: () async {
+                            await FlutterPhoneDirectCaller.callNumber(
+                                widget.userlist[index].phoneNumber);
+                          },
+                          icon: Icon(Icons.phone)),
                     ),
                   );
                 },
