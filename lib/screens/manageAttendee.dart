@@ -7,6 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:presence/components/constant.dart';
+import 'package:presence/components/myAppBar.dart';
 import 'package:presence/model/attendeeOfGroup.dart';
 import 'package:presence/model/user.dart';
 import 'package:presence/providers/Individual_attendee_provider.dart';
@@ -521,143 +522,115 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                 ),
               ],
             ),
-            body: SafeArea(
-              child: Padding(
-                padding: const EdgeInsets.symmetric(horizontal: 25),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: 10,
-                    ),
-                    Center(
-                      child: Text(
-                        'Manage Attendee',
-                        style: TextStyle(
-                            fontSize: 27,
-                            color: Colors.grey[800],
-                            fontWeight: FontWeight.bold),
-                      ),
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.end,
+            body: Column(
+              children: [
+                MyAppBar(title: 'Manage Attendee'),
+                Expanded(
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 25),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        Expanded(
-                          child: Text(
-                            widget.groupName,
-                            textAlign: TextAlign.center,
-                            style: TextStyle(
-                                color: Colors.grey[800],
-                                fontSize: 22,
-                                fontWeight: FontWeight.bold),
-                          ),
+                        // MyAppBar(title: 'as'),
+
+                        SizedBox(
+                          height: 15,
                         ),
-                        PopupMenuButton(
-                          elevation: 10,
-                          itemBuilder: (context) {
-                            return [
-                              PopupMenuItem(
-                                  child: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    selectedSortOption = 'nameAscending';
-                                    attendeeList = sortAttendees();
-                                  });
-                                },
-                                child: ListTile(
-                                  leading:
-                                      Icon(CupertinoIcons.arrow_up_circle_fill),
-                                  title: Text("By Name"),
-                                ),
-                              )),
-                              PopupMenuItem(
-                                  child: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    selectedSortOption = 'nameDescending';
-                                    attendeeList = sortAttendees();
-                                  });
-                                },
-                                child: ListTile(
-                                  leading: Icon(
-                                      CupertinoIcons.arrow_down_circle_fill),
-                                  title: Text("By Name"),
-                                ),
-                              )),
-                              // PopupMenuItem(
-                              //     child: GestureDetector(
-                              //   onTap: () {
-                              //     setState(() {
-                              //       selectedSortOption = 'presentDaysAscending';
-                              //     });
-                              //   },
-                              //   child: ListTile(
-                              //     leading: Icon(CupertinoIcons.arrow_up_circle),
-                              //     title: Text("By Present Days"),
-                              //   ),
-                              // )),
-                              // PopupMenuItem(
-                              //     child: GestureDetector(
-                              //   onTap: () {
-                              //     setState(() {
-                              //       selectedSortOption =
-                              //           'presentDaysDescending';
-                              //     });
-                              //   },
-                              //   child: ListTile(
-                              //     leading:
-                              //         Icon(CupertinoIcons.arrow_down_circle),
-                              //     title: Text("By Present Days"),
-                              //   ),
-                              // )),
-                            ];
-                          },
-                          child: Container(
-                            padding: EdgeInsets.all(10),
-                            height: 50,
-                            decoration: BoxDecoration(
-                              color: Colors.grey[200],
-                              border: Border.all(color: Colors.white),
-                              borderRadius: BorderRadius.circular(12),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.end,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                widget.groupName,
+                                textAlign: TextAlign.center,
+                                style: TextStyle(
+                                    color: Colors.grey[800],
+                                    fontSize: 22,
+                                    fontWeight: FontWeight.bold),
+                              ),
                             ),
-                            child: Image.asset('assets/images/preferences.png'),
-                          ),
+                            PopupMenuButton(
+                              elevation: 10,
+                              itemBuilder: (context) {
+                                return [
+                                  PopupMenuItem(
+                                      child: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        selectedSortOption = 'nameAscending';
+                                        attendeeList = sortAttendees();
+                                      });
+                                    },
+                                    child: ListTile(
+                                      leading: Icon(
+                                          CupertinoIcons.arrow_up_circle_fill),
+                                      title: Text("By Name"),
+                                    ),
+                                  )),
+                                  PopupMenuItem(
+                                      child: GestureDetector(
+                                    onTap: () {
+                                      setState(() {
+                                        selectedSortOption = 'nameDescending';
+                                        attendeeList = sortAttendees();
+                                      });
+                                    },
+                                    child: ListTile(
+                                      leading: Icon(CupertinoIcons
+                                          .arrow_down_circle_fill),
+                                      title: Text("By Name"),
+                                    ),
+                                  )),
+                                 
+                                ];
+                              },
+                              child: Container(
+                                padding: EdgeInsets.all(10),
+                                height: 50,
+                                decoration: BoxDecoration(
+                                  color: Colors.grey[200],
+                                  border: Border.all(color: Colors.white),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Image.asset(
+                                    'assets/images/preferences.png'),
+                              ),
+                            )
+                          ],
+                        ),
+                        SizedBox(
+                          height: 10,
+                        ),
+                        Expanded(
+                          child: ListView.builder(
+                              itemCount: attendeeList.length,
+                              // attendeeVariable.attendeeName.length,
+
+                              itemBuilder: (context, index) {
+                                // final sortedAttendees = attendeeList;
+                                return ManageAttendeeTile(
+                                    attendeeName: attendeeList[index].name,
+                                    groupId: widget.groupId,
+                                    attendeeEmail: attendeeList[index].email,
+                                    attendeeId: attendeeList[index].id,
+                                    onAttendeeDeleted: (attendeeId) {
+                                      setState(() {
+                                        attendeeList.removeWhere(
+                                            (item) => item.id == attendeeId);
+                                      });
+                                    },
+                                    attendeeIndex: index,
+                                    phoneNumber:
+                                        attendeeList[index].phoneNumber,
+                                    profileImage:
+                                        '${attendeeList[index].profilePic}');
+                              }),
                         )
                       ],
                     ),
-                    SizedBox(
-                      height: 25,
-                    ),
-                    Expanded(
-                      child: ListView.builder(
-                          itemCount: attendeeList.length,
-                          // attendeeVariable.attendeeName.length,
-
-                          itemBuilder: (context, index) {
-                            // final sortedAttendees = attendeeList;
-                            return ManageAttendeeTile(
-                                attendeeName: attendeeList[index].name,
-                                groupId: widget.groupId,
-                                attendeeEmail: attendeeList[index].email,
-                                attendeeId: attendeeList[index].id,
-                                onAttendeeDeleted: (attendeeId) {
-                                  setState(() {
-                                    attendeeList.removeWhere(
-                                        (item) => item.id == attendeeId);
-                                  });
-                                },
-                                attendeeIndex: index,
-                                phoneNumber: attendeeList[index].phoneNumber,
-                                profileImage:
-                                    '${attendeeList[index].profilePic}');
-                          }),
-                    )
-                  ],
+                  ),
                 ),
-              ),
+              ],
             ));
       },
     );

@@ -143,6 +143,8 @@ class _MyGroupTileState extends State<MyGroupTile> {
                           builder: (context, setState22) {
                             return AlertDialog(
                               title: Text('Enter New Group Name'),
+                              shape: ContinuousRectangleBorder(
+                                  borderRadius: BorderRadius.circular(42)),
                               content: Form(
                                   key: _key,
                                   child: TextFormField(

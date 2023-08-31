@@ -6,7 +6,9 @@ import 'package:flutter/material.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:presence/components/constant.dart';
+import 'package:presence/components/myAppBar.dart';
 import 'package:presence/model/getnotificationModel.dart';
+
 // import 'package:presence/model/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
@@ -58,36 +60,34 @@ class _NotificationScreenState extends State<NotificationScreen> {
   Widget build(BuildContext context) {
     return Scaffold(
       backgroundColor: AppColors.backgroundColor,
-      appBar: AppBar(
-        title: Text('Notifications'),
-        titleTextStyle: TextStyle(
-            color: Colors.black, fontSize: 24, fontWeight: FontWeight.bold),
-        iconTheme: IconThemeData(color: Colors.black),
-        backgroundColor: Colors.grey[200],
-      ),
-      body: SafeArea(
-        child: SingleChildScrollView(
-          child: Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 24.0),
-            child: Column(
-              children: [
-                SizedBox(
-                  height: 25,
-                ),
-                for (var notificationn in notificationList)
-                  NotificationItem(
-                    senderid: notificationn.sender!,
-                    senderName: notificationn.sendername!,
-                    groupId: notificationn.group!,
-                    groupName: notificationn.groupname!,
-                    date: DateFormat('MMM d, y').format(
-                      notificationn.sendAt!,
-                    ),
+
+      //
+      body: Column(
+        children: [
+          MyAppBar(title: 'Notification'),
+          SingleChildScrollView(
+            child: Padding(
+              padding: const EdgeInsets.symmetric(horizontal: 24.0),
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: 25,
                   ),
-              ],
+                  for (var notificationn in notificationList)
+                    NotificationItem(
+                      senderid: notificationn.sender!,
+                      senderName: notificationn.sendername!,
+                      groupId: notificationn.group!,
+                      groupName: notificationn.groupname!,
+                      date: DateFormat('MMM d, y').format(
+                        notificationn.sendAt!,
+                      ),
+                    ),
+                ],
+              ),
             ),
           ),
-        ),
+        ],
       ),
     );
   }
@@ -111,7 +111,7 @@ class NotificationItem extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        padding: EdgeInsets.all(7),
+        padding: EdgeInsets.symmetric(horizontal: 7, vertical: 16),
         margin: EdgeInsets.only(bottom: 15),
         decoration: BoxDecoration(
           color: AppColors.tilebackgroundColor,
@@ -229,7 +229,7 @@ class NotificationItem extends StatelessWidget {
         ));
   }
 }
-//  
+//
 
 // ListTile(
 // leading: Column(

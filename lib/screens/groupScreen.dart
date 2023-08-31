@@ -170,6 +170,8 @@ class _GroupsState extends State<Groups> {
                     context: context,
                     builder: (context) {
                       return AlertDialog(
+                        shape: ContinuousRectangleBorder(
+                            borderRadius: BorderRadius.circular(42)),
                         title: Text('Create Group'),
                         content: TextFormField(
                             controller: groupNameAddController,
@@ -180,7 +182,10 @@ class _GroupsState extends State<Groups> {
                               onPressed: () {
                                 Navigator.pop(context);
                               },
-                              child: Text('cancel')),
+                              child: Text(
+                                'cancel',
+                                style: TextStyle(color: Colors.black),
+                              )),
                           TextButton(
                               onPressed: () async {
                                 Map groupName = {
@@ -220,14 +225,14 @@ class _GroupsState extends State<Groups> {
                                           content: Text(
                                               " ${showResponse['name']}")));
                                 }
-                                // setState(() {
-                                //   groupProviderVariable
-                                //       .addToList(groupNameAddController.text);
-                                // });
 
                                 Navigator.pop(context);
                               },
-                              child: Text('ok')),
+                              child: Text(
+                                'ok',
+                                style:
+                                    TextStyle(color: AppColors.authBasicColor),
+                              )),
                         ],
                       );
                     },
