@@ -280,7 +280,7 @@ class _MyGroupTileState extends State<MyGroupTile> {
                                   fontWeight: FontWeight.w500),
                             ),
                             Text(
-                              'Created on: ${widget.date}',
+                              'Created ${widget.date}',
                               style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w400,

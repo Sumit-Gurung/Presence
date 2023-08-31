@@ -200,6 +200,20 @@ class _LoginPageState extends State<LoginPage> {
                                     borderRadius: 20,
                                     isValidated: isValid,
                                     onTap: () async {
+                                      showDialog(
+                                        context: context,
+                                        builder: (context) {
+                                          return Center(
+                                            child: SizedBox(
+                                              height: 100,
+                                              width: 100,
+                                              child: CircularProgressIndicator(
+                                                color: AppColors.authBasicColor,
+                                              ),
+                                            ),
+                                          );
+                                        },
+                                      );
                                       print('before validation!');
                                       if (_formKey.currentState!.validate()) {
                                         print('Tapp ta vacha ');
@@ -244,6 +258,7 @@ class _LoginPageState extends State<LoginPage> {
 
                                             UserProviderVariable.setUser(user);
                                             print('push huna parne ho');
+                                            Navigator.pop(context);
 
                                             Navigator.push(
                                                 context,

@@ -45,6 +45,8 @@ class Endpoints {
   static String forMyGroupsReport = "$url/attendance/reports/myGroups/";
   static String forUploadPhotoForAttendance = "$url/capture/photo/";
   static String forUpdatingGroupName = "$url/group/update/";
+  static String forSendNotification = "$url/alert/sendnotification/";
+  static String forGetNotification = "$url/alert/getnotification/";
 }
 
 Color unSelecteddrawerIconColor = Colors.grey.shade600;

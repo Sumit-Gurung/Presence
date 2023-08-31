@@ -14,7 +14,6 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // import '../model/attendeeOfGroup.dart';
 import 'package:http/http.dart' as http;
-import 'package:url_launcher/url_launcher.dart';
 
 import '../model/attendeeOfGroup.dart';
 
@@ -79,7 +78,7 @@ class _ManageAttendeeTileState extends State<ManageAttendeeTile> {
     return Consumer2<AttendeeProvider, GroupProvider>(
       builder: (context, AttendeeVariable, groupProviderVariable, child) {
         return Container(
-          margin: EdgeInsets.only(bottom: 25),
+          margin: EdgeInsets.fromLTRB(8, 0, 8, 25),
           width: double.maxFinite,
           decoration: BoxDecoration(boxShadow: [
             BoxShadow(
