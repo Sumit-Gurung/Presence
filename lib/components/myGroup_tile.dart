@@ -1,3 +1,5 @@
+import 'dart:convert';
+
 import 'package:flutter/material.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:presence/components/constant.dart';
@@ -34,7 +36,10 @@ class MyGroupTile extends StatefulWidget {
 }
 
 class _MyGroupTileState extends State<MyGroupTile> {
+ 
   // const MyGroupTile({super.key});
+  final TextEditingController _textController = TextEditingController();
+  final GlobalKey<FormState> _key = GlobalKey<FormState>();
   @override
   Widget build(BuildContext context) {
     return Consumer<GroupProvider>(
@@ -44,7 +49,7 @@ class _MyGroupTileState extends State<MyGroupTile> {
           child: Container(
             width: double.maxFinite,
             // height: double.maxFinite,
-            margin: EdgeInsets.only(bottom: 20),
+            margin: EdgeInsets.fromLTRB(8, 0, 8, 20),
             decoration: BoxDecoration(
                 color: AppColors.tilebackgroundColor,
                 boxShadow: [
@@ -55,8 +60,11 @@ class _MyGroupTileState extends State<MyGroupTile> {
                       offset: Offset(1, 6)),
                 ],
                 borderRadius: BorderRadius.only(
-                    topLeft: Radius.circular(12),
-                    bottomLeft: Radius.circular(12))),
+                  topLeft: Radius.circular(12),
+                  bottomLeft: Radius.circular(12),
+                  bottomRight: Radius.circular(12),
+                  topRight: Radius.circular(12),
+                )),
             child: Slidable(
               endActionPane: ActionPane(motion: ScrollMotion(), children: [
                 SlidableAction(
@@ -93,17 +101,12 @@ class _MyGroupTileState extends State<MyGroupTile> {
                                           '${Endpoints.forDeleteGroup}${widget.groupId}');
 
                                       if (response.statusCode == 200) {
-                                        setState11(() {
-                                          // Remove the deleted group from the list
-                                          // Update the state to trigger a refresh of the list
-                                          // widget.group.removeWhere((group) =>
-                                          //     group.id == widget.groupId);
-                                        });
+                                        setState11(() {});
                                         if (widget.onGroupDelete != null) {
                                           widget.onGroupDelete!();
+                                          print(
+                                              'Group has been deleted successfully');
                                         }
-                                        print(
-                                            'Group has been deleted successfully');
                                       } else {
                                         print(
                                             'Request failed with status: ${response.statusCode}');
@@ -130,7 +133,116 @@ class _MyGroupTileState extends State<MyGroupTile> {
                   label: 'Delete',
                 ),
                 SlidableAction(
-                  onPressed: null,
+                  onPressed: (context) {
+                    showDialog(
+                      context: context,
+                      builder: (context) {
+                        return StatefulBuilder(
+                          builder: (context, setState22) {
+                            return Form(
+                              key: _key,
+                              child: AlertDialog(
+                                title: TextFormField(
+                                  controller: _textController,
+                                  validator: (val) {
+                                    if (val == null || val.isEmpty) {
+                                      return 'Please enter group name';
+                                    }
+
+                                    return null;
+                                  },
+                                  decoration: InputDecoration(
+                                      labelText: 'Group Name',
+                                      enabledBorder: OutlineInputBorder(
+                                        borderRadius: BorderRadius.circular(5),
+                                      ),
+                                      focusColor: Colors.black),
+                                ),
+                                actions: [
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: TextButton(
+                                        onPressed: () async {
+                                          if (_key.currentState!.validate()) {
+                                            var inst = await SharedPreferences
+                                                .getInstance();
+                                            String authToken =
+                                                inst.getString('accessToken')!;
+
+                                            Map name = {
+                                              'name': _textController.text,
+                                            };
+
+                                            // updating
+                                            final response = await http.put(
+                                                Uri.parse(
+                                                    "${Endpoints.forUpdatingGroupName}${widget.groupId}/"),
+                                                headers: {
+                                                  'Content-Type':
+                                                      'application/json',
+                                                  'Authorization':
+                                                      'Bearer $authToken',
+                                                },
+                                                body: jsonEncode(name));
+
+                                            if (response.statusCode == 200) {
+                                              print('thik xa');
+                                              var data =
+                                                  jsonDecode(response.body);
+                                              print(jsonDecode(response.body));
+                                              setState22(() {});
+                                              _textController.text = '';
+
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(SnackBar(
+                                                      content: Text(
+                                                          '${data['message']}')));
+
+                                              Navigator.of(context)
+                                                  .pop(context);
+                                            } else {
+                                              print('there are issues to fix');
+                                              var data =
+                                                  jsonDecode(response.body);
+                                              ScaffoldMessenger.of(context)
+                                                  .showSnackBar(SnackBar(
+                                                      content: Text(
+                                                          '${data['error']}')));
+                                            }
+                                            setState22(() {});
+                                          }
+                                        },
+                                        child: Text(
+                                          'Change',
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.black),
+                                        )),
+                                  ),
+                                  SizedBox(
+                                    width: 70,
+                                  ),
+                                  Padding(
+                                    padding: const EdgeInsets.all(8.0),
+                                    child: TextButton(
+                                        onPressed: () {
+                                          Navigator.pop(context);
+                                        },
+                                        child: Text(
+                                          "Cancel",
+                                          style: TextStyle(
+                                              fontSize: 20,
+                                              color: Colors.black),
+                                        )),
+                                  )
+                                ],
+                              ),
+                            );
+                          },
+                        );
+                      },
+                    );
+                  },
                   backgroundColor: Color(0xFF21B7CA),
                   foregroundColor: Colors.white,
                   icon: Icons.edit,
@@ -138,10 +250,6 @@ class _MyGroupTileState extends State<MyGroupTile> {
                 ),
               ]),
               child: Container(
-                // width: double.maxFinite,
-                // height: double.maxFinite,
-                // margin: EdgeInsets.only(bottom: 15),
-
                 padding: EdgeInsets.all(14),
                 child: Column(
                   mainAxisAlignment: MainAxisAlignment.start,
@@ -172,7 +280,7 @@ class _MyGroupTileState extends State<MyGroupTile> {
                                   fontWeight: FontWeight.w500),
                             ),
                             Text(
-                              'since ${widget.date}',
+                              'Created on: ${widget.date}',
                               style: TextStyle(
                                 fontSize: 15,
                                 fontWeight: FontWeight.w400,
@@ -181,13 +289,6 @@ class _MyGroupTileState extends State<MyGroupTile> {
                             ),
                           ],
                         ),
-                        Text(
-                          '${widget.numberOfRecords}  Records',
-                          style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey[700],
-                              fontWeight: FontWeight.w500),
-                        )
                       ],
                     )
                   ],

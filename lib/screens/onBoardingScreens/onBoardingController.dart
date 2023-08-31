@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
-import 'package:presence/start_page.dart';
+import 'package:presence/screens/authn/login.dart';
+// import 'package:presence/start_page.dart';
 import 'package:smooth_page_indicator/smooth_page_indicator.dart';
 
 import 'onBoarding1st.dart';
@@ -65,7 +66,7 @@ class _OnBoardingControllerState extends State<OnBoardingController> {
                           Navigator.push(
                               context,
                               MaterialPageRoute(
-                                  builder: (context) => StartPage()));
+                                  builder: (context) => LoginPage()));
                         },
                         child: Text('Done',
                             style: TextStyle(color: Colors.grey[700])))

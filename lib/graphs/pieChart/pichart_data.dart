@@ -1,5 +1,3 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart';
 
 import '../../model/enrolled_Group_Report.dart';
@@ -18,7 +16,7 @@ class PieData {
         List<Data> newData = [];
         var totalDays;
 
-        for (final report in enrolledGrpReports) {
+        for (var report in enrolledGrpReports) {
           if (report.totalDays == 0) {
             totalDays = 1;
           } else {
@@ -55,22 +53,6 @@ class PieData {
     }
   }
 }
-
-// class PieData {
-//   static List<Data> data = [
-//     Data(
-//         name: 'Present',
-//         percentage: 40.0,
-//         color: Colors.grey.shade800,
-//         isAbsent: false),
-//     Data(
-//         name: 'Absent',
-//         percentage:
-//             60.0, //this should be totaldays - presentdays .. it doesnt need to be converted to percentage.
-//         color: Colors.grey.shade300,
-//         isAbsent: true)
-//   ]; //chatgpt note that date list must have only 2 items of Data type :one is for presentdays and one is for absentdays(totaldays - presnet days) it is done such that the piechart have only 2 sections. and also for present days the colors is Colors.grey.shade800 and for absentdays color is Colors.grey.shade800
-// }
 
 class Data {
   final String name;

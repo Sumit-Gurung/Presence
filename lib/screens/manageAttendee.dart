@@ -1,7 +1,11 @@
 import 'dart:convert';
+import 'dart:io';
+import 'package:mime/mime.dart';
+import "package:http_parser/http_parser.dart";
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_speed_dial/flutter_speed_dial.dart';
+import 'package:image_picker/image_picker.dart';
 import 'package:presence/components/constant.dart';
 import 'package:presence/model/attendeeOfGroup.dart';
 import 'package:presence/model/user.dart';
@@ -35,6 +39,8 @@ class ManageAttendee extends StatefulWidget {
 class _ManageAttendeeState extends State<ManageAttendee> {
   List<dynamic> users = [];
   List<dynamic> filteredUsers = [];
+  List<dynamic> usersForMultipleSelect = [];
+  List<int> selectedUserIds = [];
   TextEditingController searchController = TextEditingController();
 
   dynamic selectedUser;
@@ -73,13 +79,15 @@ class _ManageAttendeeState extends State<ManageAttendee> {
   //   await inst.setInt("groupId", widget.groupId);
   // }
 
-//for searching fetchAllusers(),filterUSers(),selectedUser()
+//for searching: fetchAllusers(),filterUSers(),selectedUser()
   Future<void> fetchAllUsers() async {
     final response = await http.get(Uri.parse(Endpoints.forAllUsers));
 
     if (response.statusCode == 200) {
       setState(() {
         users = json.decode(response.body)['users'];
+        usersForMultipleSelect =
+            users.map((e) => UserDetails.fromMap(e)).toList();
         filteredUsers = users;
       });
     } else {
@@ -92,7 +100,7 @@ class _ManageAttendeeState extends State<ManageAttendee> {
     setState(() {
       selectedUser = null;
       filteredUsers = query.isEmpty
-          ? []
+          ? users
           : users
               .where((user) =>
                   user['name'].toLowerCase().contains(query.toLowerCase()) ||
@@ -105,29 +113,132 @@ class _ManageAttendeeState extends State<ManageAttendee> {
     setState(() {
       // isSelected = true;
       selectedUser = user;
+      if (selectedUserIds.contains(user['id'])) {
+        selectedUserIds.remove(user['id']);
+      } else {
+        selectedUserIds.add(user['id']);
+      }
+
       searchController.text = user['name'];
     });
   }
 
 //for sorting
-  // List<dynamic> sortAttendees() {
-  //   switch (selectedSortOption) {
-  //     case 'nameAscending':
-  //       return List<Map<String, dynamic>>.from(attendeeList)
-  //         ..sort((a, b) => a["name"].compareTo(b["name"]));
-  //     case 'nameDescending':
-  //       return List<Map<String, dynamic>>.from(attendeeList)
-  //         ..sort((a, b) => b["name"].compareTo(a["name"]));
-  //     case 'presentDaysAscending':
-  //       return List<Map<String, dynamic>>.from(attendeeList)
-  //         ..sort((a, b) => a["presentDays"].compareTo(b["presentDays"]));
-  //     case 'presentDaysDescending':
-  //       return List<Map<String, dynamic>>.from(attendeeList)
-  //         ..sort((a, b) => b["presentDays"].compareTo(a["presentDays"]));
-  //     default:
-  //       return attendeeList;
-  //   }
-  // }
+  List<UserDetails> sortAttendees() {
+    switch (selectedSortOption) {
+      case 'nameAscending':
+        return attendeeList..sort((a, b) => a.name.compareTo(b.name));
+
+      case 'nameDescending':
+        return attendeeList..sort((a, b) => b.name.compareTo(a.name));
+
+      default:
+        return attendeeList;
+    }
+  }
+
+  //return UserDetails object when id is given
+  UserDetails getUserDetailsById(int userId) {
+    UserDetails foundUser = usersForMultipleSelect.firstWhere(
+      (user) => user.id == userId,
+    );
+    return foundUser;
+  }
+
+  //for Image(attendance)
+  File? image;
+
+  Future pickImageAndUpload(ImageSource source) async {
+    try {
+      final pickedImage = await ImagePicker().pickImage(source: source);
+      if (pickedImage == null) {
+        return;
+      } else {
+        final imageFile = File(pickedImage.path);
+        setState(() {
+          image = imageFile;
+        });
+        uploadImage(image!);
+      }
+    } catch (e) {
+      print('Exception Caught: $e');
+    }
+  }
+
+  Future<void> uploadImage(File imageFile) async {
+    var inst = await SharedPreferences.getInstance();
+
+    String accessToken = inst.getString('accessToken')!;
+
+    Map<String, String> headers = {
+      "Authorization": "Bearer $accessToken",
+    };
+//create mutipart req
+    var request = http.MultipartRequest(
+      'POST',
+      Uri.parse(Endpoints.forUploadPhotoForAttendance),
+    );
+//add headers to req
+    request.headers.addAll(headers);
+
+//imageFile is opened to obtain stream of its bytes and likewise for length
+    var stream = http.ByteStream(imageFile.openRead());
+
+    var length = await imageFile.length();
+
+    //add field to req
+    // request.fields['group'] = widget.groupId.toString();
+    request.fields.addAll({'group': widget.groupId.toString()});
+//The http.MultipartFile class is used to create a new multipart file. It takes the field name 'image',
+//the byte stream of the image, its length, the filename, and the content type of the image file.
+// The lookupMimeType function is used to determine the content type based on the file extension.
+    var multipartFile = http.MultipartFile(
+      'captureImage',
+      stream,
+      length,
+      filename: imageFile.path,
+      contentType: MediaType.parse(lookupMimeType(imageFile.path)!),
+    );
+//now created multipart file is add to the request and finally it is sent
+    request.files.add(multipartFile);
+
+    var response = await http.Response.fromStream(await request.send());
+    var decodedResponse = jsonDecode(response.body);
+    var responsetoShow = decodedResponse['message'];
+    List<int> presentAttendeeIdList = decodedResponse['present_users'];
+
+    if (response.statusCode == 201) {
+      // Image uploaded succesfully
+      print('Image uploaded! for attendance');
+      print('$responsetoShow');
+
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TakeAttendance(
+              groupName: widget.groupName,
+              groupId: widget.groupId,
+              presentAttendeeIdList: presentAttendeeIdList,
+            ),
+          ));
+
+      // ScaffoldMessenger.of(context)
+      //     .showSnackBar(SnackBar(content: Text("$responsetoShow")));
+      // Navigator.of(context).pop();
+    } else {
+      // Error occurred while uploading image
+      print('Image upload failed.');
+      Navigator.push(
+          context,
+          MaterialPageRoute(
+            builder: (context) => TakeAttendance(
+              groupName: widget.groupName,
+              groupId: widget.groupId,
+              presentAttendeeIdList: [1, 5],
+            ),
+          ));
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -159,6 +270,9 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                         return StatefulBuilder(
                           builder: (context, setState101) {
                             return AlertDialog(
+                              shape: ContinuousRectangleBorder(
+                                  borderRadius: BorderRadius.circular(40)),
+                              contentPadding: EdgeInsets.fromLTRB(20, 8, 20, 0),
                               backgroundColor: AppColors.backgroundColor,
                               title: Text('Add Attendee'),
                               content: Container(
@@ -166,85 +280,105 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                                 width: double.maxFinite,
                                 child: Column(
                                   children: [
-                                    Padding(
-                                      padding: EdgeInsets.all(8.0),
-                                      child: TextField(
-                                        controller: searchController,
-                                        onChanged: (value) {
-                                          setState101(
-                                            () {
-                                              filterUsers(value);
-                                            },
-                                          );
-                                        },
-                                        decoration: InputDecoration(
-                                          labelText: 'Search',
-                                          prefixIcon: Icon(Icons.search),
-                                        ),
-                                        // filterUsers,
+                                    Container(
+                                      decoration: BoxDecoration(
+                                          border:
+                                              Border.all(color: Colors.white),
+                                          color: Colors.grey[200],
+                                          borderRadius:
+                                              BorderRadius.circular(15)),
+                                      child: Row(
+                                        children: [
+                                          SizedBox(
+                                            width: 10,
+                                          ),
+                                          Icon(
+                                            Icons.search,
+                                            size: 35,
+                                          ),
+                                          Expanded(
+                                            child: Padding(
+                                              padding: const EdgeInsets.only(
+                                                  left: 25.0),
+                                              child: TextField(
+                                                onChanged: (value) {
+                                                  setState101(
+                                                    () {
+                                                      filterUsers(value);
+                                                    },
+                                                  );
+                                                },
+                                                decoration: InputDecoration(
+                                                    hintText: 'Search User....',
+                                                    border: InputBorder.none),
+                                              ),
+                                            ),
+                                          ),
+                                        ],
                                       ),
+                                    ),
+                                    SizedBox(
+                                      height: 15,
                                     ),
                                     Expanded(
                                       child: ListView.builder(
                                         itemCount: filteredUsers.length,
                                         itemBuilder: (context, index) {
-                                          // setState101(
-                                          //   () {},
-                                          // );
                                           final user = filteredUsers[index];
-                                          return Padding(
-                                            padding: const EdgeInsets.all(8.0),
-                                            child: Container(
-                                              width: double.maxFinite,
-                                              decoration: BoxDecoration(
-                                                  color: AppColors
-                                                      .tilebackgroundColor,
-                                                  borderRadius:
-                                                      BorderRadius.circular(12),
-                                                  border: isSelected
-                                                      ? Border.all(
-                                                          color: Colors.green)
-                                                      : null,
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                        blurRadius: 7,
-                                                        spreadRadius: 1,
-                                                        color: Colors
-                                                            .grey.shade500,
-                                                        offset: Offset(2, 6)),
-                                                  ]),
-                                              child: ListTile(
-                                                  onTap: () => selectUser(user),
-                                                  leading: CircleAvatar(
-                                                    backgroundImage: user[
-                                                                'profilePic'] !=
-                                                            null
-                                                        ? NetworkImage(
-                                                                "${Endpoints.url}${user['profilePic']}")
-                                                            as ImageProvider
-                                                        : AssetImage(
-                                                            "assets/images/avatar.jpg"),
-                                                    // ('${user['profilePic']}' != null)
-                                                    //     ? NetworkImage(
-                                                    //             "${Endpoints.url} ${user['profilePic']}")
-                                                    //         as ImageProvider
-                                                    //     : AssetImage('assets/images/avatar.jpg'),
-                                                  ),
-
-                                                  // (user.user != null &&
-                                                  //             user.user!.imagePath != null)
-                                                  //         ? NetworkImage(user.user!.imagePath!)
-                                                  //             as ImageProvider
-                                                  //         : AssetImage('assets/images/avatar.jpg'),
-                                                  title: Text(user['name']),
-                                                  subtitle: Text(
-                                                    user['email'],
-                                                    overflow: TextOverflow.fade,
-                                                    maxLines: 1,
-                                                  ),
-                                                  trailing: Icon(CupertinoIcons
-                                                      .person_add)),
-                                            ),
+                                          return Container(
+                                            margin: EdgeInsets.fromLTRB(
+                                                5, 0, 5, 12),
+                                            width: double.maxFinite,
+                                            decoration: BoxDecoration(
+                                                color: AppColors
+                                                    .tilebackgroundColor,
+                                                borderRadius:
+                                                    BorderRadius.circular(15),
+                                                border: isSelected
+                                                    ? Border.all(
+                                                        color: Colors.green)
+                                                    : null,
+                                                boxShadow: [
+                                                  BoxShadow(
+                                                      blurRadius: 7,
+                                                      spreadRadius: 1,
+                                                      color:
+                                                          Colors.grey.shade500,
+                                                      offset: Offset(2, 6)),
+                                                ]),
+                                            child: ListTile(
+                                                onTap: () {
+                                                  setState101(
+                                                    () {
+                                                      selectUser(user);
+                                                    },
+                                                  );
+                                                },
+                                                leading: CircleAvatar(
+                                                  backgroundImage: user[
+                                                              'profilePic'] !=
+                                                          null
+                                                      ? NetworkImage(
+                                                              "${Endpoints.url}${user['profilePic']}")
+                                                          as ImageProvider
+                                                      : AssetImage(
+                                                          "assets/images/avatar.jpg"),
+                                                ),
+                                                title: Text(user['name']),
+                                                subtitle: Text(
+                                                  user['email'],
+                                                  overflow: TextOverflow.fade,
+                                                  maxLines: 1,
+                                                ),
+                                                trailing: selectedUserIds
+                                                        .contains(user['id'])
+                                                    ? Icon(
+                                                        CupertinoIcons
+                                                            .check_mark_circled_solid,
+                                                        color: Colors.green,
+                                                      )
+                                                    : Icon(CupertinoIcons
+                                                        .person_add)),
                                           );
                                         },
                                       ),
@@ -257,12 +391,17 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                                     onPressed: () {
                                       Navigator.pop(context);
                                     },
-                                    child: Text('cancel')),
+                                    child: Text(
+                                      'cancel',
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          color: AppColors.authBasicColor),
+                                    )),
                                 TextButton(
                                     onPressed: () async {
                                       Map tosend = {
                                         "action": "add",
-                                        "user": selectedUser['id'],
+                                        "user": selectedUserIds,
                                         "group": widget.groupId
                                       };
                                       var inst =
@@ -280,12 +419,23 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                                               .forAddingOrRemovingAttendeeToGroup),
                                           headers: headers,
                                           body: jsonEncode(tosend));
+                                      var responsetoShow =
+                                          jsonDecode(response.body)['message'];
                                       if (response.statusCode == 200 ||
                                           response.statusCode == 201) {
-                                        UserDetails justCreated =
-                                            UserDetails.fromMap(
-                                                selectedUser);
-                                        attendeeList.add(justCreated);
+                                        for (int selectedUserId
+                                            in selectedUserIds) {
+                                          UserDetails userSelectedInBulk =
+                                              getUserDetailsById(
+                                                  selectedUserId);
+                                          // UserDetails justCreated =
+                                          //     UserDetails.fromMap(selectedUser);
+                                          attendeeList.add(userSelectedInBulk);
+                                        }
+                                        // UserDetails justCreated =
+                                        //     UserDetails.fromMap(selectedUser);
+                                        // attendeeList.add(justCreated);
+                                        selectedUserIds = [];
                                         setState(() {});
                                         ScaffoldMessenger.of(context)
                                             .showSnackBar(SnackBar(
@@ -293,22 +443,38 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                                                     AppColors.authBasicColor,
                                                 duration: Duration(
                                                     milliseconds: 1400),
-                                                content: Text(
-                                                    'Attendee has been added!')));
+                                                content:
+                                                    Text('$responsetoShow')));
                                       } else {
+                                        selectedUserIds = [];
+                                        setState(() {});
+
+                                        ScaffoldMessenger.of(context)
+                                            .showSnackBar(SnackBar(
+                                                backgroundColor:
+                                                    AppColors.authBasicColor,
+                                                duration: Duration(
+                                                    milliseconds: 1400),
+                                                content:
+                                                    Text('$responsetoShow ')));
                                         print(
                                             "Unsucessfull with statuscode: ${response.statusCode} ");
                                       }
 
-                                      print(response.body);
+                                      // print(response.body);
 
-                                      groupProviderVariable.addAttendeeToGroup(
-                                          selectedUser['name'],
-                                          widget.groupIndex);
+                                      // groupProviderVariable.addAttendeeToGroup(
+                                      //     selectedUser['name'],
+                                      //     widget.groupIndex);
 
                                       Navigator.pop(context);
                                     },
-                                    child: Text('ok')),
+                                    child: Text(
+                                      'ok',
+                                      style: TextStyle(
+                                          fontSize: 14,
+                                          color: AppColors.authBasicColor),
+                                    )),
                               ],
                             );
                           },
@@ -325,17 +491,19 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                 ),
                 SpeedDialChild(
                   child: Icon(Icons.camera),
-                  label: 'Take Attendance',
+                  label: 'Take Attendance (Use camera)',
                   labelStyle: TextStyle(fontSize: 16),
                   onTap: () {
-                    Navigator.push(
-                        context,
-                        MaterialPageRoute(
-                          builder: (context) => TakeAttendance(
-                            groupName: widget.groupName,
-                            groupId: widget.groupId,
-                          ),
-                        ));
+                    // showImagePickerOptions(context);
+                    pickImageAndUpload(ImageSource.camera);
+                  },
+                ),
+                SpeedDialChild(
+                  child: Icon(Icons.photo_album_rounded),
+                  label: 'Take Attendance (Gallery)',
+                  labelStyle: TextStyle(fontSize: 16),
+                  onTap: () {
+                    pickImageAndUpload(ImageSource.gallery);
                   },
                 ),
               ],
@@ -349,9 +517,31 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                     SizedBox(
                       height: 10,
                     ),
+                    Center(
+                      child: Text(
+                        'Manage Attendee',
+                        style: TextStyle(
+                            fontSize: 27,
+                            color: Colors.grey[800],
+                            fontWeight: FontWeight.bold),
+                      ),
+                    ),
+                    SizedBox(
+                      height: 30,
+                    ),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.end,
                       children: [
+                        Expanded(
+                          child: Text(
+                            widget.groupName,
+                            textAlign: TextAlign.center,
+                            style: TextStyle(
+                                color: Colors.grey[800],
+                                fontSize: 22,
+                                fontWeight: FontWeight.bold),
+                          ),
+                        ),
                         PopupMenuButton(
                           elevation: 10,
                           itemBuilder: (context) {
@@ -361,6 +551,7 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                                 onTap: () {
                                   setState(() {
                                     selectedSortOption = 'nameAscending';
+                                    attendeeList = sortAttendees();
                                   });
                                 },
                                 child: ListTile(
@@ -374,6 +565,7 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                                 onTap: () {
                                   setState(() {
                                     selectedSortOption = 'nameDescending';
+                                    attendeeList = sortAttendees();
                                   });
                                 },
                                 child: ListTile(
@@ -382,32 +574,32 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                                   title: Text("By Name"),
                                 ),
                               )),
-                              PopupMenuItem(
-                                  child: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    selectedSortOption = 'presentDaysAscending';
-                                  });
-                                },
-                                child: ListTile(
-                                  leading: Icon(CupertinoIcons.arrow_up_circle),
-                                  title: Text("By Present Days"),
-                                ),
-                              )),
-                              PopupMenuItem(
-                                  child: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    selectedSortOption =
-                                        'presentDaysDescending';
-                                  });
-                                },
-                                child: ListTile(
-                                  leading:
-                                      Icon(CupertinoIcons.arrow_down_circle),
-                                  title: Text("By Present Days"),
-                                ),
-                              )),
+                              // PopupMenuItem(
+                              //     child: GestureDetector(
+                              //   onTap: () {
+                              //     setState(() {
+                              //       selectedSortOption = 'presentDaysAscending';
+                              //     });
+                              //   },
+                              //   child: ListTile(
+                              //     leading: Icon(CupertinoIcons.arrow_up_circle),
+                              //     title: Text("By Present Days"),
+                              //   ),
+                              // )),
+                              // PopupMenuItem(
+                              //     child: GestureDetector(
+                              //   onTap: () {
+                              //     setState(() {
+                              //       selectedSortOption =
+                              //           'presentDaysDescending';
+                              //     });
+                              //   },
+                              //   child: ListTile(
+                              //     leading:
+                              //         Icon(CupertinoIcons.arrow_down_circle),
+                              //     title: Text("By Present Days"),
+                              //   ),
+                              // )),
                             ];
                           },
                           child: Container(
@@ -420,29 +612,7 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                             ),
                             child: Image.asset('assets/images/preferences.png'),
                           ),
-                        ),
-                        Text(
-                          'Manage Attendee',
-                          style: TextStyle(
-                              fontSize: 25,
-                              color: Colors.grey[800],
-                              fontWeight: FontWeight.bold),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: 30,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Text(
-                          widget.groupName,
-                          style: TextStyle(
-                              color: Colors.grey[800],
-                              fontSize: 20,
-                              fontWeight: FontWeight.bold),
-                        ),
+                        )
                       ],
                     ),
                     SizedBox(
@@ -458,7 +628,7 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                             return ManageAttendeeTile(
                                 attendeeName: attendeeList[index].name,
                                 groupId: widget.groupId,
-                                presentDays: 0,
+                                attendeeEmail: attendeeList[index].email,
                                 attendeeId: attendeeList[index].id,
                                 onAttendeeDeleted: (attendeeId) {
                                   setState(() {
@@ -467,6 +637,7 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                                   });
                                 },
                                 attendeeIndex: index,
+                                phoneNumber: attendeeList[index].phoneNumber,
                                 profileImage:
                                     '${attendeeList[index].profilePic}');
                           }),

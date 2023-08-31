@@ -12,7 +12,7 @@ class BarData {
   BarData(this.sunData, this.MonData, this.TueData, this.WedData, this.ThurData,
       this.FriData, this.SatData);
   List<IndividualBar> barData = [];
-  void initBar() { 
+  void initBar() {
     barData = [
       IndividualBar(x: 1, y: sunData),
       IndividualBar(x: 2, y: MonData),

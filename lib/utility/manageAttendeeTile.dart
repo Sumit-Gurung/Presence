@@ -3,6 +3,7 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_phone_direct_caller/flutter_phone_direct_caller.dart';
 import 'package:flutter_slidable/flutter_slidable.dart';
 import 'package:presence/components/constant.dart';
 import 'package:presence/model/user.dart';
@@ -13,6 +14,7 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 // import '../model/attendeeOfGroup.dart';
 import 'package:http/http.dart' as http;
+import 'package:url_launcher/url_launcher.dart';
 
 import '../model/attendeeOfGroup.dart';
 
@@ -28,16 +30,18 @@ class ManageAttendeeTile extends StatefulWidget {
   final int groupId;
   final ValueChanged<int> onAttendeeDeleted;
   final String profileImage;
-  final int presentDays;
+  final String attendeeEmail;
+  final String phoneNumber;
 
   const ManageAttendeeTile({
     super.key,
     required this.attendeeName,
     required this.groupId,
-    required this.presentDays,
+    required this.attendeeEmail,
     required this.onAttendeeDeleted,
     required this.attendeeId,
     required this.profileImage,
+    required this.phoneNumber,
     required this.attendeeIndex,
     // required this.groupIndex
   });
@@ -65,6 +69,11 @@ class _ManageAttendeeTileState extends State<ManageAttendeeTile> {
     );
   }
 
+  // callNumber() {
+  //   const number = '08592119XXXX'; //set the number here
+  //   FlutterPhoneDirectCaller.callNumber(number);
+  // }
+
   @override
   Widget build(BuildContext context) {
     return Consumer2<AttendeeProvider, GroupProvider>(
@@ -91,7 +100,7 @@ class _ManageAttendeeTileState extends State<ManageAttendeeTile> {
                   // title: Text(
                   // "${AttendeeVariable.attendeeName[widget.index]["name"]}"),
                   title: Text(widget.attendeeName),
-                  subtitle: Text("Present Days: ${widget.presentDays}"),
+                  subtitle: Text("${widget.attendeeEmail}"),
                   //
                   leading: CircleAvatar(
                     radius: 15,
@@ -103,8 +112,7 @@ class _ManageAttendeeTileState extends State<ManageAttendeeTile> {
                     //         as ImageProvider
                     //     : AssetImage("assets/images/avatar.jpg"),
 
-                    backgroundImage: NetworkImage(widget.profileImage ??
-                        'https://www.google.com/search?q=avatar+url&source=lnms&tbm=isch&sa=X&ved=2ahUKEwiegO6ty-X8AhXMI7cAHZr3AU8Q_AUoAXoECAEQAw&biw=1536&bih=754&dpr=1.25#imgrc=YYYLguVFuko0CM'),
+                    backgroundImage: NetworkImage(widget.profileImage),
                   ),
                   trailing: Icon(Icons.room_preferences_outlined)),
             ),
@@ -115,7 +123,7 @@ class _ManageAttendeeTileState extends State<ManageAttendeeTile> {
                   onPressed: (context) async {
                     Map tosend = {
                       "action": "remove",
-                      "user": widget.attendeeId,
+                      "user": "${widget.attendeeId}",
                       "group": widget.groupId
                     };
                     var inst = await SharedPreferences.getInstance();
@@ -130,11 +138,12 @@ class _ManageAttendeeTileState extends State<ManageAttendeeTile> {
                         Uri.parse(Endpoints.forAddingOrRemovingAttendeeToGroup),
                         headers: headers,
                         body: jsonEncode(tosend));
-                    print(response.body);
-                    print(response.statusCode);
+                    // print(response.body);
+                    print(
+                        "The staus code when user is deleted is:  ${response.statusCode}");
                     // var responseDecoded = jsonDecode(response.body);
                     // print(responseDecoded['message']);
-                    print('print huna parne ho!');
+
                     var responseToShow = jsonDecode(response.body);
                     if (response.statusCode == 200 ||
                         response.statusCode == 201) {
@@ -148,19 +157,9 @@ class _ManageAttendeeTileState extends State<ManageAttendeeTile> {
                             style: TextStyle(color: Colors.white),
                           )));
                     } else {
-                      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                          content: Text('${responseToShow['error']}')));
                       print(
                           "Unsucessfull with statuscode: ${response.statusCode} ");
                     }
-
-                    // print(response.body);
-                    // setState(() {
-                    //   groupProviderVariable.deleteAttendeeFromGroup(
-                    //       widget.groupIndex,
-                    //       widget.attendeeId,
-                    //       widget.attendeeName);
-                    // });
                   },
                   backgroundColor: Color(0xFFFE4A49),
                   foregroundColor: Colors.white,
@@ -168,7 +167,11 @@ class _ManageAttendeeTileState extends State<ManageAttendeeTile> {
                   label: 'Delete',
                 ),
                 SlidableAction(
-                  onPressed: null,
+                  onPressed: (context) async {
+                    // launch('tel://${widget.phoneNumber}');
+                    await FlutterPhoneDirectCaller.callNumber(
+                        widget.phoneNumber);
+                  },
                   backgroundColor: Color.fromARGB(255, 33, 202, 89),
                   foregroundColor: Colors.white,
                   icon: Icons.phone,

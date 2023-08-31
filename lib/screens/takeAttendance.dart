@@ -13,8 +13,12 @@ import '../utility/individual_attendance_tile.dart';
 class TakeAttendance extends StatefulWidget {
   final String groupName;
   final int groupId;
+  final List<int> presentAttendeeIdList;
   const TakeAttendance(
-      {super.key, required this.groupName, required this.groupId});
+      {super.key,
+      required this.groupName,
+      required this.groupId,
+      required this.presentAttendeeIdList});
 
   @override
   State<TakeAttendance> createState() => _TakeAttendanceState();
@@ -43,6 +47,9 @@ class _TakeAttendanceState extends State<TakeAttendance> {
   //     "Authorization": "Bearer $authToken"
   //   };
   // }
+  bool isIdInList(int inputId, List<int> idList) {
+    return idList.contains(inputId);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -133,10 +140,12 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                 shrinkWrap: true,
                 itemCount: attendeeList.length,
                 itemBuilder: (context, index) {
-                  return Individual_tile(
+                  return IndividualTakeAttendanceTile(
                     name: attendeeList[index].name,
                     profilePic: attendeeList[index].profilePic,
-                    // attendeeId: attendeeList[index].id,
+                    attendeeId: attendeeList[index].id,
+                    isPresent: isIdInList(
+                        attendeeList[index].id, widget.presentAttendeeIdList),
                     onSwitchChanged: (bool isSwitchOn) {
                       setState(() {
                         if (isSwitchOn) {
@@ -158,8 +167,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                   width: 210,
                   onTap: () async {
                     print(listOfIdOfPresentAttendee);
-                    // print(headers);
-                    // print(headers); //chatgpt why can't i access headers here
+
                     Map toSend = {
                       "present_user": listOfIdOfPresentAttendee,
                       "group": widget.groupId,

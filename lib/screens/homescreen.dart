@@ -3,7 +3,10 @@
 import 'dart:convert';
 
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:presence/components/constant.dart';
+
+import 'package:presence/model/group.dart';
 import 'package:presence/model/user.dart';
 
 import '../components/homeScreenGroupCard.dart';
@@ -19,18 +22,20 @@ class HomeScreen extends StatefulWidget {
 class _HomeScreenState extends State<HomeScreen> {
   List<dynamic> users = [];
   List<UserDetails> filteredUsers = [];
+  List<Group> recommendedGroups = [];
+  List<Group> filteredRecommendedGroups = [];
 
   @override
   void initState() {
     super.initState();
+    RecommendationOfGroupRepository.getGroup().then((value) {
+      setState(() {
+        recommendedGroups = value;
+        filteredRecommendedGroups = value;
+      });
+    });
     fetchAllUsers();
   }
-
-  List groupList = [
-    ['Math-iii', 'assets/images/mathh.png', 'No.of Members: 21'],
-    ['Programming', 'assets/images/programming.png', 'No.of of Members: 13'],
-    ['Data Mining', 'assets/images/dataMinig.png', 'No.of of Members: 33']
-  ];
 
   Future<void> fetchAllUsers() async {
     final response = await http.get(Uri.parse(Endpoints.forAllUsers));
@@ -38,13 +43,59 @@ class _HomeScreenState extends State<HomeScreen> {
     if (response.statusCode == 200) {
       setState(() {
         users = json.decode(response.body)['users'];
-        filteredUsers = (users).map((e) => UserDetails.fromMap(e)).toList();
+        filteredUsers = users.map((e) => UserDetails.fromMap(e)).toList();
       });
     } else {
       // Handle error if necessary
       print('Failed to load data');
     }
   }
+
+  String getCreatorName(int id) {
+    try {
+      final user = filteredUsers.firstWhere(
+        (user) => user.id == id,
+        orElse: () => UserDetails(
+            id: 99,
+            email: 'dsa@gma.com',
+            name: 'random',
+            phoneNumber: '9874563210',
+            profilePic: 'saddas'),
+      );
+
+      return user.name;
+    } catch (e, s) {
+      // Handle any errors or exceptions that occur during the retrieval
+      print('Error: $e');
+      print(s);
+      return 'Error retrieving user';
+    }
+  }
+
+  //for searching
+
+  void filtergroup(String query) {
+    setState(() {
+      filteredRecommendedGroups = query.isEmpty
+          ? recommendedGroups
+          : recommendedGroups
+              .where((recomgroups) =>
+                  recomgroups.name.toLowerCase().contains(query.toLowerCase()))
+              .toList();
+    });
+  }
+  // void filterUsers(String query) {
+  //   setState(() {
+  //     selectedUser = null;
+  //     filteredUsers = query.isEmpty
+  //         ? []
+  //         : users
+  //             .where((user) =>
+  //                 user['name'].toLowerCase().contains(query.toLowerCase()) ||
+  //                 user['email'].toLowerCase().contains(query.toLowerCase()))
+  //             .toList();
+  //   });
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -57,22 +108,20 @@ class _HomeScreenState extends State<HomeScreen> {
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            //discover new...
-
             SizedBox(
-              height: 15,
+              height: 10,
             ),
 
             Padding(
               padding: const EdgeInsets.only(left: 25.0),
               child: Text(
                 'Join Groups Now',
-                style: TextStyle(fontSize: 27, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 24, fontWeight: FontWeight.bold),
               ),
             ),
             // search bar
             SizedBox(
-              height: 15,
+              height: 10,
             ),
             Padding(
               padding: const EdgeInsets.symmetric(horizontal: 25.0),
@@ -97,8 +146,13 @@ class _HomeScreenState extends State<HomeScreen> {
                             child: Padding(
                               padding: const EdgeInsets.only(left: 25.0),
                               child: TextField(
+                                onChanged: ((value) {
+                                  setState(() {
+                                    filtergroup(value);
+                                  });
+                                }),
                                 decoration: InputDecoration(
-                                    hintText: 'Type bruhh..',
+                                    hintText: 'Search Group....',
                                     border: InputBorder.none),
                               ),
                             ),
@@ -129,47 +183,49 @@ class _HomeScreenState extends State<HomeScreen> {
             //discover new...
 
             SizedBox(
-              height: 20,
+              height: 10,
             ),
 
             Padding(
               padding: const EdgeInsets.only(left: 25.0),
               child: Text(
                 'For You',
-                style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
 
             //cards
 
             Padding(
-              padding: const EdgeInsets.fromLTRB(15, 5, 0, 0),
-              child: Container(
-                height: 200,
+              padding: const EdgeInsets.fromLTRB(15, 0, 0, 0),
+              child: SizedBox(
+                height: 225,
                 // color: Colors.amber,
                 child: ListView.builder(
+                  // shrinkWrap: true,
                   scrollDirection: Axis.horizontal,
                   itemBuilder: (context, index) {
                     return HomePageGroupCard(
-                      iconPath: groupList[index][1],
-                      jobTitle: groupList[index][0],
-                      horlyRate: groupList[index][2],
+                      groupName: filteredRecommendedGroups[index].name,
+                      creatorName:
+                          getCreatorName(filteredRecommendedGroups[index].id),
+                      date: DateFormat('MMM d, y')
+                          .format(filteredRecommendedGroups[index].created_at),
+                      numberOfMembers:
+                          filteredRecommendedGroups[index].numberOfAttendee,
                     );
                   },
-                  itemCount: groupList.length,
+                  itemCount: filteredRecommendedGroups.length,
                 ),
               ),
             ),
             //recently added
-            SizedBox(
-              height: 8,
-            ),
 
             Padding(
               padding: const EdgeInsets.only(left: 25.0),
               child: Text(
                 'Recently Added',
-                style: TextStyle(fontSize: 23, fontWeight: FontWeight.bold),
+                style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
             // SizedBox(
@@ -206,10 +262,7 @@ class _HomeScreenState extends State<HomeScreen> {
                       tileColor: Colors.grey[200],
                       title: Text(user.name),
                       leading: CircleAvatar(
-                        backgroundImage: user.profilePic != null
-                            ? NetworkImage(user.profilePic!) as ImageProvider
-                            : AssetImage("assets/images/avatar.jpg"),
-                      ),
+                          backgroundImage: NetworkImage(user.profilePic!)),
                       subtitle: Text(user.email),
                     ),
                   ),
