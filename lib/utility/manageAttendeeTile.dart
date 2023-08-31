@@ -78,7 +78,7 @@ class _ManageAttendeeTileState extends State<ManageAttendeeTile> {
     return Consumer2<AttendeeProvider, GroupProvider>(
       builder: (context, AttendeeVariable, groupProviderVariable, child) {
         return Container(
-          margin: EdgeInsets.only(bottom: 25),
+          margin: EdgeInsets.fromLTRB(8, 0, 8, 25),
           width: double.maxFinite,
           decoration: BoxDecoration(boxShadow: [
             BoxShadow(

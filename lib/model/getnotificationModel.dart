@@ -5,29 +5,45 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 class GetNotification {
   int? id;
+  String? message;
   int? sender;
   DateTime? sendAt;
   bool? read;
   int? group;
+  String? groupname;
+  String? sendername;
 
-  GetNotification({this.id, this.sender, this.sendAt, this.read, this.group});
+  GetNotification(
+      {this.id,
+      this.message,
+      this.sender,
+      this.sendAt,
+      this.read,
+      this.group,
+      this.groupname,
+      this.sendername});
 
   GetNotification.fromJson(Map<String, dynamic> json) {
     id = json['id'];
+    message = json['message'];
     sender = json['sender'];
-
     sendAt = DateTime.parse(json['send_at']);
     read = json['read'];
     group = json['group'];
+    groupname = json['groupname'];
+    sendername = json['sendername'];
   }
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = new Map<String, dynamic>();
     data['id'] = this.id;
+    data['message'] = this.message;
     data['sender'] = this.sender;
     data['send_at'] = this.sendAt;
     data['read'] = this.read;
     data['group'] = this.group;
+    data['groupname'] = this.groupname;
+    data['sendername'] = this.sendername;
     return data;
   }
 }

@@ -7,21 +7,11 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:intl/intl.dart';
 import 'package:presence/components/constant.dart';
 import 'package:presence/model/getnotificationModel.dart';
-import 'package:presence/model/user.dart';
+// import 'package:presence/model/user.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 import 'package:http/http.dart' as http;
 
 class NotificationScreen extends StatefulWidget {
-  // final List NotificationList = [
-  //   ["New Message", 'You have a new message from John Doe.', '10:30 AM'],
-  //   [
-  //     'New Message',
-  //     'Don\'t forget to attend the meeting at 2:00 PM.',
-  //     '11:45 AM'
-  //   ],
-  //   ['Event Invitation', 'You are invited to a party on Saturday.', '1:15 PM']
-  // ];
-
   NotificationScreen({super.key});
 
   @override
@@ -76,29 +66,26 @@ class _NotificationScreenState extends State<NotificationScreen> {
         backgroundColor: Colors.grey[200],
       ),
       body: SafeArea(
-        child: Padding(
-          padding: const EdgeInsets.symmetric(horizontal: 24.0),
-          child: Column(
-            children: [
-              SizedBox(
-                height: 25,
-              ),
-              ListView.builder(
-                shrinkWrap: true,
-                itemCount: notificationList.length,
-                itemBuilder: (context, index) {
-                  return NotificationItem(
-                    senderid: notificationList[index].sender!,
-                    senderName: 'sumit',
-                    groupId: notificationList[index].group!,
-                    groupName: 'Hamro GROUP',
+        child: SingleChildScrollView(
+          child: Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 24.0),
+            child: Column(
+              children: [
+                SizedBox(
+                  height: 25,
+                ),
+                for (var notificationn in notificationList)
+                  NotificationItem(
+                    senderid: notificationn.sender!,
+                    senderName: notificationn.sendername!,
+                    groupId: notificationn.group!,
+                    groupName: notificationn.groupname!,
                     date: DateFormat('MMM d, y').format(
-                      notificationList[index].sendAt!,
+                      notificationn.sendAt!,
                     ),
-                  );
-                },
-              ),
-            ],
+                  ),
+              ],
+            ),
           ),
         ),
       ),
@@ -137,25 +124,47 @@ class NotificationItem extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    '$senderName has requested\n to join $groupName',
-                    style: GoogleFonts.acme(
+                  RichText(
+                    text: TextSpan(
+                      style: GoogleFonts.aBeeZee(
                         textStyle: TextStyle(
-                            fontWeight: FontWeight.w600, fontSize: 14)),
+                            fontWeight: FontWeight.w500,
+                            fontSize: 12,
+                            color: Colors.black),
+                      ),
+                      children: [
+                        TextSpan(
+                          text: '$senderName',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 15),
+                        ),
+                        TextSpan(text: ' has requested\n to join '),
+                        TextSpan(
+                          text: '$groupName',
+                          style: TextStyle(
+                              fontWeight: FontWeight.bold, fontSize: 15),
+                        ),
+                      ],
+                    ),
                   ),
                   Text(
                     'on: $date',
                     style: GoogleFonts.acme(
                         textStyle:
-                            TextStyle(color: Colors.grey[500], fontSize: 12)),
+                            TextStyle(color: Colors.grey[500], fontSize: 11)),
                   )
                 ]),
             Row(
               children: [
                 Container(
                     height: 30,
-                    width: 83,
+                    width: 65,
                     child: ElevatedButton(
+                        style: ElevatedButton.styleFrom(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 3,
+                              vertical: 0), // Adjust padding values
+                        ),
                         onPressed: () async {
                           Map tosend = {
                             "action": "add",
@@ -201,11 +210,14 @@ class NotificationItem extends StatelessWidget {
                 ),
                 Container(
                     height: 30,
-                    width: 83,
+                    width: 65,
                     child: ElevatedButton(
-                        style: ButtonStyle(
-                            backgroundColor:
-                                MaterialStatePropertyAll(Colors.grey.shade400)),
+                        style: ElevatedButton.styleFrom(
+                          backgroundColor: Colors.grey.shade400,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: 3,
+                              vertical: 0), // Adjust padding values
+                        ),
                         onPressed: () {},
                         child: Text(
                           'Delete',

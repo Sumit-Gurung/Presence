@@ -166,6 +166,16 @@ class _ManageAttendeeState extends State<ManageAttendee> {
   }
 
   Future<void> uploadImage(File imageFile) async {
+    Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => TakeAttendance(
+            groupName: widget.groupName,
+            imageFile: imageFile,
+            groupId: widget.groupId,
+            presentAttendeeIdList: [7, 8],
+          ),
+        ));
     var inst = await SharedPreferences.getInstance();
 
     String accessToken = inst.getString('accessToken')!;
@@ -207,7 +217,7 @@ class _ManageAttendeeState extends State<ManageAttendee> {
     var responsetoShow = decodedResponse['message'];
     List<int> presentAttendeeIdList = decodedResponse['present_users'];
 
-    if (response.statusCode == 201) {
+    if (response.statusCode == 400) {
       // Image uploaded succesfully
       print('Image uploaded! for attendance');
       print('$responsetoShow');
@@ -218,6 +228,7 @@ class _ManageAttendeeState extends State<ManageAttendee> {
             builder: (context) => TakeAttendance(
               groupName: widget.groupName,
               groupId: widget.groupId,
+              imageFile: imageFile,
               presentAttendeeIdList: presentAttendeeIdList,
             ),
           ));
@@ -233,8 +244,9 @@ class _ManageAttendeeState extends State<ManageAttendee> {
           MaterialPageRoute(
             builder: (context) => TakeAttendance(
               groupName: widget.groupName,
+              imageFile: imageFile,
               groupId: widget.groupId,
-              presentAttendeeIdList: [1, 5],
+              presentAttendeeIdList: [1],
             ),
           ));
     }
@@ -495,6 +507,7 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                   labelStyle: TextStyle(fontSize: 16),
                   onTap: () {
                     // showImagePickerOptions(context);
+
                     pickImageAndUpload(ImageSource.camera);
                   },
                 ),
