@@ -113,6 +113,11 @@ class _GroupsState extends State<Groups> {
                                   groups.removeAt(index);
                                 });
                               },
+                              onGroupUpdatedd: (value) {
+                                setState(() {
+                                  groups[index].name = value;
+                                });
+                              },
                               ontap: () {
                                 Navigator.push(
                                     context,

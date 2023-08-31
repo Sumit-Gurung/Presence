@@ -5,7 +5,7 @@ import 'package:http/http.dart' as http;
 import 'package:shared_preferences/shared_preferences.dart';
 
 class Group {
-  final String name;
+  String name;
   final DateTime created_at;
   final int id;
   final int numberOfAttendee;

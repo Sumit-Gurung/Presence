@@ -28,6 +28,7 @@ class ManageAttendeeTile extends StatefulWidget {
   final int attendeeIndex;
   final int groupId;
   final ValueChanged<int> onAttendeeDeleted;
+
   final String profileImage;
   final String attendeeEmail;
   final String phoneNumber;
