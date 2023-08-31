@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:lottie/lottie.dart';
 import 'package:mime/mime.dart';
 import "package:http_parser/http_parser.dart";
 import 'package:flutter/cupertino.dart';
@@ -239,7 +240,24 @@ class _ManageAttendeeState extends State<ManageAttendee> {
       // Navigator.of(context).pop();
     } else {
       // Error occurred while uploading image
-      print('Image upload failed.');
+      showDialog(
+        context: context,
+        builder: (context) {
+          return Center(
+            child: Container(
+              height: 350,
+              width: 350,
+              child: Lottie.asset('assets/animations/photoProcess.json'),
+            ),
+          );
+        },
+      );
+      // print('Image upload failed.');
+      // Container(
+      //   child: Lottie.asset('assets/animations/photoProcess.json'),
+      // );
+      Future.delayed(Duration(seconds: 5));
+
       Navigator.push(
           context,
           MaterialPageRoute(
@@ -581,7 +599,6 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                                       title: Text("By Name"),
                                     ),
                                   )),
-                                 
                                 ];
                               },
                               child: Container(

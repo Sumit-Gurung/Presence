@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:presence/providers/group_Provider.dart';
 import 'package:presence/providers/user_provider.dart';
+import 'package:presence/screens/animationPage.dart';
 import 'package:presence/screens/authn/login.dart';
 // import 'package:presence/screens/authn/login.dart';
 // import 'package:presence/start_page.dart';

@@ -4,6 +4,7 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'package:presence/components/constant.dart';
 
 import 'package:presence/model/group.dart';
@@ -228,6 +229,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 'Recently Added',
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
+            ),
+            Center(
+              child: Container(
+                  height: 200,
+                  width: 200,
+                  child: Lottie.asset('assets/animations/photoProcess.json')),
             ),
 
             Column(
