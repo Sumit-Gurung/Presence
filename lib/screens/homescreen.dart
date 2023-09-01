@@ -230,12 +230,12 @@ class _HomeScreenState extends State<HomeScreen> {
                 style: TextStyle(fontSize: 20, fontWeight: FontWeight.bold),
               ),
             ),
-            Center(
-              child: Container(
-                  height: 200,
-                  width: 200,
-                  child: Lottie.asset('assets/animations/photoProcess.json')),
-            ),
+            // Center(
+            //   child: Container(
+            //       height: 200,
+            //       width: 200,
+            //       child: Lottie.asset('assets/animations/photoProcess.json')),
+            // ),
 
             Column(
               children: [
