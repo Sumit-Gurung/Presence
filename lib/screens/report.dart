@@ -130,8 +130,8 @@ class _ReportState extends State<Report> {
                               myGroupReport[index].group!.totalStudent!,
                           child: MyBarGraph(
                             totalMember:
-                                myGroupReport[index].group!.totalStudent!,
-                            presentAttendee: myGroupReport[index].attendance!,
+                                myGroupReport[index].group!.totalStudent ,
+                            presentAttendee: myGroupReport[index].attendance,
                             // presentAttendee: myGroupReport[index].attendance!,
                           ),
                         );
