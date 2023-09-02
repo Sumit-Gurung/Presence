@@ -43,6 +43,8 @@ class Endpoints {
   static String forUpdatingGroupName = "$url/group/update/";
   static String forSendNotification = "$url/alert/sendnotification/";
   static String forGetNotification = "$url/alert/getnotification/";
+  static String forAcckNotification = "$url/alert/accknotification/";
+
 }
 
 Color unSelecteddrawerIconColor = Colors.grey.shade600;
