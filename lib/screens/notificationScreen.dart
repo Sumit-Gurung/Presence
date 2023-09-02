@@ -35,27 +35,6 @@ class _NotificationScreenState extends State<NotificationScreen> {
     );
   }
 
-  // String getCreatorName(int id) {
-  //   try {
-  //     final user = filteredUsers.firstWhere(
-  //       (user) => user.id == id,
-  //       orElse: () => UserDetails(
-  //           id: 99,
-  //           email: 'dsa@gma.com',
-  //           name: 'random',
-  //           phoneNumber: '9874563210',
-  //           profilePic: 'saddas'),
-  //     );
-
-  //     return user.name;
-  //   } catch (e, s) {
-  //     // Handle any errors or exceptions that occur during the retrieval
-  //     print('Error: $e');
-  //     print(s);
-  //     return 'Error retrieving user';
-  //   }
-  // }
-
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -75,6 +54,10 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   ),
                   for (var notificationn in notificationList)
                     NotificationItem(
+                      onReaction: () {
+                        notificationList.remove(notificationn);
+                        setState(() {});
+                      },
                       noti_id: notificationn.id.toString(),
                       senderid: notificationn.sender!,
                       senderName: notificationn.sendername!,
@@ -101,12 +84,14 @@ class NotificationItem extends StatelessWidget {
   final int groupId;
   final String date;
   final String noti_id;
+  final void Function() onReaction;
 
   const NotificationItem(
       {super.key,
       required this.senderid,
       required this.senderName,
       required this.groupId,
+      required this.onReaction,
       required this.groupName,
       required this.date,
       required this.noti_id});
@@ -176,6 +161,7 @@ class NotificationItem extends StatelessWidget {
                           };
                           var inst = await SharedPreferences.getInstance();
                           String accessToken = inst.getString('accessToken')!;
+                          onReaction();
 
                           var headers = {
                             'Content-Type': 'application/json',
@@ -234,7 +220,9 @@ class NotificationItem extends StatelessWidget {
                               horizontal: 3,
                               vertical: 0), // Adjust padding values
                         ),
-                        onPressed: () {},
+                        onPressed: () {
+                          onReaction();
+                        },
                         child: Text(
                           'Delete',
                           style: TextStyle(fontSize: 12, color: Colors.black),
