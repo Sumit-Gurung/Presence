@@ -45,14 +45,6 @@ class _TakeAttendanceState extends State<TakeAttendance> {
     // initilizeHeaders();
   }
 
-  // Future<void> initilizeHeaders() async {
-  //   final inst = await SharedPreferences.getInstance();
-  //   String authToken = inst.getString('accessToken')!;
-  //   var headers = {
-  //     'Content-Type': 'application/json',
-  //     "Authorization": "Bearer $authToken"
-  //   };
-  // }
   bool isIdInList(int inputId, List<int> idList) {
     return idList.contains(inputId);
   }
@@ -170,12 +162,7 @@ class _TakeAttendanceState extends State<TakeAttendance> {
                       },
                     ),
 
-                  // ListView.builder(
-                  //     shrinkWrap: true,
-                  //     itemCount: attendeeList.length,
-                  //     itemBuilder: (context, index) {
-                  //       return
-                  //     }),
+              
                   SizedBox(
                     height: 5,
                   ),

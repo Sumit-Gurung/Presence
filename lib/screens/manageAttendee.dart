@@ -1,5 +1,6 @@
 import 'dart:convert';
 import 'dart:io';
+import 'package:lottie/lottie.dart';
 import 'package:mime/mime.dart';
 import "package:http_parser/http_parser.dart";
 import 'package:flutter/cupertino.dart';
@@ -159,7 +160,7 @@ class _ManageAttendeeState extends State<ManageAttendee> {
         setState(() {
           image = imageFile;
         });
-        uploadImage(image!);
+        await uploadImage(image!);
       }
     } catch (e) {
       print('Exception Caught: $e');
@@ -167,16 +168,6 @@ class _ManageAttendeeState extends State<ManageAttendee> {
   }
 
   Future<void> uploadImage(File imageFile) async {
-    Navigator.push(
-        context,
-        MaterialPageRoute(
-          builder: (context) => TakeAttendance(
-            groupName: widget.groupName,
-            imageFile: imageFile,
-            groupId: widget.groupId,
-            presentAttendeeIdList: [7, 8],
-          ),
-        ));
     var inst = await SharedPreferences.getInstance();
 
     String accessToken = inst.getString('accessToken')!;
@@ -184,25 +175,14 @@ class _ManageAttendeeState extends State<ManageAttendee> {
     Map<String, String> headers = {
       "Authorization": "Bearer $accessToken",
     };
-//create mutipart req
     var request = http.MultipartRequest(
       'POST',
       Uri.parse(Endpoints.forUploadPhotoForAttendance),
     );
-//add headers to req
     request.headers.addAll(headers);
-
-//imageFile is opened to obtain stream of its bytes and likewise for length
     var stream = http.ByteStream(imageFile.openRead());
-
     var length = await imageFile.length();
-
-    //add field to req
-    // request.fields['group'] = widget.groupId.toString();
     request.fields.addAll({'group': widget.groupId.toString()});
-//The http.MultipartFile class is used to create a new multipart file. It takes the field name 'image',
-//the byte stream of the image, its length, the filename, and the content type of the image file.
-// The lookupMimeType function is used to determine the content type based on the file extension.
     var multipartFile = http.MultipartFile(
       'captureImage',
       stream,
@@ -210,18 +190,34 @@ class _ManageAttendeeState extends State<ManageAttendee> {
       filename: imageFile.path,
       contentType: MediaType.parse(lookupMimeType(imageFile.path)!),
     );
-//now created multipart file is add to the request and finally it is sent
     request.files.add(multipartFile);
-
+    showDialog(
+      barrierDismissible: false,
+      context: context,
+      builder: (context) {
+        return Center(
+          child: Container(
+            height: 350,
+            width: 350,
+            child: Lottie.asset('assets/animations/photoProcess.json'),
+          ),
+        );
+      },
+    );
     var response = await http.Response.fromStream(await request.send());
-    var decodedResponse = jsonDecode(response.body);
-    var responsetoShow = decodedResponse['message'];
-    List<int> presentAttendeeIdList = decodedResponse['present_users'];
+    Navigator.of(context).pop();
+    if (response.statusCode == 201) {
+      var decodedResponse = jsonDecode(response.body);
+      var responsetoShow = decodedResponse['message'];
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text(responsetoShow),
+      ));
+      List<int> presentAttendeeIdList =
+          (decodedResponse['present_users'] as List<dynamic>)
+              .map((e) => e as int)
+              .toList();
 
-    if (response.statusCode == 400) {
-      // Image uploaded succesfully
-      print('Image uploaded! for attendance');
-      print('$responsetoShow');
+      print("Detected ${presentAttendeeIdList.length} students.");
 
       Navigator.push(
           context,
@@ -233,21 +229,18 @@ class _ManageAttendeeState extends State<ManageAttendee> {
               presentAttendeeIdList: presentAttendeeIdList,
             ),
           ));
-
-      // ScaffoldMessenger.of(context)
-      //     .showSnackBar(SnackBar(content: Text("$responsetoShow")));
-      // Navigator.of(context).pop();
     } else {
-      // Error occurred while uploading image
-      print('Image upload failed.');
+      ScaffoldMessenger.of(context).showSnackBar(SnackBar(
+        content: Text("Something went wrong processing this request."),
+      ));
       Navigator.push(
           context,
           MaterialPageRoute(
             builder: (context) => TakeAttendance(
               groupName: widget.groupName,
-              imageFile: imageFile,
               groupId: widget.groupId,
-              presentAttendeeIdList: [1],
+              imageFile: imageFile,
+              presentAttendeeIdList: [],
             ),
           ));
     }
@@ -581,7 +574,6 @@ class _ManageAttendeeState extends State<ManageAttendee> {
                                       title: Text("By Name"),
                                     ),
                                   )),
-                                 
                                 ];
                               },
                               child: Container(

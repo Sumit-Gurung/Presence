@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:http/http.dart' as http;
 
 import 'package:flutter/material.dart';
+import 'package:lottie/lottie.dart';
 import 'package:presence/components/constant.dart';
 import 'package:presence/components/cutomFormField.dart';
 import 'package:presence/model/user.dart';
@@ -36,8 +37,8 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     super.initState();
     //set email and password to defaults
-    _userNameController.text = 'sumitgur1169@gmail.com';
-    _passwordController.text = 'sumit123';
+    _userNameController.text = 'arjunq21@gmail.com';
+    _passwordController.text = 'asdfasdf1';
   }
 
   @override
@@ -203,18 +204,21 @@ class _LoginPageState extends State<LoginPage> {
                                       showDialog(
                                         context: context,
                                         builder: (context) {
+                                          // CircularProgressIndicator(
+                                          //   color: AppColors.authBasicColor,
+                                          // ),
                                           return Center(
                                             child: SizedBox(
-                                              height: 100,
-                                              width: 100,
-                                              child: CircularProgressIndicator(
-                                                color: AppColors.authBasicColor,
-                                              ),
-                                            ),
+                                                height: 300,
+                                                width: 400,
+                                                child: Lottie.asset(
+                                                    'assets/animations/login.json')),
                                           );
                                         },
                                       );
                                       print('before validation!');
+                                      // await Future.delayed(
+                                      //     Duration(seconds: 5));
                                       if (_formKey.currentState!.validate()) {
                                         print('Tapp ta vacha ');
                                         try {
