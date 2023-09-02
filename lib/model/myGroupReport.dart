@@ -1,6 +1,7 @@
 import 'dart:convert';
 import 'package:http/http.dart' as http;
 import 'package:presence/components/constant.dart';
+import 'package:presence/components/static_data.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 // class MyGroupsReport {
@@ -108,7 +109,7 @@ class MyGroupReportRepo {
     final response = await http.get(Uri.parse(Endpoints.forMyGroupsReport),
         headers: headers);
     if (response.statusCode == 201 || response.statusCode == 200) {
-      final data = jsonDecode(response.body);
+      final data = jsonDecode(reportOfAttendeesInMyGroups);
 
       List<MyGroupsReport> myGroupReports =
           List.of(data).map((e) => MyGroupsReport.fromJson(e)).toList();
