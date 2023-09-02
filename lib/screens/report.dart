@@ -3,7 +3,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_toggle_tab/flutter_toggle_tab.dart';
 import 'package:presence/components/graphTile.dart';
 import 'package:presence/graphs/barGraphs/myBarGraph.dart';
-import 'package:presence/graphs/pieChart/piechart_section.dart';
 import 'package:presence/model/enrolled_Group_Report.dart';
 
 import '../graphs/pieChart/pichart_data.dart';
@@ -73,12 +72,6 @@ class _ReportState extends State<Report> {
             Row(
               mainAxisAlignment: MainAxisAlignment.start,
               children: const [
-                // IconButton(
-                //     constraints: const BoxConstraints(),
-                //     padding: EdgeInsets.zero,
-                //     onPressed: () => Navigator.pop(context),
-                //     icon: const Icon(Icons.arrow_back,
-                //         color: Colors.black, size: 25)),
                 Expanded(
                   child: Text(
                     'Reports',
@@ -130,9 +123,8 @@ class _ReportState extends State<Report> {
                               myGroupReport[index].group!.totalStudent!,
                           child: MyBarGraph(
                             totalMember:
-                                myGroupReport[index].group!.totalStudent ,
+                                myGroupReport[index].group!.totalStudent,
                             presentAttendee: myGroupReport[index].attendance,
-                            // presentAttendee: myGroupReport[index].attendance!,
                           ),
                         );
                       },
@@ -156,30 +148,47 @@ class _ReportState extends State<Report> {
                                     child: PieChart(
                                       PieChartData(
                                         sectionsSpace: 0,
-                                        // pieTouchData: PieTouchData(
-                                        //   touchCallback: (FlTouchEvent event,
-                                        //       PieTouchResponse?
-                                        //           pieTouchResponse) {
-                                        //     if (event is FlLongPressEnd ||
-                                        //         event is FlPanEndEvent ||
-                                        //         pieTouchResponse
-                                        //                 ?.touchedSection ==
-                                        //             null) {
-                                        //       setState(() {
-                                        //         touchedIndex = -1;
-                                        //       });
-                                        //     } else {
-                                        //       setState(() {
-                                        //         touchedIndex = pieTouchResponse!
-                                        //             .touchedSection!
-                                        //             .touchedSectionIndex;
-                                        //       });
-                                        //     }
-                                        //   },
-                                        // ),
+                                        pieTouchData: PieTouchData(
+                                          touchCallback: (FlTouchEvent event,
+                                              PieTouchResponse?
+                                                  pieTouchResponse) {
+                                            if (event is FlLongPressEnd ||
+                                                event is FlPanEndEvent ||
+                                                pieTouchResponse
+                                                        ?.touchedSection ==
+                                                    null) {
+                                              setState(() {
+                                                touchedIndex = -1;
+                                              });
+                                            } else {
+                                              setState(() {
+                                                touchedIndex = pieTouchResponse!
+                                                    .touchedSection!
+                                                    .touchedSectionIndex;
+                                              });
+                                            }
+                                          },
+                                        ),
                                         borderData: null,
                                         centerSpaceRadius: 40,
-                                        sections: getSection(touchedIndex),
+                                        sections: [
+                                          PieChartSectionData(
+                                            color: Colors.grey,
+                                            value: enrolledGrpReport[index]
+                                                .presentDays
+                                                .toDouble(),
+                                          ),
+                                          PieChartSectionData(
+                                            value: enrolledGrpReport[index]
+                                                    .totalDays
+                                                    .toDouble() -
+                                                enrolledGrpReport[index]
+                                                    .presentDays
+                                                    .toDouble(),
+                                            color: Colors.white,
+                                          )
+                                        ],
+                                        // sections: getSection(touchedIndex),
                                       ),
                                     )),
                                 SizedBox(
