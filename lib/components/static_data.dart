@@ -2,8 +2,8 @@ const String reportOfAttendeesInMyGroups = '''[
     {
         "group": {
             "id": 2,
-            "name": "tyyy",
-            "totalStudent": 5
+            "name": "Science XII",
+            "totalStudent": 21
         },
         "attendance": [
             {
@@ -41,6 +41,14 @@ const String reportOfAttendeesInMyGroups = '''[
             {
                 "date": "2023-08-31",
                 "presentStudent": 1
+            },
+            {
+                "date": "2023-09-01",
+                "presentStudent": 2
+            },
+            {
+                "date": "2023-09-02",
+                "presentStudent": 6
             }
         ]
     },
@@ -75,7 +83,32 @@ const String reportOfAttendeesInMyGroups = '''[
             "name": "sumitgib",
             "totalStudent": 5
         },
-        "attendance": []
+        "attendance": [
+          {
+                "date": "2023-08-27",
+                "presentStudent": 4
+            },
+            {
+                "date": "2023-08-28",
+                "presentStudent": 3
+            },
+            {
+                "date": "2023-08-29",
+                "presentStudent": 2
+            },
+            {
+                "date": "2023-08-31",
+                "presentStudent": 6
+            },
+            {
+                "date": "2023-09-01",
+                "presentStudent": 7
+            },
+            {
+                "date": "2023-09-02",
+                "presentStudent": 3
+            }
+        ]
     },
     {
         "group": {
@@ -96,7 +129,32 @@ const String reportOfAttendeesInMyGroups = '''[
             "name": "errr",
             "totalStudent": 6
         },
-        "attendance": []
+        "attendance": [
+          {
+                "date": "2023-08-27",
+                "presentStudent": 3
+            },
+            {
+                "date": "2023-08-28",
+                "presentStudent": 2
+            },
+            {
+                "date": "2023-08-29",
+                "presentStudent": 2
+            },
+            {
+                "date": "2023-08-31",
+                "presentStudent": 1
+            },
+            {
+                "date": "2023-09-01",
+                "presentStudent": 3
+            },
+            {
+                "date": "2023-09-02",
+                "presentStudent": 6
+            }
+        ]
     },
     {
         "group": {
@@ -200,43 +258,35 @@ const String myAttendanceReport = '''
 [
     {
         "group": {
-            "id": 2,
-            "name": "tyyy"
-        },
-        "totalDays": 9,
-        "presentDays": 3
-    },
-    {
-        "group": {
             "id": 3,
             "name": "sumit group"
         },
         "totalDays": 4,
-        "presentDays": 0
+        "presentDays": 2
     },
     {
         "group": {
             "id": 17,
             "name": "nursing"
         },
-        "totalDays": 1,
-        "presentDays": 0
+        "totalDays": 9,
+        "presentDays": 4
     },
     {
         "group": {
             "id": 18,
             "name": "errr"
         },
-        "totalDays": 0,
-        "presentDays": 0
+        "totalDays": 5,
+        "presentDays": 3
     },
     {
         "group": {
             "id": 20,
             "name": "ftgvedrr"
         },
-        "totalDays": 0,
-        "presentDays": 0
+        "totalDays": 5,
+        "presentDays": 2
     },
     {
         "group": {
