@@ -75,6 +75,7 @@ class _NotificationScreenState extends State<NotificationScreen> {
                   ),
                   for (var notificationn in notificationList)
                     NotificationItem(
+                      noti_id: notificationn.id.toString(),
                       senderid: notificationn.sender!,
                       senderName: notificationn.sendername!,
                       groupId: notificationn.group!,
@@ -99,6 +100,7 @@ class NotificationItem extends StatelessWidget {
   final String groupName;
   final int groupId;
   final String date;
+  final String noti_id;
 
   const NotificationItem(
       {super.key,
@@ -106,7 +108,8 @@ class NotificationItem extends StatelessWidget {
       required this.senderName,
       required this.groupId,
       required this.groupName,
-      required this.date});
+      required this.date,
+      required this.noti_id});
 
   @override
   Widget build(BuildContext context) {
@@ -179,26 +182,39 @@ class NotificationItem extends StatelessWidget {
                             'Authorization': 'Bearer $accessToken',
                           };
 
-                          var response = await http.post(
+                          final response = await http.put(
                               Uri.parse(
-                                  Endpoints.forAddingOrRemovingAttendeeToGroup),
+                                  '${Endpoints.forAcckNotification}$noti_id'),
                               headers: headers,
-                              body: jsonEncode(tosend));
-                          var responsetoShow =
-                              jsonDecode(response.body)['message'];
-                          if (response.statusCode == 200 ||
-                              response.statusCode == 201) {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                backgroundColor: AppColors.authBasicColor,
-                                duration: Duration(milliseconds: 1400),
-                                content: Text('$responsetoShow')));
+                              body: null);
+
+                          if (response.statusCode == 200) {
+                            print(jsonDecode(response.body));
+                            var response1 = await http.post(
+                                Uri.parse(Endpoints
+                                    .forAddingOrRemovingAttendeeToGroup),
+                                headers: headers,
+                                body: jsonEncode(tosend));
+                            var response1toShow =
+                                jsonDecode(response1.body)['message'];
+                            if (response1.statusCode == 200 ||
+                                response1.statusCode == 201) {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      backgroundColor: AppColors.authBasicColor,
+                                      duration: Duration(milliseconds: 1400),
+                                      content: Text('$response1toShow')));
+                            } else {
+                              ScaffoldMessenger.of(context).showSnackBar(
+                                  SnackBar(
+                                      backgroundColor: AppColors.authBasicColor,
+                                      duration: Duration(milliseconds: 1400),
+                                      content: Text('$response1toShow ')));
+                              print(
+                                  "Unsucessfull with statuscode: ${response1.statusCode} ");
+                            }
                           } else {
-                            ScaffoldMessenger.of(context).showSnackBar(SnackBar(
-                                backgroundColor: AppColors.authBasicColor,
-                                duration: Duration(milliseconds: 1400),
-                                content: Text('$responsetoShow ')));
-                            print(
-                                "Unsucessfull with statuscode: ${response.statusCode} ");
+                            print(jsonDecode(response.body));
                           }
                         },
                         child: Text(
@@ -229,6 +245,7 @@ class NotificationItem extends StatelessWidget {
         ));
   }
 }
+
 //
 
 // ListTile(
